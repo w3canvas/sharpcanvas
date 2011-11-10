@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D9316368-C831-4004-8D28-D4B975C73984}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpCanvas.Forms</RootNamespace>
+    <AssemblyName>SharpCanvas.Forms</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>SharpCanvasStrong.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.JScript" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\Drawing.AssemblyInfo.cs" />
+    <Compile Include="Context.Drawing2D\CanvasConfig.cs" />
+    <Compile Include="Context.Drawing2D\CanvasPattern.cs" />
+    <Compile Include="Context.Drawing2D\CanvasRenderingContext2D.cs" />
+    <Compile Include="Context.Drawing2D\CanvasState.cs" />
+    <Compile Include="Context.Drawing2D\Fill.cs" />
+    <Compile Include="Context.Drawing2D\FontUtils.cs" />
+    <Compile Include="Context.Drawing2D\GaussianBlur.cs" />
+    <Compile Include="Context.Drawing2D\GeometryUtils.cs" />
+    <Compile Include="Context.Drawing2D\Image.cs" />
+    <Compile Include="Context.Drawing2D\LinearCanvasGradient.cs" />
+    <Compile Include="Context.Drawing2D\LineEquation.cs" />
+    <Compile Include="Context.Drawing2D\PathCanvasGradient.cs" />
+    <Compile Include="Context.Drawing2D\RawBitmap.cs" />
+    <Compile Include="Context.Drawing2D\ColorUtils.cs" />
+    <None Include="SharpCanvasStrong.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="SharpCanvas.Bitmap.Filter.csproj">
+      <Project>{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}</Project>
+      <Name>SharpCanvas.Bitmap.Filter</Name>
+    </ProjectReference>
+    <ProjectReference Include="SharpCanvas.csproj">
+      <Project>{5EF03EC8-B8B6-4DC6-AD26-2C580EA76F76}</Project>
+      <Name>SharpCanvas</Name>
+    </ProjectReference>
+    <ProjectReference Include="SharpCanvas.Interop.csproj">
+      <Project>{7982AF66-9ACB-40A8-B07C-67605845C588}</Project>
+      <Name>SharpCanvas.Interop</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+</Project>

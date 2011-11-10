@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5EF03EC8-B8B6-4DC6-AD26-2C580EA76F76}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpCanvas</RootNamespace>
+    <AssemblyName>SharpCanvas</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>SharpCanvasStrong.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.JScript" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Shared\EventPhases.cs" />
+    <Compile Include="Shared\ICanvasProxy.cs" />
+    <Compile Include="Shared\CanvasComposition.cs" />
+    <Compile Include="Shared\FilterChain.cs" />
+    <Compile Include="Shared\ICanvasRenderingContext2D.cs" />
+    <Compile Include="Shared\IContextProxy.cs" />
+    <Compile Include="Shared\ICSSStyleDeclaration.cs" />
+    <Compile Include="Shared\IDocument.cs" />
+    <Compile Include="Shared\IEventModel.cs" />
+    <Compile Include="Shared\IEventRegistration.cs" />
+    <Compile Include="Shared\IEventTarget.cs" />
+    <Compile Include="Shared\IFill.cs" />
+    <Compile Include="Shared\IFilter.cs" />
+    <Compile Include="Shared\IHTMLCanvasElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Shared\IImage.cs" />
+    <Compile Include="Shared\IImageData.cs" />
+    <Compile Include="Shared\ILinearCanvasGradient.cs" />
+    <Compile Include="Shared\ILocation.cs" />
+    <Compile Include="Shared\ImageData.cs" />
+    <Compile Include="Shared\INavigator.cs" />
+    <Compile Include="Shared\IPathCanvasGradient.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\ITimeout.cs" />
+    <Compile Include="Shared\IWindow.cs" />
+    <Compile Include="Shared\TextMetrics.cs" />
+    <Compile Include="Shared\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SharpCanvasStrong.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="SharpCanvas.Interop.csproj">
+      <Project>{7982AF66-9ACB-40A8-B07C-67605845C588}</Project>
+      <Name>SharpCanvas.Interop</Name>
+    </ProjectReference>
+    <ProjectReference Include="SharpCanvas.Prototype.csproj">
+      <Project>{6E79634E-9EAA-4004-99D3-1FE918FB424C}</Project>
+      <Name>SharpCanvas.Prototype</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns:html5="http://www.w3.org/TR/HTML5/">
+	<head>
+	    <object classid="CLSID:06351772-f965-4b5e-8dd2-0c2cf8da6c6b" id="canvas"></object>
+
+	    <?IMPORT namespace="html5" implementation="#canvas">
+		<title>Canvas test page</title>
+	</head>
+	<body>
+	    <table>
+	        <tr>
+	            <td>
+	                <html5:canvas id="c1" width="320" height="240"></html5:canvas>
+	            </td>
+	            <td>
+	                <html5:canvas id="c2" width="320" height="240" style="behavior: url(#canvas);"></html5:canvas>
+	            </td>
+	        </tr>
+	    </table>
+	    <script type="text/javascript" language="ecmascript">
+	        function DoTest() {
+	            alert(this.test);
+	        }
+
+	        var canvas = document.getElementById("c2");
+
+//	        canvas['prototype'].test = 42;
+//	        alert(canvas.test);
+
+//	        canvas['test'] = 2 * canvas.test;
+//	        canvas['prototype']['doTest'] = DoTest;
+	        //	        canvas.doTest();
+
+				var ctx = canvas.getContext('2d');
+				//setTimeout(function(){
+				ctx.fillStyle = 'orange';
+				ctx.fillRect(0, 0, 100, 500);
+				//}, 5000);
+
+
+	    </script>
+	    <!--<div style="position:absolute; width:640; height:480; behavior: url(#canvas);" id="test"></div>-->
+	</body>
+</html>

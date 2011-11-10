@@ -1,0 +1,7 @@
+﻿<Media:HTMLElement x:Class="SharpCanvas.Browser.Media.Document"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Media="clr-namespace:SharpCanvas.Browser.Media" Height="300" Width="300">
+    <Grid>
+            
+    </Grid>
+</Media:HTMLElement>

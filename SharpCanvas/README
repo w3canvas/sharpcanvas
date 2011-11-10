@@ -1,0 +1,12 @@
+SharpCanvas
+
+This package is a set of developer utilities, implementing the HTML5 Canvas
+standard in C# primarily by using the System.Drawing and Windows.Media namespaces.
+
+Unless otherwise noted:
+        All source code and documentation is released into public domain and CC0.
+        http://creativecommons.org/publicdomain/zero/1.0/
+        http://creativecommons.org/licenses/publicdomain/
+
+Should you have any questions about licensing or records, please consult with Jumis, Inc.
+w3canvas at jumis.com

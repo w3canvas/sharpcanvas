@@ -1,0 +1,18 @@
+
+
+Regarding HLSL Shaders.
+
+
+Visual Studio and other IDEs may require the WPF Futures ShaderBuildTask compile Shaders.
+
+Available at: http://wpf.codeplex.com/releases/view/14962
+In Binary From:
+http://wpf.codeplex.com/releases/view/14962#DownloadId=40167
+And Source Code:
+http://wpf.codeplex.com/releases/view/14962#DownloadId=40170
+
+The package has been released under the Microsoft Permissive License (MS-PL).
+Contained within it is the "d3dx9_static.lib" Object File Library
+used to compile HLSL shaders into bytecode.
+
+

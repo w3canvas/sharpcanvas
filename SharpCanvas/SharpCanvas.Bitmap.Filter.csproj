@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpCanvas.StandardFilter</RootNamespace>
+    <AssemblyName>SharpCanvas.StandardFilter</AssemblyName>
+    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>SharpCanvasStrong.snk</AssemblyOriginatorKeyFile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bitmap.Filter\ColorMatrix\AlphaFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\BaseFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\BlindFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\BrightnessFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\ChannelFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\ContrastFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\DuotoneFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\ExposureFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\GrayscaleFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\HueFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\InvertFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\SaturateFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\TempFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\ThresholdFilter.cs" />
+    <Compile Include="Bitmap.Filter\ColorMatrix\TintFilter.cs" />
+    <Compile Include="Bitmap.Filter\ConvFilter\ConvolutionFilter.cs" />
+    <Compile Include="Bitmap.Filter\ConvFilter\EdgeDetectFilter.cs" />
+    <Compile Include="Bitmap.Filter\ConvFilter\EmbossFilter.cs" />
+    <Compile Include="Bitmap.Filter\ConvFilter\GaussianBlurFilter.cs" />
+    <Compile Include="Bitmap.Filter\ConvFilter\ReliefFilter.cs" />
+    <Compile Include="Bitmap.Filter\ConvFilter\SharpnessFilter.cs" />
+    <Compile Include="Bitmap.Filter\DisplacementFilter\BaseDisplacementFilter.cs" />
+    <Compile Include="Bitmap.Filter\DisplacementFilter\FlipFilter.cs" />
+    <Compile Include="Bitmap.Filter\DisplacementFilter\JitterFilter.cs" />
+    <Compile Include="Bitmap.Filter\DisplacementFilter\PixelateFilter.cs" />
+    <Compile Include="Bitmap.Filter\DisplacementFilter\SphereFilter.cs" />
+    <Compile Include="Bitmap.Filter\DisplacementFilter\TimeWrapFilter.cs" />
+    <Compile Include="Bitmap.Filter\DisplacementFilter\WaterFilter.cs" />
+    <Compile Include="Bitmap.Filter\FilterChain.cs" />
+    <Compile Include="Bitmap.Filter\IFilter.cs" />
+    <Compile Include="Properties\Filter.AssemblyInfo.cs" />
+    <None Include="SharpCanvasStrong.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+</Project>

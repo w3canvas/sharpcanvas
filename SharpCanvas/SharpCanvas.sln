@@ -1,0 +1,89 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Context.Drawing2D", "SharpCanvas.Context.Drawing2D.csproj", "{D9316368-C831-4004-8D28-D4B975C73984}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Context.WindowsMedia", "SharpCanvas.Context.WindowsMedia.csproj", "{8A65583E-A0C4-4BBA-AF0A-CDB51434A409}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Bitmap.Shader", "SharpCanvas.Bitmap.Shader.csproj", "{2A197367-F52D-4024-825E-74F3EE1CDBD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas", "SharpCanvas.csproj", "{5EF03EC8-B8B6-4DC6-AD26-2C580EA76F76}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7982AF66-9ACB-40A8-B07C-67605845C588} = {7982AF66-9ACB-40A8-B07C-67605845C588}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Host", "SharpCanvas.Host.csproj", "{B4B96B7C-6E4B-4EB4-817E-DAA5ED980171}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Installer", "SharpCanvas.Installer.csproj", "{3C89EEDB-816F-462E-AF0E-FB1A09F64355}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Bitmap.Filter", "SharpCanvas.Bitmap.Filter.csproj", "{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Interop", "SharpCanvas.Interop.csproj", "{7982AF66-9ACB-40A8-B07C-67605845C588}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Prototype", "SharpCanvas.Prototype.csproj", "{6E79634E-9EAA-4004-99D3-1FE918FB424C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Browser", "SharpCanvas.Browser.csproj", "{F069A7FA-C0E0-4BAA-802D-74ABCD9570FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Browser.WinForms", "SharpCanvas.Browser.WinForms.csproj", "{F0FBE056-39CA-469D-92D8-FBB3F0568D5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Browser.WindowsMedia", "SharpCanvas.Browser.WindowsMedia.csproj", "{F069A7FA-C0E0-4BA4-802D-74ABCD9570FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Description = SharpCanvas by W3Canvas Corporation
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9316368-C831-4004-8D28-D4B975C73984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9316368-C831-4004-8D28-D4B975C73984}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9316368-C831-4004-8D28-D4B975C73984}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9316368-C831-4004-8D28-D4B975C73984}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A65583E-A0C4-4BBA-AF0A-CDB51434A409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A65583E-A0C4-4BBA-AF0A-CDB51434A409}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A65583E-A0C4-4BBA-AF0A-CDB51434A409}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A65583E-A0C4-4BBA-AF0A-CDB51434A409}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A197367-F52D-4024-825E-74F3EE1CDBD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A197367-F52D-4024-825E-74F3EE1CDBD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A197367-F52D-4024-825E-74F3EE1CDBD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A197367-F52D-4024-825E-74F3EE1CDBD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EF03EC8-B8B6-4DC6-AD26-2C580EA76F76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EF03EC8-B8B6-4DC6-AD26-2C580EA76F76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EF03EC8-B8B6-4DC6-AD26-2C580EA76F76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EF03EC8-B8B6-4DC6-AD26-2C580EA76F76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4B96B7C-6E4B-4EB4-817E-DAA5ED980171}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4B96B7C-6E4B-4EB4-817E-DAA5ED980171}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4B96B7C-6E4B-4EB4-817E-DAA5ED980171}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4B96B7C-6E4B-4EB4-817E-DAA5ED980171}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C89EEDB-816F-462E-AF0E-FB1A09F64355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C89EEDB-816F-462E-AF0E-FB1A09F64355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C89EEDB-816F-462E-AF0E-FB1A09F64355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C89EEDB-816F-462E-AF0E-FB1A09F64355}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7982AF66-9ACB-40A8-B07C-67605845C588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7982AF66-9ACB-40A8-B07C-67605845C588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7982AF66-9ACB-40A8-B07C-67605845C588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7982AF66-9ACB-40A8-B07C-67605845C588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E79634E-9EAA-4004-99D3-1FE918FB424C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E79634E-9EAA-4004-99D3-1FE918FB424C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E79634E-9EAA-4004-99D3-1FE918FB424C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E79634E-9EAA-4004-99D3-1FE918FB424C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F069A7FA-C0E0-4BAA-802D-74ABCD9570FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F069A7FA-C0E0-4BAA-802D-74ABCD9570FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F069A7FA-C0E0-4BAA-802D-74ABCD9570FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F069A7FA-C0E0-4BAA-802D-74ABCD9570FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0FBE056-39CA-469D-92D8-FBB3F0568D5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0FBE056-39CA-469D-92D8-FBB3F0568D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0FBE056-39CA-469D-92D8-FBB3F0568D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0FBE056-39CA-469D-92D8-FBB3F0568D5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F069A7FA-C0E0-4BA4-802D-74ABCD9570FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F069A7FA-C0E0-4BA4-802D-74ABCD9570FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F069A7FA-C0E0-4BA4-802D-74ABCD9570FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F069A7FA-C0E0-4BA4-802D-74ABCD9570FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

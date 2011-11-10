@@ -1,0 +1,2 @@
+WARNING:
+Originals and the CanvasAd tests may be under licenses that are not as liberal as the main license of SharpCanvas. Blob Sallad [sic] has been released by the original author into CC0/Public Domain and is the preferred means of testing the library.

@@ -1,0 +1,1 @@
+WARNING: This test uses ext.js and so some portions may fall under BSD license. This test is not particularly useful and may be dropped from SharpCanvas in the future.

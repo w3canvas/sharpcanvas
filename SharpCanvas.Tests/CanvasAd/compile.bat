@@ -1,0 +1,2 @@
+c:\Personal\SharpCanvas\SharpCanvas.Tests\CanvasAd\jsc.exe /r:"C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\PresentationFramework.dll","C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\WindowsBase.dll","C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\PresentationCore.dll" /debug /out:canvasad.exe combined-debug.js
+pause
