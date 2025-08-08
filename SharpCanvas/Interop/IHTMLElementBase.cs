@@ -1,5 +1,4 @@
 using System.Windows.Forms;
-using Microsoft.JScript;
 
 namespace SharpCanvas.Interop
 {

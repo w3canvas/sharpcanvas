@@ -1,0 +1,6 @@
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Interop.GeneratedMSBuildEditorConfig.editorconfig
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Interop.AssemblyInfoInputs.cache
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Interop.AssemblyInfo.cs
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Interop.csproj.CoreCompileInputs.cache
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Interop.sourcelink.json
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Interop.csproj.AssemblyReference.cache

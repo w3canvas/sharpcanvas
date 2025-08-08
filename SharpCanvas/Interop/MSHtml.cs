@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.CustomMarshalers;
 
 namespace SharpCanvas.Interop
 {
@@ -3136,9 +3135,6 @@ namespace SharpCanvas.Interop
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), DispId(0x5dd)]
         string toString();
 
-        [return:
-            MarshalAs(UnmanagedType.CustomMarshaler, MarshalType = "",
-                MarshalTypeRef = typeof (EnumeratorToEnumVariantMarshaler), MarshalCookie = "")]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), DispId(-4),
          TypeLibFunc((short) 0x41)]
         new IEnumerator GetEnumerator();

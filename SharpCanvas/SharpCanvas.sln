@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas", "SharpCanvas.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Host", "SharpCanvas.Host.csproj", "{B4B96B7C-6E4B-4EB4-817E-DAA5ED980171}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Installer", "SharpCanvas.Installer.csproj", "{3C89EEDB-816F-462E-AF0E-FB1A09F64355}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Bitmap.Filter", "SharpCanvas.Bitmap.Filter.csproj", "{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Interop", "SharpCanvas.Interop.csproj", "{7982AF66-9ACB-40A8-B07C-67605845C588}"
@@ -54,10 +52,6 @@ Global
 		{B4B96B7C-6E4B-4EB4-817E-DAA5ED980171}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4B96B7C-6E4B-4EB4-817E-DAA5ED980171}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4B96B7C-6E4B-4EB4-817E-DAA5ED980171}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3C89EEDB-816F-462E-AF0E-FB1A09F64355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C89EEDB-816F-462E-AF0E-FB1A09F64355}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C89EEDB-816F-462E-AF0E-FB1A09F64355}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C89EEDB-816F-462E-AF0E-FB1A09F64355}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37DBBCC1-85DC-4B23-B52E-5E7B19C43686}.Release|Any CPU.ActiveCfg = Release|Any CPU
