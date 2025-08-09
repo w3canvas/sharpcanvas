@@ -4,14 +4,14 @@
     "/app/SharpCanvas/SharpCanvas.csproj": {}
   },
   "projects": {
-    "/app/SharpCanvas/SharpCanvas.Bitmap.Filter.csproj": {
+    "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Bitmap.Filter.csproj",
+        "projectUniqueName": "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj",
         "projectName": "SharpCanvas.StandardFilter",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Bitmap.Filter.csproj",
+        "projectPath": "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
+        "outputPath": "/app/SharpCanvas/Bitmap.Filter/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
@@ -77,14 +77,14 @@
         }
       }
     },
-    "/app/SharpCanvas/SharpCanvas.Bitmap.Shader.csproj": {
+    "/app/SharpCanvas/Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Bitmap.Shader.csproj",
+        "projectUniqueName": "/app/SharpCanvas/Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj",
         "projectName": "SharpCanvas.ShaderFilter",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Bitmap.Shader.csproj",
+        "projectPath": "/app/SharpCanvas/Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
+        "outputPath": "/app/SharpCanvas/Bitmap.Shader/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
@@ -144,14 +144,14 @@
         }
       }
     },
-    "/app/SharpCanvas/SharpCanvas.Browser.WinForms.csproj": {
+    "/app/SharpCanvas/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Browser.WinForms.csproj",
+        "projectUniqueName": "/app/SharpCanvas/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj",
         "projectName": "SharpCanvas.Browser.Forms",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Browser.WinForms.csproj",
+        "projectPath": "/app/SharpCanvas/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
+        "outputPath": "/app/SharpCanvas/Browser.WinForms/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
@@ -166,17 +166,17 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "/app/SharpCanvas/SharpCanvas.Browser.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Browser.csproj"
+              "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj": {
+                "projectPath": "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Context.Drawing2D.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Context.Drawing2D.csproj"
+              "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj": {
+                "projectPath": "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Interop.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Interop.csproj"
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Prototype.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Prototype.csproj"
+              "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
+                "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
               }
             }
           }
@@ -230,14 +230,14 @@
         }
       }
     },
-    "/app/SharpCanvas/SharpCanvas.Browser.WindowsMedia.csproj": {
+    "/app/SharpCanvas/Browser.WindowsMedia/SharpCanvas.Browser.WindowsMedia.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Browser.WindowsMedia.csproj",
+        "projectUniqueName": "/app/SharpCanvas/Browser.WindowsMedia/SharpCanvas.Browser.WindowsMedia.csproj",
         "projectName": "SharpCanvas.Browser.Media",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Browser.WindowsMedia.csproj",
+        "projectPath": "/app/SharpCanvas/Browser.WindowsMedia/SharpCanvas.Browser.WindowsMedia.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
+        "outputPath": "/app/SharpCanvas/Browser.WindowsMedia/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
@@ -252,17 +252,17 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "/app/SharpCanvas/SharpCanvas.Context.WindowsMedia.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Context.WindowsMedia.csproj"
+              "/app/SharpCanvas/Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj": {
+                "projectPath": "/app/SharpCanvas/Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Host.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Host.csproj"
+              "/app/SharpCanvas/Host/SharpCanvas.Host.csproj": {
+                "projectPath": "/app/SharpCanvas/Host/SharpCanvas.Host.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Interop.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Interop.csproj"
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Prototype.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Prototype.csproj"
+              "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
+                "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
               }
             }
           }
@@ -310,23 +310,20 @@
             },
             "Microsoft.WindowsDesktop.App": {
               "privateAssets": "none"
-            },
-            "Microsoft.WindowsDesktop.App.Wpf": {
-              "privateAssets": "none"
             }
           },
           "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/app/SharpCanvas/SharpCanvas.Browser.csproj": {
+    "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Browser.csproj",
+        "projectUniqueName": "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj",
         "projectName": "SharpCanvas.Browser",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Browser.csproj",
+        "projectPath": "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
+        "outputPath": "/app/SharpCanvas/Browser/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
@@ -341,14 +338,14 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "/app/SharpCanvas/SharpCanvas.Host.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Host.csproj"
+              "/app/SharpCanvas/Host/SharpCanvas.Host.csproj": {
+                "projectPath": "/app/SharpCanvas/Host/SharpCanvas.Host.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Interop.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Interop.csproj"
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Prototype.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Prototype.csproj"
+              "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
+                "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
               }
             }
           }
@@ -394,7 +391,7 @@
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             },
-            "Microsoft.WindowsDesktop.App.WindowsForms": {
+            "Microsoft.WindowsDesktop.App.WPF": {
               "privateAssets": "none"
             }
           },
@@ -402,14 +399,14 @@
         }
       }
     },
-    "/app/SharpCanvas/SharpCanvas.Context.Drawing2D.csproj": {
+    "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Context.Drawing2D.csproj",
+        "projectUniqueName": "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj",
         "projectName": "SharpCanvas.Forms",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Context.Drawing2D.csproj",
+        "projectPath": "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
+        "outputPath": "/app/SharpCanvas/Context.Drawing2D/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
@@ -424,17 +421,14 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "/app/SharpCanvas/SharpCanvas.Bitmap.Filter.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Bitmap.Filter.csproj"
+              "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj": {
+                "projectPath": "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Interop.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Interop.csproj"
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Prototype.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Prototype.csproj"
-              },
-              "/app/SharpCanvas/SharpCanvas.Shared.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Shared.csproj"
+              "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
+                "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
               }
             }
           }
@@ -488,14 +482,14 @@
         }
       }
     },
-    "/app/SharpCanvas/SharpCanvas.Context.WindowsMedia.csproj": {
+    "/app/SharpCanvas/Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Context.WindowsMedia.csproj",
+        "projectUniqueName": "/app/SharpCanvas/Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj",
         "projectName": "SharpCanvas.Media",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Context.WindowsMedia.csproj",
+        "projectPath": "/app/SharpCanvas/Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
+        "outputPath": "/app/SharpCanvas/Context.WindowsMedia/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
@@ -510,20 +504,17 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "/app/SharpCanvas/SharpCanvas.Bitmap.Filter.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Bitmap.Filter.csproj"
+              "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj": {
+                "projectPath": "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Host.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Host.csproj"
+              "/app/SharpCanvas/Host/SharpCanvas.Host.csproj": {
+                "projectPath": "/app/SharpCanvas/Host/SharpCanvas.Host.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Interop.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Interop.csproj"
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Prototype.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Prototype.csproj"
-              },
-              "/app/SharpCanvas/SharpCanvas.Shared.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Shared.csproj"
+              "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
+                "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
               }
             }
           }
@@ -577,14 +568,14 @@
         }
       }
     },
-    "/app/SharpCanvas/SharpCanvas.Host.csproj": {
+    "/app/SharpCanvas/Host/SharpCanvas.Host.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Host.csproj",
+        "projectUniqueName": "/app/SharpCanvas/Host/SharpCanvas.Host.csproj",
         "projectName": "SharpCanvas.Host",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Host.csproj",
+        "projectPath": "/app/SharpCanvas/Host/SharpCanvas.Host.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
+        "outputPath": "/app/SharpCanvas/Host/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
@@ -599,14 +590,11 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "/app/SharpCanvas/SharpCanvas.Interop.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Interop.csproj"
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Prototype.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Prototype.csproj"
-              },
-              "/app/SharpCanvas/SharpCanvas.Shared.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Shared.csproj"
+              "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
+                "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
               }
             }
           }
@@ -660,14 +648,14 @@
         }
       }
     },
-    "/app/SharpCanvas/SharpCanvas.Interop.csproj": {
+    "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Interop.csproj",
+        "projectUniqueName": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj",
         "projectName": "SharpCanvas.Interop",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Interop.csproj",
+        "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
+        "outputPath": "/app/SharpCanvas/Interop/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
@@ -733,14 +721,14 @@
         }
       }
     },
-    "/app/SharpCanvas/SharpCanvas.Prototype.csproj": {
+    "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Prototype.csproj",
+        "projectUniqueName": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj",
         "projectName": "SharpCanvas.Prototype",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Prototype.csproj",
+        "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
+        "outputPath": "/app/SharpCanvas/Prototype/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
@@ -755,8 +743,8 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "/app/SharpCanvas/SharpCanvas.Interop.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Interop.csproj"
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
               }
             }
           }
@@ -775,80 +763,6 @@
       "frameworks": {
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.19, 8.0.19]"
-            }
-          ],
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "/app/SharpCanvas/SharpCanvas.Shared.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Shared.csproj",
-        "projectName": "SharpCanvas.Shared",
-        "projectPath": "/app/SharpCanvas/SharpCanvas.Shared.csproj",
-        "packagesPath": "/home/jules/.nuget/packages/",
-        "outputPath": "/app/SharpCanvas/obj/",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "/home/jules/.nuget/NuGet/NuGet.Config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0-windows"
-        ],
-        "sources": {
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0-windows7.0": {
-            "targetAlias": "net8.0-windows",
-            "projectReferences": {}
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net8.0-windows7.0": {
-          "targetAlias": "net8.0-windows",
-          "dependencies": {
-            "Jint": {
-              "target": "Package",
-              "version": "[4.4.1, )"
-            },
-            "System.Drawing.Common": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -897,35 +811,32 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
-              "/app/SharpCanvas/SharpCanvas.Bitmap.Shader.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Bitmap.Shader.csproj"
+              "/app/SharpCanvas/Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj": {
+                "projectPath": "/app/SharpCanvas/Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Browser.WinForms.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Browser.WinForms.csproj"
+              "/app/SharpCanvas/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj": {
+                "projectPath": "/app/SharpCanvas/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Browser.WindowsMedia.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Browser.WindowsMedia.csproj"
+              "/app/SharpCanvas/Browser.WindowsMedia/SharpCanvas.Browser.WindowsMedia.csproj": {
+                "projectPath": "/app/SharpCanvas/Browser.WindowsMedia/SharpCanvas.Browser.WindowsMedia.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Browser.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Browser.csproj"
+              "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj": {
+                "projectPath": "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Context.Drawing2D.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Context.Drawing2D.csproj"
+              "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj": {
+                "projectPath": "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Context.WindowsMedia.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Context.WindowsMedia.csproj"
+              "/app/SharpCanvas/Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj": {
+                "projectPath": "/app/SharpCanvas/Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Host.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Host.csproj"
+              "/app/SharpCanvas/Host/SharpCanvas.Host.csproj": {
+                "projectPath": "/app/SharpCanvas/Host/SharpCanvas.Host.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Interop.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Interop.csproj"
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
               },
-              "/app/SharpCanvas/SharpCanvas.Prototype.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Prototype.csproj"
-              },
-              "/app/SharpCanvas/SharpCanvas.Shared.csproj": {
-                "projectPath": "/app/SharpCanvas/SharpCanvas.Shared.csproj"
+              "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
+                "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
               }
             }
           }

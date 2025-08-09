@@ -12,7 +12,7 @@ using SharpCanvas.Interop;
 
 // FIXME: This library has not been converted to use the ObjectWithPrototype class.
 // FIXME: Used only with InvokeMember, currently only used with drawImage (bug?).
-using SharpCanvas.Shared;
+using SharpCanvas.Core.Shared;
 using Convert = System.Convert;
 
 //namespace SharpCanvas.Drawing

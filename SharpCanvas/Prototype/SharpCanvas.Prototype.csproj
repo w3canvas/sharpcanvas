@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SharpCanvas.Prototype</RootNamespace>
+    <AssemblyName>SharpCanvas.Prototype</AssemblyName>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Interop\SharpCanvas.Interop.csproj" />
+  </ItemGroup>
+
+</Project>

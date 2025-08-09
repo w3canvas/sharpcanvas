@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Browser</RootNamespace>
     <AssemblyName>SharpCanvas.Browser</AssemblyName>
@@ -10,9 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="SharpCanvas.Host.csproj" />
-    <ProjectReference Include="SharpCanvas.Interop.csproj" />
-    <ProjectReference Include="SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="..\Host\SharpCanvas.Host.csproj" />
+    <ProjectReference Include="..\Interop\SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="..\Prototype\SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="..\Core\SharpCanvas.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

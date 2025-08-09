@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SharpCanvas.Media</RootNamespace>
+    <AssemblyName>SharpCanvas.Media</AssemblyName>
+    <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bitmap.Filter\SharpCanvas.Bitmap.Filter.csproj" />
+    <ProjectReference Include="..\Interop\SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="..\Prototype\SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="..\Host\SharpCanvas.Host.csproj" />
+    <ProjectReference Include="..\Core\SharpCanvas.Core.csproj" />
+    <ProjectReference Include="..\Common\SharpCanvas.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

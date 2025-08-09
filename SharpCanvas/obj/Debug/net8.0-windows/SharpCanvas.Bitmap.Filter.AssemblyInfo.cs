@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SharpCanvas.StandardFilter")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d749dfd480bf7e133ea9e675a7b19a0150d1641d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ce08b7098215d731d0e7098496b6fcd4bc4573e")]
 [assembly: System.Reflection.AssemblyProductAttribute("SharpCanvas.StandardFilter")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SharpCanvas.StandardFilter")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

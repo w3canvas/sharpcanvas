@@ -18,16 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="SharpCanvas.Bitmap.Shader.csproj" />
-    <ProjectReference Include="SharpCanvas.Browser.WinForms.csproj" />
-    <ProjectReference Include="SharpCanvas.Browser.WindowsMedia.csproj" />
-    <ProjectReference Include="SharpCanvas.Browser.csproj" />
-    <ProjectReference Include="SharpCanvas.Context.Drawing2D.csproj" />
-    <ProjectReference Include="SharpCanvas.Context.WindowsMedia.csproj" />
-    <ProjectReference Include="SharpCanvas.Host.csproj" />
-    <ProjectReference Include="SharpCanvas.Interop.csproj" />
-    <ProjectReference Include="SharpCanvas.Prototype.csproj" />
-    <ProjectReference Include="SharpCanvas.Shared.csproj" />
+    <ProjectReference Include="Bitmap.Shader\SharpCanvas.Bitmap.Shader.csproj" />
+    <ProjectReference Include="Browser.WinForms\SharpCanvas.Browser.WinForms.csproj" />
+    <ProjectReference Include="Browser.WindowsMedia\SharpCanvas.Browser.WindowsMedia.csproj" />
+    <ProjectReference Include="Browser\SharpCanvas.Browser.csproj" />
+    <ProjectReference Include="Context.Drawing2D\SharpCanvas.Context.Drawing2D.csproj" />
+    <ProjectReference Include="Context.WindowsMedia\SharpCanvas.Context.WindowsMedia.csproj" />
+    <ProjectReference Include="Host\SharpCanvas.Host.csproj" />
+    <ProjectReference Include="Interop\SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="Prototype\SharpCanvas.Prototype.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,19 +8,14 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseWindowsForms>true</UseWindowsForms>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Context.Drawing2D\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="SharpCanvas.Bitmap.Filter.csproj" />
-    <ProjectReference Include="SharpCanvas.Interop.csproj" />
-    <ProjectReference Include="SharpCanvas.Prototype.csproj" />
-    <ProjectReference Include="SharpCanvas.Core\SharpCanvas.Core.csproj" />
-    <ProjectReference Include="SharpCanvas.Common\SharpCanvas.Common.csproj" />
+    <ProjectReference Include="..\Bitmap.Filter\SharpCanvas.Bitmap.Filter.csproj" />
+    <ProjectReference Include="..\Interop\SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="..\Prototype\SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="..\Core\SharpCanvas.Core.csproj" />
+    <ProjectReference Include="..\Common\SharpCanvas.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

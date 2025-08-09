@@ -11,18 +11,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="SharpCanvas.Host.csproj" />
-    <ProjectReference Include="SharpCanvas.Context.WindowsMedia.csproj" />
-    <ProjectReference Include="SharpCanvas.Interop.csproj" />
-    <ProjectReference Include="SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="..\Host\SharpCanvas.Host.csproj" />
+    <ProjectReference Include="..\Context.WindowsMedia\SharpCanvas.Context.WindowsMedia.csproj" />
+    <ProjectReference Include="..\Interop\SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="..\Prototype\SharpCanvas.Prototype.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.WindowsDesktop.App.Wpf" />
   </ItemGroup>
 
 </Project>

@@ -10,10 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="SharpCanvas.Browser.csproj" />
-    <ProjectReference Include="SharpCanvas.Context.Drawing2D.csproj" />
-    <ProjectReference Include="SharpCanvas.Interop.csproj" />
-    <ProjectReference Include="SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="..\Browser\SharpCanvas.Browser.csproj" />
+    <ProjectReference Include="..\Context.Drawing2D\SharpCanvas.Context.Drawing2D.csproj" />
+    <ProjectReference Include="..\Interop\SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="..\Prototype\SharpCanvas.Prototype.csproj" />
   </ItemGroup>
 
   <ItemGroup>

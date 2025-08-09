@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SharpCanvas.Host")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a21c57e9ef2ce0c346d215f3d9a2a7f8e96fcf07")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ce08b7098215d731d0e7098496b6fcd4bc4573e")]
 [assembly: System.Reflection.AssemblyProductAttribute("SharpCanvas.Host")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SharpCanvas.Host")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
