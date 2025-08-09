@@ -19,7 +19,7 @@ namespace SharpCanvas.Shared
         // read only. specifically, in ES a string URI can be assigned to location,
         // having the same effect as location.assign(URI)
         [DispId(2000000)]
-        ILocation location { get; set; }
+        ILocation? location { get; set; }
 
         /// <summary>
         /// The value of the window attribute MUST be the same Window object that has the attribute: the attribute is a self-reference.

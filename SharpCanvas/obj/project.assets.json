@@ -112,26 +112,6 @@
           "Microsoft.WindowsDesktop.App.WindowsForms"
         ]
       },
-      "SharpCanvas.Browser.Media/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "SharpCanvas.Host": "1.0.0",
-          "SharpCanvas.Interop": "1.0.0",
-          "SharpCanvas.Media": "1.0.0",
-          "SharpCanvas.Prototype": "1.0.0",
-          "System.Drawing.Common": "8.0.0"
-        },
-        "compile": {
-          "bin/placeholder/SharpCanvas.Browser.Media.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SharpCanvas.Browser.Media.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App"
-        ]
-      },
       "SharpCanvas.Common/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
@@ -153,6 +133,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "SharpCanvas.Common": "1.0.0",
           "SharpCanvas.Core": "1.0.0",
           "SharpCanvas.Interop": "1.0.0",
           "SharpCanvas.Prototype": "1.0.0",
@@ -215,28 +196,6 @@
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WindowsForms"
-        ]
-      },
-      "SharpCanvas.Media/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "SharpCanvas.Common": "1.0.0",
-          "SharpCanvas.Core": "1.0.0",
-          "SharpCanvas.Host": "1.0.0",
-          "SharpCanvas.Interop": "1.0.0",
-          "SharpCanvas.Prototype": "1.0.0",
-          "SharpCanvas.StandardFilter": "1.0.0",
-          "System.Drawing.Common": "8.0.0"
-        },
-        "compile": {
-          "bin/placeholder/SharpCanvas.Media.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SharpCanvas.Media.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App"
         ]
       },
       "SharpCanvas.Prototype/1.0.0": {
@@ -409,11 +368,6 @@
       "path": "Browser.WinForms/SharpCanvas.Browser.WinForms.csproj",
       "msbuildProject": "Browser.WinForms/SharpCanvas.Browser.WinForms.csproj"
     },
-    "SharpCanvas.Browser.Media/1.0.0": {
-      "type": "project",
-      "path": "Browser.WindowsMedia/SharpCanvas.Browser.WindowsMedia.csproj",
-      "msbuildProject": "Browser.WindowsMedia/SharpCanvas.Browser.WindowsMedia.csproj"
-    },
     "SharpCanvas.Common/1.0.0": {
       "type": "project",
       "path": "SharpCanvas.Common/SharpCanvas.Common.csproj",
@@ -439,11 +393,6 @@
       "path": "Interop/SharpCanvas.Interop.csproj",
       "msbuildProject": "Interop/SharpCanvas.Interop.csproj"
     },
-    "SharpCanvas.Media/1.0.0": {
-      "type": "project",
-      "path": "Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj",
-      "msbuildProject": "Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj"
-    },
     "SharpCanvas.Prototype/1.0.0": {
       "type": "project",
       "path": "Prototype/SharpCanvas.Prototype.csproj",
@@ -465,11 +414,9 @@
       "Jint >= 4.4.1",
       "SharpCanvas.Browser >= 1.0.0",
       "SharpCanvas.Browser.Forms >= 1.0.0",
-      "SharpCanvas.Browser.Media >= 1.0.0",
       "SharpCanvas.Context.Drawing2D >= 1.0.0",
       "SharpCanvas.Host >= 1.0.0",
       "SharpCanvas.Interop >= 1.0.0",
-      "SharpCanvas.Media >= 1.0.0",
       "SharpCanvas.Prototype >= 1.0.0",
       "SharpCanvas.ShaderFilter >= 1.0.0",
       "System.Drawing.Common >= 8.0.0"
@@ -506,17 +453,11 @@
             "/app/SharpCanvas/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj": {
               "projectPath": "/app/SharpCanvas/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj"
             },
-            "/app/SharpCanvas/Browser.WindowsMedia/SharpCanvas.Browser.WindowsMedia.csproj": {
-              "projectPath": "/app/SharpCanvas/Browser.WindowsMedia/SharpCanvas.Browser.WindowsMedia.csproj"
-            },
             "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj": {
               "projectPath": "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj"
             },
             "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj": {
               "projectPath": "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj"
-            },
-            "/app/SharpCanvas/Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj": {
-              "projectPath": "/app/SharpCanvas/Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj"
             },
             "/app/SharpCanvas/Host/SharpCanvas.Host.csproj": {
               "projectPath": "/app/SharpCanvas/Host/SharpCanvas.Host.csproj"

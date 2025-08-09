@@ -551,7 +551,7 @@ namespace SharpCanvas.Host.Browser
         /// <summary>
         /// Reference to the direct parent node
         /// </summary>
-        public INode parentNode
+        public object parentNode
         {
             get { return null; }
         }
@@ -559,7 +559,7 @@ namespace SharpCanvas.Host.Browser
         /// <summary>
         /// A NodeList that contains all children of this node. If there are no children, this is a NodeList containing no nodes.
         /// </summary>
-        public List<INode> childNodes
+        public object childNodes
         {
             get { return _childNodes; }
         }

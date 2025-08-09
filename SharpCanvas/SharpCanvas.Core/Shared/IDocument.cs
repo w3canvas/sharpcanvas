@@ -23,7 +23,7 @@ namespace SharpCanvas.Shared
         /// <summary>
         /// The location attribute of the HTMLDocument interface must return the Location object for that Document object, if it is in a browsing context, and null otherwise.
         /// </summary>
-        ILocation location { get; set; }
+        ILocation? location { get; set; }
 
         /// <summary>
         /// Creates an element with the specified tag name defaulting namespace depending on the document.
