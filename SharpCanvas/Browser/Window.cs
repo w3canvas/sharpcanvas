@@ -6,10 +6,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Microsoft.JScript;
 using SharpCanvas.Host;
 using SharpCanvas.Interop;
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Host.Browser
 {
@@ -313,11 +312,11 @@ namespace SharpCanvas.Host.Browser
         {
             if (this.onload != null) //run only once
             {
-                if (onload is ScriptFunction)
+                if (onload is Delegate)
                 {
-                    var function = (ScriptFunction) this.onload;
+                    var function = (Delegate) this.onload;
                     this.onload = null;
-                    function.Invoke(this, new object[] {});
+                    function.DynamicInvoke(this, new object[] {});
                     RedrawChildren();
                 }
                 //if(this.onload is LoadAssemblyHandler)
@@ -440,7 +439,7 @@ namespace SharpCanvas.Host.Browser
         /// <param name="eventName"></param>
         public void InvokeEvent(object sender, EventArgs e, string eventName)
         {
-            foreach (ScriptFunction sf in _events[eventName])
+            foreach (Delegate sf in _events[eventName])
             {
                 sf.GetType().InvokeMember("", BindingFlags.InvokeMethod, null, sf,
                                           new object[] {e});
@@ -517,7 +516,7 @@ namespace SharpCanvas.Host.Browser
         /// <param name="type">The event type for which the user is registering</param>
         /// <param name="listener">The listener parameter takes an interface implemented by the user which contains the methods to be called when the event occurs.</param>
         /// <param name="useCapture">If true, useCapture indicates that the user wishes to initiate capture. After initiating capture, all events of the specified type will be dispatched to the registered EventListener before being dispatched to any EventTargets beneath them in the tree. Events which are bubbling upward through the tree will not trigger an EventListener designated to use capture.</param>
-        public void addEventListener(string type, ScriptFunction listener, bool useCapture)
+        public void addEventListener(string type, Delegate listener, bool useCapture)
         {
             lock (sync)
             {
@@ -532,7 +531,7 @@ namespace SharpCanvas.Host.Browser
         /// <param name="type">Specifies the event type of the EventListener being removed.</param>
         /// <param name="listener">The EventListener parameter indicates the EventListener to be removed.</param>
         /// <param name="useCapture">Specifies whether the EventListener being removed was registered as a capturing listener or not. If a listener was registered twice, one with capture and one without, each must be removed separately. Removal of a capturing listener does not affect a non-capturing version of the same listener, and vice versa.</param>
-        public void removeEventListener(string type, ScriptFunction listener, bool useCapture)
+        public void removeEventListener(string type, Delegate listener, bool useCapture)
         {
             lock (sync)
             {

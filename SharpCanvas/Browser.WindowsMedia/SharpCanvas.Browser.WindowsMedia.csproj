@@ -11,10 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Host\SharpCanvas.Host.csproj" />
-    <ProjectReference Include="..\Context.WindowsMedia\SharpCanvas.Context.WindowsMedia.csproj" />
-    <ProjectReference Include="..\Interop\SharpCanvas.Interop.csproj" />
-    <ProjectReference Include="..\Prototype\SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="../Host/SharpCanvas.Host.csproj" />
+    <ProjectReference Include="../Context.WindowsMedia/SharpCanvas.Context.WindowsMedia.csproj" />
+    <ProjectReference Include="../Interop/SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="../Prototype/SharpCanvas.Prototype.csproj" />
   </ItemGroup>
 
   <ItemGroup>

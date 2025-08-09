@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Host.Browser
 {

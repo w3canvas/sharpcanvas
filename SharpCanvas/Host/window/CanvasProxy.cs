@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using SharpCanvas.Host.Prototype;
 using SharpCanvas.Interop;
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Shared;
 using Convert = System.Convert;
 
 namespace SharpCanvas.Host.Browser

@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 
-namespace SharpCanvas.Browser.Browser
+namespace SharpCanvas.Host.Browser
 {
     internal class ScripLoader
     {
@@ -18,7 +17,7 @@ namespace SharpCanvas.Browser.Browser
             get { return _scripLoaderIsRunning; }
         }
 
-        private void ScripLoaderWorker(string url)
+        public void LoadScript(string url)
         {
             Uri webUrl;
             if(Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out webUrl))
@@ -51,56 +50,5 @@ namespace SharpCanvas.Browser.Browser
 
             }
         }
-
-        private delegate void ScripLoaderWorkerDelegate(string url);
-
-        public void LoadScriptAsync(string url)
-        {
-            ScripLoaderWorkerDelegate worker = new ScripLoaderWorkerDelegate(ScripLoaderWorker);
-            AsyncCallback completedCallback = new AsyncCallback(ScriptLoadCompletedCallback);
-
-            lock (_sync)
-            {
-                if (_scripLoaderIsRunning)
-                    throw new InvalidOperationException("The script loader is currently busy.");
-
-                AsyncOperation async = AsyncOperationManager.CreateOperation(null);
-                worker.BeginInvoke(url, completedCallback, async);
-                _scripLoaderIsRunning = true;
-            }
-        }
-
-        private void ScriptLoadCompletedCallback(IAsyncResult ar)
-        {
-            // get the original worker delegate and the AsyncOperation instance
-            ScripLoaderWorkerDelegate worker =
-              (ScripLoaderWorkerDelegate)((AsyncResult)ar).AsyncDelegate;
-            AsyncOperation async = (AsyncOperation)ar.AsyncState;
-
-            // finish the asynchronous operation
-            worker.EndInvoke(ar);
-
-            // clear the running task flag
-            lock (_sync)
-            {
-                _scripLoaderIsRunning = false;
-            }
-
-            // raise the completed event
-            AsyncCompletedEventArgs completedArgs = new AsyncCompletedEventArgs(null,
-              false, null);
-            async.PostOperationCompleted(
-              delegate(object e) { OnScriptLoadCompleted((AsyncCompletedEventArgs)e); },
-              completedArgs);
-        }
-
-        public event AsyncCompletedEventHandler ScriptLoadCompleted;
-
-        protected virtual void OnScriptLoadCompleted(AsyncCompletedEventArgs e)
-        {
-            if (ScriptLoadCompleted != null)
-                ScriptLoadCompleted(this, e);
-        }
-
     }
 }

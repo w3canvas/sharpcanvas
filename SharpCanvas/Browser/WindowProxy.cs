@@ -4,10 +4,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.JScript;
 using SharpCanvas.Host.Prototype;
 using SharpCanvas.Interop;
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Host.Browser
 {
@@ -195,7 +194,7 @@ namespace SharpCanvas.Host.Browser
         /// <param name="listener"></param>
         /// <param name="useCapture"></param>
         [DispId(17)]
-        public void addEventListener(string type, ScriptFunction listener, bool useCapture)
+        public void addEventListener(string type, Delegate listener, bool useCapture)
         {
             _realObject.addEventListener(type, listener, useCapture);
         }

@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.JScript;
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Host.Browser
 {
@@ -11,10 +10,10 @@ namespace SharpCanvas.Host.Browser
     {
         private UserControl _target;
         private string _type;
-        private ScriptFunction _listener;
+        private Delegate _listener;
         private EventPhases _applyToPhase;
 
-        public EventRegistration(UserControl target, string type, ScriptFunction listener, EventPhases applyToPhase)
+        public EventRegistration(UserControl target, string type, Delegate listener, EventPhases applyToPhase)
         {
             _target = target;
             _type = type;
@@ -32,7 +31,7 @@ namespace SharpCanvas.Host.Browser
             get { return _type; }
         }
 
-        public ScriptFunction Listener
+        public Delegate Listener
         {
             get { return _listener; }
         }

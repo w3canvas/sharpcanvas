@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace SharpCanvas.Common
+namespace SharpCanvas.Context.Drawing2D
 {
     public static class GeometryUtils
     {
@@ -85,7 +85,7 @@ namespace SharpCanvas.Common
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="A">First point of the line</param>
         /// <param name="B">Second point of the line</param>

@@ -9,7 +9,7 @@ using System.Xml;
 // using SharpCanvas.Prototype.HTMLPainter
 using SharpCanvas.Host.Prototype;
 using SharpCanvas.Interop;
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Shared;
 using _BEHAVIOR_LAYOUT_INFO = SharpCanvas.Interop._BEHAVIOR_LAYOUT_INFO;
 using _BEHAVIOR_LAYOUT_MODE = SharpCanvas.Interop._BEHAVIOR_LAYOUT_MODE;
 using _HTML_PAINTER_INFO = SharpCanvas.Interop._HTML_PAINTER_INFO;

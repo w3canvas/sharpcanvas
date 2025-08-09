@@ -3,7 +3,6 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
-using Microsoft.JScript;
 using Convert=System.Convert;
 
 namespace SharpCanvas.Host.Browser

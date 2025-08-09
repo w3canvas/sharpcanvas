@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Host.Browser
 {

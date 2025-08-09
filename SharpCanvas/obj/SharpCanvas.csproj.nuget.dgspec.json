@@ -346,6 +346,9 @@
               },
               "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
                 "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
+              },
+              "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj": {
+                "projectPath": "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj"
               }
             }
           }
@@ -403,7 +406,7 @@
       "version": "1.0.0",
       "restore": {
         "projectUniqueName": "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj",
-        "projectName": "SharpCanvas.Forms",
+        "projectName": "SharpCanvas.Context.Drawing2D",
         "projectPath": "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj",
         "packagesPath": "/home/jules/.nuget/packages/",
         "outputPath": "/app/SharpCanvas/Context.Drawing2D/obj/",
@@ -429,6 +432,9 @@
               },
               "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
                 "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
+              },
+              "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj": {
+                "projectPath": "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj"
               }
             }
           }
@@ -515,6 +521,12 @@
               },
               "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
                 "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
+              },
+              "/app/SharpCanvas/SharpCanvas.Common/SharpCanvas.Common.csproj": {
+                "projectPath": "/app/SharpCanvas/SharpCanvas.Common/SharpCanvas.Common.csproj"
+              },
+              "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj": {
+                "projectPath": "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj"
               }
             }
           }
@@ -595,6 +607,9 @@
               },
               "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
                 "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
+              },
+              "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj": {
+                "projectPath": "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj"
               }
             }
           }
@@ -780,6 +795,147 @@
               "version": "[8.0.19, 8.0.19]"
             }
           ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/app/SharpCanvas/SharpCanvas.Common/SharpCanvas.Common.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Common/SharpCanvas.Common.csproj",
+        "projectName": "SharpCanvas.Common",
+        "projectPath": "/app/SharpCanvas/SharpCanvas.Common/SharpCanvas.Common.csproj",
+        "packagesPath": "/home/jules/.nuget/packages/",
+        "outputPath": "/app/SharpCanvas/SharpCanvas.Common/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/jules/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {
+              "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj": {
+                "projectPath": "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WindowsForms": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj",
+        "projectName": "SharpCanvas.Core",
+        "projectPath": "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj",
+        "packagesPath": "/home/jules/.nuget/packages/",
+        "outputPath": "/app/SharpCanvas/SharpCanvas.Core/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/jules/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"

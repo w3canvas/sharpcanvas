@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
+﻿Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Context.Drawing2D", "Context.Drawing2D\SharpCanvas.Context.Drawing2D.csproj", "{D9316368-C831-4004-8D28-D4B975C73984}"
 EndProject
@@ -24,6 +24,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Browser.WinForms", "Browser.WinForms\SharpCanvas.Browser.WinForms.csproj", "{F0FBE056-39CA-469D-92D8-FBB3F0568D5E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Browser.WindowsMedia", "Browser.WindowsMedia\SharpCanvas.Browser.WindowsMedia.csproj", "{F069A7FA-C0E0-4BA4-802D-74ABCD9570FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Core", "SharpCanvas.Core\SharpCanvas.Core.csproj", "{5912BA8D-81D6-4E24-A535-0F84D73B1D8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Common", "SharpCanvas.Common\SharpCanvas.Common.csproj", "{A83CF9C8-3D1F-495B-92E8-0FC916E2748C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,6 +80,14 @@ Global
 		{F069A7FA-C0E0-4BA4-802D-74ABCD9570FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F069A7FA-C0E0-4BA4-802D-74ABCD9570FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F069A7FA-C0E0-4BA4-802D-74ABCD9570FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5912BA8D-81D6-4E24-A535-0F84D73B1D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5912BA8D-81D6-4E24-A535-0F84D73B1D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5912BA8D-81D6-4E24-A535-0F84D73B1D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5912BA8D-81D6-4E24-A535-0F84D73B1D8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A83CF9C8-3D1F-495B-92E8-0FC916E2748C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A83CF9C8-3D1F-495B-92E8-0FC916E2748C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A83CF9C8-3D1F-495B-92E8-0FC916E2748C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A83CF9C8-3D1F-495B-92E8-0FC916E2748C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

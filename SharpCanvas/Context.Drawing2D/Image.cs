@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 
-namespace SharpCanvas.Forms
+namespace SharpCanvas.Context.Drawing2D
 {
     public class Image : IImage
     {
