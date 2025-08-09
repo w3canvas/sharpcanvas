@@ -1,8 +1,8 @@
-﻿namespace SharpCanvas
+﻿namespace SharpCanvas.Shared
 {
     public interface IImageData
     {
-        Microsoft.JScript.ArrayObject data { get; set; }
+        object data { get; set; }
         string alt { get; set; }
         string src { get; set; }
         string useMap { get; set; }

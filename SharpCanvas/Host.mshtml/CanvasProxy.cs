@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.JScript;
 // using SharpCanvas.Prototype.HTMLPainter
 using SharpCanvas.Host.Prototype;
 using SharpCanvas.Interop;
@@ -29,19 +28,19 @@ namespace SharpCanvas.Host.mshtml
 {
     [Guid("27664326-55d8-4a73-9362-4f5fd5ec7d18")]
     [ComVisible(true)]
-    [ComDefaultInterface(typeof(global::SharpCanvas.Interop.IHTMLCanvasElement))]
+    [ComDefaultInterface(typeof(global::SharpCanvas.Shared.IHTMLCanvasElement))]
     [ClassInterface(ClassInterfaceType.AutoDual)]
     internal class CanvasProxy : // HTMLPainterWithPrototype
         ObjectWithPrototype, 
         IElementBehavior,
         IElementBehaviorLayout,
         IHTMLPainter,
-        global::SharpCanvas.Interop.IHTMLCanvasElement
+        global::SharpCanvas.Shared.IHTMLCanvasElement
     {
         #region Internet Explorer Integration Interfaces
 
         private IHTMLElement _canvasElt;
-        private global::SharpCanvas.Interop.IHTMLCanvasElement _canvasWindow;
+        private global::SharpCanvas.Shared.IHTMLCanvasElement _canvasWindow;
         private IElementBehaviorSite _site;
         private IHTMLElement _windowElt;
 
@@ -142,7 +141,7 @@ namespace SharpCanvas.Host.mshtml
                         // host. ControlAxSourcingSite is a generic proxy that allows itself to be
                         // cast to its target.
                         _canvasWindow =
-                            ((IHTMLObjectElement)_windowElt).@object as global::SharpCanvas.Interop.IHTMLCanvasElement;
+                            ((IHTMLObjectElement)_windowElt).@object as global::SharpCanvas.Shared.IHTMLCanvasElement;
                         _canvasWindow.PaintSite = (IHTMLPaintSite)_site;
                         _canvasWindow.width = _width;
                         _canvasWindow.height = _height;
@@ -320,7 +319,7 @@ namespace SharpCanvas.Host.mshtml
         }
 
         [DispId(14)]
-        public void addEventListener(string type, ScriptFunction listener, bool useCapture)
+        public void addEventListener(string type, Delegate listener, bool useCapture)
         {
             if (_canvasWindow != null)
             {
@@ -328,7 +327,7 @@ namespace SharpCanvas.Host.mshtml
             }
         }
 
-        public IHTMLPaintSite PaintSite { get; set; }
+        public object PaintSite { get; set; }
 
         public ICanvasRenderingContext2D getCanvas()
         {

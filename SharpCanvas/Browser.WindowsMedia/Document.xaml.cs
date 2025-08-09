@@ -44,7 +44,7 @@ namespace SharpCanvas.Browser.Media
             Name = "document";
         }
 
-        public IHTMLElementBase body { get; set; }
+        public object body { get; set; }
 
         public string title { get; set; }
 

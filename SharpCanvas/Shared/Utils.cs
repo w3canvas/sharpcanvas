@@ -13,25 +13,6 @@ namespace SharpCanvas
     {
         private static readonly Regex httpRegex = new Regex(@"http://.*");
 
-        public static Microsoft.JScript.ArrayObject ConvertArrayToJSArray(object[] array)
-        {
-            return Microsoft.JScript.GlobalObject.Array.ConstructArray(array);
-        }
-
-        public static byte[] ConvertJSArrayToByteArray(Microsoft.JScript.ArrayObject arrayObject)
-        {
-            var length = (int) arrayObject.length;
-            if (length > 0 && (arrayObject[0] is byte || arrayObject[0] is int))
-            {
-                var byteArray = new byte[length];
-                for (int i = 0; i < length; i++)
-                {
-                    byteArray[i] = Convert.ToByte(arrayObject[i]);
-                }
-                return byteArray;
-            }
-            return new byte[] {};
-        }
 
         public static byte[] CopyBitmapToBytes(int x, int y, int width, int height, Bitmap bmp)
         {
@@ -157,6 +138,25 @@ namespace SharpCanvas
                 default:
                     return ImageFormat.Png;
             }
+        }
+
+        public static object ConvertArrayToJSArray(object[] arr)
+        {
+            return arr;
+        }
+
+        public static byte[] ConvertJSArrayToByteArray(object arr)
+        {
+            if (arr is object[] objArray)
+            {
+                byte[] byteArr = new byte[objArray.Length];
+                for (int i = 0; i < objArray.Length; i++)
+                {
+                    byteArr[i] = Convert.ToByte(objArray[i]);
+                }
+                return byteArr;
+            }
+            return new byte[0];
         }
     }
 }

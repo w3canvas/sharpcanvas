@@ -1,0 +1,13 @@
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Shared.csproj.AssemblyReference.cache
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Shared.GeneratedMSBuildEditorConfig.editorconfig
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Shared.AssemblyInfoInputs.cache
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Shared.AssemblyInfo.cs
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Shared.csproj.CoreCompileInputs.cache
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Shared.sourcelink.json
+/app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.Shared.deps.json
+/app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.Shared.dll
+/app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.Shared.pdb
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Shared.dll
+/app/SharpCanvas/obj/Debug/net8.0-windows/refint/SharpCanvas.Shared.dll
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Shared.pdb
+/app/SharpCanvas/obj/Debug/net8.0-windows/ref/SharpCanvas.Shared.dll

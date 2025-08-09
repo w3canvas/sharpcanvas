@@ -1,0 +1,52 @@
+# C# and Visual Studio
+[Bb]in/
+[Oo]bj/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.vspscc
+*.vssscc
+*.vs/
+*_i.c
+*_p.c
+*.ncb
+*.sbr
+*.sdf
+*.opensdf
+*.sdf.lastwrite
+ipch/
+[Dd]ebug/
+[Rr]elease/
+[Dd]ebugPublic/
+[Rr]eleasePublic/
+x64/
+x86/
+bld/
+[Ll]ogs/
+[Ll]ib/
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.log
+*.[Cc]ache
+*.cache
+*.[Aa]pikey
+*.[Rr]eports
+*.[Pp]ublish.xml
+*.[Pp]ublish.targets
+
+# Shader files
+*.ps
+
+# Project files
+*.csproj.FileListAbsolute.txt
+project.nuget.cache
+
+# Ignore all .txt files in the repository except for special cases
+**/*.txt
+# But don't ignore readme and warning files
+!*Readme.txt
+!*readme.txt
+!*README.txt
+!**/warning.txt

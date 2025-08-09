@@ -1,0 +1,13 @@
+/app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.StandardFilter.deps.json
+/app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.StandardFilter.dll
+/app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.StandardFilter.pdb
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Bitmap.Filter.GeneratedMSBuildEditorConfig.editorconfig
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Bitmap.Filter.AssemblyInfoInputs.cache
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Bitmap.Filter.AssemblyInfo.cs
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Bitmap.Filter.csproj.CoreCompileInputs.cache
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Bitmap.Filter.sourcelink.json
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.StandardFilter.dll
+/app/SharpCanvas/obj/Debug/net8.0-windows/refint/SharpCanvas.StandardFilter.dll
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.StandardFilter.pdb
+/app/SharpCanvas/obj/Debug/net8.0-windows/ref/SharpCanvas.StandardFilter.dll
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Bitmap.Filter.csproj.AssemblyReference.cache

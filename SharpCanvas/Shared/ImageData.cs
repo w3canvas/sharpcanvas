@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace SharpCanvas
+namespace SharpCanvas.Shared
 {
     /// <summary>
     /// The CanvasPixelArray object provides ordered, indexed access to the color components of each pixel of the image data. 
@@ -15,7 +15,7 @@ namespace SharpCanvas
      ComSourceInterfaces(typeof (IImageData))]
     public class ImageData : IImageData
     {
-        private Microsoft.JScript.ArrayObject _data;
+        private object _data;
 
         public ImageData()
         {
@@ -29,7 +29,7 @@ namespace SharpCanvas
 
         #region IImageData Members
 
-        public Microsoft.JScript.ArrayObject data
+        public object data
         {
             get { return _data; }
             set { _data = value; }
@@ -51,24 +51,10 @@ namespace SharpCanvas
 
         public void applyFilters(FilterChain chain)
         {
-            //get current data as byte array
-            byte[] data = Utils.ConvertJSArrayToByteArray(_data);
-            var arr = new List<object>();
             var bmp = new Bitmap((int) width, (int) height);
-            //for (int i = 0; i < data.Length; i += 4)
-            //{
-            //    int k = i/4;
-            //    int x = k%(int)width;
-            //    int y = k / (int)width;
-            //    bmp.SetPixel(x, y, Color.FromArgb(data[i+3], data[i], data[i+1], data[i+2]));
-            //}
-            Utils.CopyBytesToBitmap(data, (int) width, (int) height, ref bmp);
+            Utils.CopyBytesToBitmap(Utils.ConvertJSArrayToByteArray(_data), (int) width, (int) height, ref bmp);
             Bitmap filtered = chain.ApplyFilters(bmp);
-            byte[] bytes = Utils.CopyBitmapToBytes(0, 0, (int) width, (int) height, filtered);
-            var objects = new object[bytes.Length];
-            bytes.CopyTo(objects, 0);
-            //store result as array
-            _data = Utils.ConvertArrayToJSArray(objects);
+            _data = Utils.CopyBitmapToBytes(0, 0, (int) width, (int) height, filtered);
         }
     }
 }

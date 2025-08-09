@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SharpCanvas.Interop;
 
 namespace SharpCanvas.Shared
 {
@@ -14,7 +13,7 @@ namespace SharpCanvas.Shared
         /// Otherwise, if the body element is not null, then replace that element with the new value in the DOM, as if the root element's replaceChild() method had been called with the new value and the incumbent body element as its two arguments respectively, then abort these steps.
         /// Otherwise, the body element is null. Append the new value to the root element.
         /// </summary>
-        IHTMLElementBase body { get; set; }
+        object body { get; set; }
 
         /// <summary>
         /// Returns the title of the current document.

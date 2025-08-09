@@ -4,13 +4,12 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.Expando;
 using CT = System.Runtime.InteropServices.ComTypes;
 
 namespace SharpCanvas.Host.Prototype
 {
     [ComVisible(true)]
-    public abstract class ExpandoBase : IExpando, IExpandoProperty, INotifyPropertyChanged
+    public abstract class ExpandoBase : IExpandoProperty, INotifyPropertyChanged
     {
         #region Storage and Metadata contract
 

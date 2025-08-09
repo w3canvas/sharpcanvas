@@ -1,118 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F069A7FA-C0E0-4BAA-802D-74ABCD9570FA}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpCanvas.Browser</RootNamespace>
     <AssemblyName>SharpCanvas.Browser</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>SharpCanvasStrong.snk</AssemblyOriginatorKeyFile>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <TargetFrameworkProfile />
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Microsoft.JScript" />
-    <Reference Include="Microsoft.Vsa" />
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="SharpCanvas.Host.csproj" />
+    <ProjectReference Include="SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="SharpCanvas.Prototype.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Browser\AssemblyLoader.cs" />
-    <Compile Include="Browser\Browser.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Browser\Event.cs" />
-    <Compile Include="Browser\EventFactory.cs" />
-    <Compile Include="Browser\EventModel.cs" />
-    <Compile Include="Browser\EventRegistration.cs" />
-    <Compile Include="Browser\HttpLoader.cs" />
-    <Compile Include="Browser\IFileLoader.cs" />
-    <Compile Include="Browser\IFrame.cs" />
-    <Compile Include="Browser\LFSLoader.cs" />
-    <Compile Include="Browser\LoaderFactory.cs" />
-    <Compile Include="Browser\MouseEvent.cs" />
-    <Compile Include="Browser\Navigator.cs" />
-    <Compile Include="Browser\ScripLoader.cs" />
-    <Compile Include="Browser\UIEvent.cs" />
-    <Compile Include="Browser\WindowProxy.cs" />
-    <Compile Include="Properties\Browser.AssemblyInfo.cs" />
-    <Compile Include="Browser\Document.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Browser\HTMLElement.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Browser\Image.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Browser\Location.cs" />
-    <Compile Include="Browser\Window.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="SharpCanvas.Host.csproj">
-      <Project>{B4B96B7C-6E4B-4EB4-817E-DAA5ED980171}</Project>
-      <Name>SharpCanvas.Host</Name>
-    </ProjectReference>
-    <ProjectReference Include="SharpCanvas.Interop.csproj">
-      <Project>{7982AF66-9ACB-40A8-B07C-67605845C588}</Project>
-      <Name>SharpCanvas.Interop</Name>
-    </ProjectReference>
-    <ProjectReference Include="SharpCanvas.csproj">
-      <Project>{5EF03EC8-B8B6-4DC6-AD26-2C580EA76F76}</Project>
-      <Name>SharpCanvas</Name>
-    </ProjectReference>
-    <ProjectReference Include="SharpCanvas.Prototype.csproj">
-      <Project>{6E79634E-9EAA-4004-99D3-1FE918FB424C}</Project>
-      <Name>SharpCanvas.Prototype</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SharpCanvasStrong.snk" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+
 </Project>
