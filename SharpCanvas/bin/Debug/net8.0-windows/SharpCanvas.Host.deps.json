@@ -8,11 +8,12 @@
     ".NETCoreApp,Version=v8.0": {
       "SharpCanvas.Host/1.0.0": {
         "dependencies": {
-          "Jint": "4.4.1",
-          "System.Drawing.Common": "8.0.0",
-          "SharpCanvas.Interop": "1.0.0.0",
-          "SharpCanvas.Prototype": "1.0.0.0",
-          "SharpCanvas.Shared": "1.0.0.0"
+          "SharpCanvas.Host": "1.0.0",
+          "SharpCanvas.Interop": "1.0.0",
+          "SharpCanvas.Prototype": "1.0.0",
+          "SharpCanvas.Shared": "1.0.0",
+          "SharpCanvas.StandardFilter": "1.0.0",
+          "System.Drawing.Common": "8.0.0"
         },
         "runtime": {
           "SharpCanvas.Host.dll": {}
@@ -43,26 +44,36 @@
           "Microsoft.Win32.SystemEvents": "8.0.0"
         }
       },
-      "SharpCanvas.Interop/1.0.0.0": {
+      "SharpCanvas.Interop/1.0.0": {
+        "dependencies": {
+          "Jint": "4.4.1"
+        },
         "runtime": {
           "SharpCanvas.Interop.dll": {
-            "assemblyVersion": "1.0.0.0",
+            "assemblyVersion": "1.0.0",
             "fileVersion": "1.0.0.0"
           }
         }
       },
-      "SharpCanvas.Prototype/1.0.0.0": {
+      "SharpCanvas.Prototype/1.0.0": {
+        "dependencies": {
+          "SharpCanvas.Interop": "1.0.0"
+        },
         "runtime": {
           "SharpCanvas.Prototype.dll": {
-            "assemblyVersion": "1.0.0.0",
+            "assemblyVersion": "1.0.0",
             "fileVersion": "1.0.0.0"
           }
         }
       },
-      "SharpCanvas.Shared/1.0.0.0": {
+      "SharpCanvas.Shared/1.0.0": {
+        "dependencies": {
+          "Jint": "4.4.1",
+          "System.Drawing.Common": "8.0.0"
+        },
         "runtime": {
           "SharpCanvas.Shared.dll": {
-            "assemblyVersion": "1.0.0.0",
+            "assemblyVersion": "1.0.0",
             "fileVersion": "1.0.0.0"
           }
         }
@@ -103,18 +114,18 @@
       "path": "system.drawing.common/8.0.0",
       "hashPath": "system.drawing.common.8.0.0.nupkg.sha512"
     },
-    "SharpCanvas.Interop/1.0.0.0": {
-      "type": "reference",
+    "SharpCanvas.Interop/1.0.0": {
+      "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "SharpCanvas.Prototype/1.0.0.0": {
-      "type": "reference",
+    "SharpCanvas.Prototype/1.0.0": {
+      "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "SharpCanvas.Shared/1.0.0.0": {
-      "type": "reference",
+    "SharpCanvas.Shared/1.0.0": {
+      "type": "project",
       "serviceable": false,
       "sha512": ""
     }

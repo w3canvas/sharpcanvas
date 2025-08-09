@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SharpCanvas.Media")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8abf32db18c3abab9a34b7dc41f1e7d0a1aa0bab")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a21c57e9ef2ce0c346d215f3d9a2a7f8e96fcf07")]
 [assembly: System.Reflection.AssemblyProductAttribute("SharpCanvas.Media")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SharpCanvas.Media")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

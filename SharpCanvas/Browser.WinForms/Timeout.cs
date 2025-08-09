@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using Microsoft.JScript;
+using Jint;
 using Timer = System.Windows.Forms.Timer;
 
 namespace SharpCanvas.Browser.Forms
@@ -10,6 +10,12 @@ namespace SharpCanvas.Browser.Forms
         private readonly Dictionary<int, Timer> _timers = new Dictionary<int, Timer>();
         private readonly object sync = new object();
         private int _index = 1;
+        private readonly Engine _engine;
+
+        public Timeout(Engine engine)
+        {
+            _engine = engine;
+        }
 
         #region setTimeout
 
@@ -19,7 +25,7 @@ namespace SharpCanvas.Browser.Forms
         /// <param name="func">func is the function you want to execute after delay milliseconds</param>
         /// <param name="milliseconds">is the number of milliseconds (thousandths of a second) that the function call should be delayed by.</param>
         /// <returns>timeoutID is the ID of the timeout, which can be used with window.clearTimeout.</returns>
-        public int setTimeout(object func, object milliseconds)
+        public int setTimeout(string func, object milliseconds)
         {
             int m = 100;
             int.TryParse(milliseconds.ToString(), out m);
@@ -33,7 +39,7 @@ namespace SharpCanvas.Browser.Forms
                                      if (!isLocked)
                                      {
                                          if (func != null)
-                                             ((ScriptFunction) func).Invoke(this, new object[] {});
+                                             _engine.Execute(func);
                                          clearTimeout(currentIndex);
                                          Monitor.Exit(sync);
                                      }
@@ -71,7 +77,7 @@ namespace SharpCanvas.Browser.Forms
         /// <param name="func">func is the function you want to be called repeatedly.</param>
         /// <param name="milliseconds">is the number of milliseconds (thousandths of a second) that the setInterval() function should wait before each call to func.</param>
         /// <returns>unique interval ID you can pass to clearInterval().</returns>
-        public int setInterval(object func, object milliseconds)
+        public int setInterval(string func, object milliseconds)
         {
             int m = 100;
             int.TryParse(milliseconds.ToString(), out m);
@@ -84,7 +90,7 @@ namespace SharpCanvas.Browser.Forms
                                      if (!isLocked)
                                      {
                                          if (func != null)
-                                             ((ScriptFunction) func).Invoke(this, new object[] {});
+                                             _engine.Execute(func);
                                          Monitor.Exit(sync);
                                      }
                                  };

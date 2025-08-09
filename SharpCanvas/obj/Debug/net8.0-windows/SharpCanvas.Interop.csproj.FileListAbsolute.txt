@@ -10,3 +10,4 @@
 /app/SharpCanvas/obj/Debug/net8.0-windows/refint/SharpCanvas.Interop.dll
 /app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Interop.pdb
 /app/SharpCanvas/obj/Debug/net8.0-windows/ref/SharpCanvas.Interop.dll
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Interop.csproj.AssemblyReference.cache

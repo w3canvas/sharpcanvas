@@ -191,6 +191,9 @@
               "/app/SharpCanvas/SharpCanvas.Bitmap.Filter.csproj": {
                 "projectPath": "/app/SharpCanvas/SharpCanvas.Bitmap.Filter.csproj"
               },
+              "/app/SharpCanvas/SharpCanvas.Host.csproj": {
+                "projectPath": "/app/SharpCanvas/SharpCanvas.Host.csproj"
+              },
               "/app/SharpCanvas/SharpCanvas.Interop.csproj": {
                 "projectPath": "/app/SharpCanvas/SharpCanvas.Interop.csproj"
               },
@@ -244,7 +247,7 @@
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             },
-            "Microsoft.WindowsDesktop.App.WPF": {
+            "Microsoft.WindowsDesktop.App": {
               "privateAssets": "none"
             }
           },

@@ -10,3 +10,4 @@
 /app/SharpCanvas/obj/Debug/net8.0-windows/refint/SharpCanvas.StandardFilter.dll
 /app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.StandardFilter.pdb
 /app/SharpCanvas/obj/Debug/net8.0-windows/ref/SharpCanvas.StandardFilter.dll
+/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Bitmap.Filter.csproj.AssemblyReference.cache

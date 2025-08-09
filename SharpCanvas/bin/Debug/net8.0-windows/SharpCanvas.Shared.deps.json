@@ -8,37 +8,40 @@
     ".NETCoreApp,Version=v8.0": {
       "SharpCanvas.Shared/1.0.0": {
         "dependencies": {
+          "SharpCanvas.Host": "1.0.0",
+          "SharpCanvas.Interop": "1.0.0",
+          "SharpCanvas.Prototype": "1.0.0",
+          "SharpCanvas.Shared": "1.0.0",
+          "SharpCanvas.StandardFilter": "1.0.0",
           "System.Drawing.Common": "8.0.0"
         },
         "runtime": {
           "SharpCanvas.Shared.dll": {}
         }
       },
-      "Microsoft.Win32.SystemEvents/8.0.0": {
+      "Acornima/1.2.0": {
         "runtime": {
-          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net8.0/Acornima.dll": {
+            "assemblyVersion": "1.2.0.0",
+            "fileVersion": "1.2.0.0"
           }
         }
       },
+      "Jint/4.4.1": {
+        "dependencies": {
+          "Acornima": "1.2.0"
+        },
+        "runtime": {
+          "lib/net8.0/Jint.dll": {
+            "assemblyVersion": "4.4.1.0",
+            "fileVersion": "4.0.0.0"
+          }
+        }
+      },
+      "Microsoft.Win32.SystemEvents/8.0.0": {},
       "System.Drawing.Common/8.0.0": {
         "dependencies": {
           "Microsoft.Win32.SystemEvents": "8.0.0"
-        },
-        "runtime": {
-          "lib/net8.0/System.Drawing.Common.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53105"
-          }
         }
       }
     }
@@ -48,6 +51,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Acornima/1.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pT3kn/WrVzz4NmrzN5zOAVDOK2VuQFJ7VivKviKmKbbzppMVEToEvnAaVhxerXclptvjpBUudhOwUtDsRjrMYQ==",
+      "path": "acornima/1.2.0",
+      "hashPath": "acornima.1.2.0.nupkg.sha512"
+    },
+    "Jint/4.4.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hb1cQygDKGJblgw82YMkaEpPbIy+YHMUtx1ab+cUMwTRkRXcY8JK7YkJ5F/jPMNInTcFPOfVJZ5VfspsjXp2xQ==",
+      "path": "jint/4.4.1",
+      "hashPath": "jint.4.4.1.nupkg.sha512"
     },
     "Microsoft.Win32.SystemEvents/8.0.0": {
       "type": "package",

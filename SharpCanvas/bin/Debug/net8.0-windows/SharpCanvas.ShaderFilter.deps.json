@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v8.0": {
       "SharpCanvas.ShaderFilter/1.0.0": {
         "dependencies": {
-          "SharpCanvas.Interop": "1.0.0"
+          "Jint": "4.4.1"
         },
         "runtime": {
           "SharpCanvas.ShaderFilter.dll": {}
