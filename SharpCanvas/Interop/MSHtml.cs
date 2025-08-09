@@ -4306,9 +4306,6 @@ namespace SharpCanvas.Interop
         int length { [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), DispId(0x3e9)]
         get; }
 
-        [return:
-            MarshalAs(UnmanagedType.CustomMarshaler, MarshalType = "",
-                MarshalTypeRef = typeof (EnumeratorToEnumVariantMarshaler), MarshalCookie = "")]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), DispId(-4),
          TypeLibFunc((short) 0x41)]
         new IEnumerator GetEnumerator();
@@ -5260,9 +5257,6 @@ namespace SharpCanvas.Interop
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), DispId(0x3f2)]
         void reset();
 
-        [return:
-            MarshalAs(UnmanagedType.CustomMarshaler, MarshalType = "",
-                MarshalTypeRef = typeof (EnumeratorToEnumVariantMarshaler), MarshalCookie = "")]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), TypeLibFunc((short) 0x41),
          DispId(-4)]
         new IEnumerator GetEnumerator();
@@ -6127,9 +6121,6 @@ namespace SharpCanvas.Interop
         int length { [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), DispId(0x3e9)]
         get; }
 
-        [return:
-            MarshalAs(UnmanagedType.CustomMarshaler, MarshalType = "",
-                MarshalTypeRef = typeof (EnumeratorToEnumVariantMarshaler), MarshalCookie = "")]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), DispId(-4),
          TypeLibFunc((short) 0x41)]
         new IEnumerator GetEnumerator();
@@ -6723,9 +6714,6 @@ namespace SharpCanvas.Interop
         int length { [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), DispId(0x5dc)]
         get; }
 
-        [return:
-            MarshalAs(UnmanagedType.CustomMarshaler, MarshalType = "",
-                MarshalTypeRef = typeof (EnumeratorToEnumVariantMarshaler), MarshalCookie = "")]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), DispId(-4),
          TypeLibFunc((short) 0x41)]
         new IEnumerator GetEnumerator();

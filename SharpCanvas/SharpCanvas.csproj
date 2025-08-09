@@ -6,15 +6,28 @@
     <RootNamespace>SharpCanvas</RootNamespace>
     <AssemblyName>SharpCanvas</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Jint" Version="3.1.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="SharpCanvas.Bitmap.Shader.csproj" />
+    <ProjectReference Include="SharpCanvas.Browser.WinForms.csproj" />
+    <ProjectReference Include="SharpCanvas.Browser.WindowsMedia.csproj" />
+    <ProjectReference Include="SharpCanvas.Browser.csproj" />
+    <ProjectReference Include="SharpCanvas.Context.Drawing2D.csproj" />
+    <ProjectReference Include="SharpCanvas.Context.WindowsMedia.csproj" />
+    <ProjectReference Include="SharpCanvas.Host.csproj" />
     <ProjectReference Include="SharpCanvas.Interop.csproj" />
     <ProjectReference Include="SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="SharpCanvas.Shared.csproj" />
   </ItemGroup>
 
 </Project>

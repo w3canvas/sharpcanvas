@@ -193,19 +193,6 @@ namespace SharpCanvas.Host.Prototype
                 throw new OutOfMemoryException("No storage created");
             }
 
-            Type vt = value.GetType();
-            if (vt.IsCOMObject)
-            {
-                var pDispatch = value as IDispatch;
-                if (pDispatch != null)
-                {
-                    IntPtr pTI;
-                    pDispatch.GetTypeInfo(0, 0, out pTI);
-
-                    Type t = Marshal.GetTypeForITypeInfo(pTI);
-                }
-            }
-
             // Set new value
             backingStore.Value = value;
         }

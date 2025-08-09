@@ -10,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Microsoft.JScript;
 using SharpCanvas.Interop;
 
 namespace SharpCanvas.Browser.Media
@@ -18,7 +17,7 @@ namespace SharpCanvas.Browser.Media
     /// <summary>
     /// Interaction logic for HTMLElement.xaml
     /// </summary>
-    public class HTMLElement : UserControl, IHTMLElementBase
+    public partial class HTMLElement : Canvas, IHTMLElementBase
     {
         private readonly List<string> _avoidBubblingEvents = new List<string> { "load" };
         //list of events which shouldn't be bubbled

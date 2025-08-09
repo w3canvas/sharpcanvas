@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using Microsoft.JScript;
 using SharpCanvas.Host.Prototype;
 using SharpCanvas.Interop;
 using SharpCanvas.Shared;
@@ -12,9 +11,9 @@ namespace SharpCanvas.Host.Browser
     /// <summary>
     /// Proxy implementation of IHTMLCanvasElement.
     /// </summary>
-    public class CanvasProxy : ObjectWithPrototype, ICanvasProxy, IHTMLCanvasElement
+    public class CanvasProxy : ObjectWithPrototype, ICanvasProxy, Shared.IHTMLCanvasElement
     {
-        private readonly global::SharpCanvas.Interop.IHTMLCanvasElement _realObject;
+        private readonly global::SharpCanvas.Shared.IHTMLCanvasElement _realObject;
 
         public CanvasProxy()
             : base(Guid.NewGuid())
@@ -66,7 +65,7 @@ namespace SharpCanvas.Host.Browser
         }
 
         [DispId(7)]
-        public void addEventListener(string type, ScriptFunction listener, bool useCapture)
+        public void addEventListener(string type, Delegate listener, bool useCapture)
         {
             (_realObject).addEventListener(type, listener, useCapture);
         }
@@ -88,7 +87,7 @@ namespace SharpCanvas.Host.Browser
         #region Utils
 
         [DispId(10)]
-        public global::SharpCanvas.Interop.IHTMLCanvasElement RealObject
+        public global::SharpCanvas.Shared.IHTMLCanvasElement RealObject
         {
             get { return _realObject; }
         }
@@ -99,8 +98,8 @@ namespace SharpCanvas.Host.Browser
         [DispId(11)]
         public int offsetLeft
         {
-            get { return (_realObject as IHTMLElementBase).offsetLeft; }
-            set { (_realObject as IHTMLElementBase).offsetLeft = value; }
+            get { return (_realObject as IWindow).Left; }
+            set { (_realObject as IWindow).Left = value; }
         }
 
         /// <summary>
@@ -109,16 +108,16 @@ namespace SharpCanvas.Host.Browser
         [DispId(12)]
         public int offsetTop
         {
-            get { return (_realObject as IHTMLElementBase).offsetTop; }
-            set { (_realObject as IHTMLElementBase).offsetTop = value; }
+            get { return (_realObject as IWindow).Top; }
+            set { (_realObject as IWindow).Top = value; }
         }
 
-        ICanvasRenderingContext2D IHTMLCanvasElement.getCanvas()
+        public ICanvasRenderingContext2D getCanvas()
         {
             return _realObject.getCanvas();
-        }        
+        }
 
-        public IHTMLPaintSite PaintSite
+        public object PaintSite
         {
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }

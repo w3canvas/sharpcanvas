@@ -14,7 +14,6 @@
     <ProjectReference Include="SharpCanvas.Context.Drawing2D.csproj" />
     <ProjectReference Include="SharpCanvas.Interop.csproj" />
     <ProjectReference Include="SharpCanvas.Prototype.csproj" />
-    <ProjectReference Include="SharpCanvas.csproj" />
   </ItemGroup>
 
   <ItemGroup>

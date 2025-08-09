@@ -8,7 +8,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseWindowsForms>true</UseWindowsForms>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Host.mshtml\**\*.cs" />
+    <Compile Include="Host.window\**\*.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Test\Test.htm" />
@@ -17,7 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="SharpCanvas.Interop.csproj" />
     <ProjectReference Include="SharpCanvas.Prototype.csproj" />
-    <ProjectReference Include="SharpCanvas.csproj" />
+    <ProjectReference Include="SharpCanvas.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,20 +8,25 @@
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Context.WindowsMedia\*.cs" />
+    <Compile Include="Browser.WindowsMedia\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="SharpCanvas.Bitmap.Filter.csproj" />
-    <ProjectReference Include="SharpCanvas.csproj" />
     <ProjectReference Include="SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="SharpCanvas.Shared.csproj" />
+    <ProjectReference Include="SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="SharpCanvas.Host.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.WindowsDesktop.App.Wpf" />
   </ItemGroup>
 
 </Project>

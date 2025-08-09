@@ -11,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Microsoft.JScript;
 using SharpCanvas.Interop;
 using SharpCanvas.Shared;
 
@@ -20,7 +19,7 @@ namespace SharpCanvas.Browser.Media
     /// <summary>
     /// Interaction logic for HTMLElement.xaml
     /// </summary>
-    public class HTMLElement : Canvas, IHTMLElementBase
+    public partial class HTMLElement : Canvas, IHTMLElementBase
     {
         private readonly List<string> _avoidBubblingEvents = new List<string> { "load" };
         //list of events which shouldn't be bubbled
@@ -136,9 +135,9 @@ namespace SharpCanvas.Browser.Media
 
         #region Events
 
-        protected Dictionary<string, List<ScriptFunction>> _events = new Dictionary<string, List<ScriptFunction>>();
+        protected Dictionary<string, List<Delegate>> _events = new Dictionary<string, List<Delegate>>();
 
-        public Dictionary<string, List<ScriptFunction>> GetEvents()
+        public Dictionary<string, List<Delegate>> GetEvents()
         {
             return _events;
         }
@@ -308,11 +307,11 @@ namespace SharpCanvas.Browser.Media
         /// <param name="type"></param>
         /// <param name="listener"></param>
         /// <param name="useCapture"></param>
-        public void addEventListener(string type, ScriptFunction listener, bool useCapture)
+        public void addEventListener(string type, Delegate listener, bool useCapture)
         {
             if (!_events.ContainsKey(type))
             {
-                var value = new List<ScriptFunction>();
+                var value = new List<Delegate>();
                 value.Add(listener);
                 _events.Add(type, value);
             }
@@ -337,7 +336,7 @@ namespace SharpCanvas.Browser.Media
         {
             lock (sync)
             {
-                foreach (ScriptFunction sf in _events[eventName])
+                foreach (Delegate sf in _events[eventName])
                 {
                     Point position = Mouse.GetPosition(this);
                     int x = (int)position.X;

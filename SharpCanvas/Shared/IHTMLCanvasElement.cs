@@ -1,9 +1,7 @@
-﻿using System.Runtime.InteropServices;
-using Microsoft.JScript;
-using SharpCanvas.Interop;
-using SharpCanvas.Shared;
+﻿using System;
+using System.Runtime.InteropServices;
 
-namespace SharpCanvas.Interop
+namespace SharpCanvas.Shared
 {
     [ComVisible(true)]
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
@@ -22,7 +20,7 @@ namespace SharpCanvas.Interop
         object getContext([In] string contextId);
 
         [DispId(4000002)]
-        void addEventListener(string type, ScriptFunction listener, bool capture);
+        void addEventListener(string type, Delegate listener, bool capture);
 
         [DispId(4000003)]
         void setAttribute(string name, object value);
@@ -32,7 +30,7 @@ namespace SharpCanvas.Interop
 
         //we need this property in order to allow CanvasRenderingContext2D to refresh its container
         //when necessary internal event occurs. Probably we can replace this property by event subscription later
-        IHTMLPaintSite PaintSite { get; set; }
+        object PaintSite { get; set; }
 
         ICanvasProxy GetProxy();
 

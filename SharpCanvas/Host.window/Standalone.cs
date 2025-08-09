@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using SharpCanvas.Interop;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Host
 {

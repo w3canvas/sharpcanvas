@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.JScript;
-using SharpCanvas.Interop;
 
 namespace SharpCanvas.Shared
 {
     [ComVisible(true)]
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    public interface IWindow: INode
+    public interface IWindow
     {
+        object parentNode { get; }
+        object childNodes { get; }
+        void appendChild(object child);
+        void removeChild(object child);
+        object ownerDocument { get; }
+
         // assigning this has special behavior in ECMAScript, but it is otherwise
         // read only. specifically, in ES a string URI can be assigned to location,
         // having the same effect as location.assign(URI)

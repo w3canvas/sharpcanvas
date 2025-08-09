@@ -7,7 +7,6 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.Expando;
 
 using SharpCanvas.Interop;
 
@@ -15,7 +14,6 @@ using SharpCanvas.Interop;
 // FIXME: Used only with InvokeMember, currently only used with drawImage (bug?).
 using SharpCanvas.Shared;
 using Convert = System.Convert;
-using Microsoft.JScript;
 
 //namespace SharpCanvas.Drawing
 namespace SharpCanvas.Forms
@@ -23,7 +21,7 @@ namespace SharpCanvas.Forms
     
     [ComVisible(true),
      ComSourceInterfaces(typeof (ICanvasRenderingContext2D))]
-    public class CanvasRenderingContext2D : IExpando, ICanvasRenderingContext2D
+    public class CanvasRenderingContext2D : ICanvasRenderingContext2D
     {
         #region Private Fields
 
@@ -2112,36 +2110,10 @@ namespace SharpCanvas.Forms
             if (attr == (BindingFlags.InvokeMethod | BindingFlags.OptionalParamBinding))
             {
                 object function = _arbitraryFields[name].GetValue(this);
-                _myApply.GetType().InvokeMember("", BindingFlags.InvokeMethod, null, _myApply,
-                                                new[] {function, this, Microsoft.JScript.GlobalObject.Array.ConstructArray(args)});
+                //_myApply.GetType().InvokeMember("", BindingFlags.InvokeMethod, null, _myApply,
+                //                                new[] {function, this, Microsoft.JScript.GlobalObject.Array.ConstructArray(args)});
             }
             return null;
-        }
-
-        #endregion
-
-        #region Implementation of IExpando
-
-        public FieldInfo AddField(string name)
-        {
-            var expanededFields = new FieldInfo[_fields.Length + 1];
-            throw new NotImplementedException();
-        }
-
-        public PropertyInfo AddProperty(string name)
-        {
-            var expanededFields = new PropertyInfo[_fields.Length + 1];
-            throw new NotImplementedException();
-        }
-
-        public MethodInfo AddMethod(string name, Delegate method)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveMember(MemberInfo m)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion

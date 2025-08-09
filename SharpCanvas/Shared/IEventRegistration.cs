@@ -1,4 +1,4 @@
-using Microsoft.JScript;
+using System;
 
 namespace SharpCanvas.Shared
 {
@@ -6,7 +6,7 @@ namespace SharpCanvas.Shared
     {
         object Target { get; }
         string Type { get; }
-        ScriptFunction Listener { get; }
+        Delegate Listener { get; }
         EventPhases ApplyToPhase { get; }
     }
 }

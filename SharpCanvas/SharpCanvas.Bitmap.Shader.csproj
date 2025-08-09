@@ -7,14 +7,11 @@
     <AssemblyName>SharpCanvas.ShaderFilter</AssemblyName>
     <UseWPF>true</UseWPF>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
 
   <ItemGroup>
     <Resource Include="Bitmap.Shader\*.fx" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.WindowsDesktop.App.Wpf" />
   </ItemGroup>
 
 </Project>

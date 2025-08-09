@@ -42,6 +42,12 @@
       "frameworks": {
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "Jint": {
+              "target": "Package",
+              "version": "[4.4.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

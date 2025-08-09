@@ -12,7 +12,6 @@
   <ItemGroup>
     <ProjectReference Include="SharpCanvas.Host.csproj" />
     <ProjectReference Include="SharpCanvas.Interop.csproj" />
-    <ProjectReference Include="SharpCanvas.csproj" />
     <ProjectReference Include="SharpCanvas.Prototype.csproj" />
   </ItemGroup>
 
