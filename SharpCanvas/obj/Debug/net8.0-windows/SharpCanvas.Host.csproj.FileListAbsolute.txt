@@ -9,7 +9,6 @@
 /app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.Host.pdb
 /app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.Interop.pdb
 /app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.Prototype.pdb
-/app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.Shared.pdb
 /app/SharpCanvas/obj/Debug/net8.0-windows/SharpCan.D6D45D6B.Up2Date
 /app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Host.dll
 /app/SharpCanvas/obj/Debug/net8.0-windows/refint/SharpCanvas.Host.dll

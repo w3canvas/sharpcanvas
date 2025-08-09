@@ -1,2 +1,3 @@
 #!/bin/bash
-/home/jules/.dotnet/dotnet build SharpCanvas/SharpCanvas.sln > build.log 2>&1
+cd SharpCanvas
+/home/jules/.dotnet/dotnet build SharpCanvas.sln > ../build.log 2>&1

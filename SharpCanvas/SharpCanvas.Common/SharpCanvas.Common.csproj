@@ -6,10 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="ColorUtils.cs" />
-    <Compile Include="FontUtils.cs" />
-    <Compile Include="GeometryUtils.cs" />
-  </ItemGroup>
-
 </Project>

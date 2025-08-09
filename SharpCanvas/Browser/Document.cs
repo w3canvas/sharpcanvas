@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using SharpCanvas.Interop;
-using SharpCanvas.Shared;
+using SharpCanvas.Core.Shared;
 
 namespace SharpCanvas.Host.Browser
 {

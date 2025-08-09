@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using SharpCanvas.Shared;
+using SharpCanvas.Core.Shared;
 
 namespace SharpCanvas.Host.Browser
 {

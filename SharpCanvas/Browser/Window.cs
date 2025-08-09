@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using Microsoft.JScript;
 using SharpCanvas.Host;
 using SharpCanvas.Interop;
-using SharpCanvas.Shared;
+using SharpCanvas.Core.Shared;
 
 namespace SharpCanvas.Host.Browser
 {

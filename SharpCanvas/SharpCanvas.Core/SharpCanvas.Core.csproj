@@ -6,32 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="Shared\CanvasComposition.cs" />
-    <Compile Include="Shared\EventPhases.cs" />
-    <Compile Include="Shared\FilterChain.cs" />
-    <Compile Include="Shared\ICSSStyleDeclaration.cs" />
-    <Compile Include="Shared\ICanvasProxy.cs" />
-    <Compile Include="Shared\ICanvasRenderingContext2D.cs" />
-    <Compile Include="Shared\IContextProxy.cs" />
-    <Compile Include="Shared\IDocument.cs" />
-    <Compile Include="Shared\IEventModel.cs" />
-    <Compile Include="Shared\IEventRegistration.cs" />
-    <Compile Include="Shared\IEventTarget.cs" />
-    <Compile Include="Shared\IFill.cs" />
-    <Compile Include="Shared\IFilter.cs" />
-    <Compile Include="Shared\IHTMLCanvasElement.cs" />
-    <Compile Include="Shared\IImage.cs" />
-    <Compile Include="Shared\IImageData.cs" />
-    <Compile Include="Shared\ILinearCanvasGradient.cs" />
-    <Compile Include="Shared\ILocation.cs" />
-    <Compile Include="Shared\INavigator.cs" />
-    <Compile Include="Shared\IPathCanvasGradient.cs" />
-    <Compile Include="Shared\ITimeout.cs" />
-    <Compile Include="Shared\IWindow.cs" />
-    <Compile Include="Shared\ImageData.cs" />
-    <Compile Include="Shared\TextMetrics.cs" />
-    <Compile Include="Shared\Utils.cs" />
-  </ItemGroup>
-
 </Project>
