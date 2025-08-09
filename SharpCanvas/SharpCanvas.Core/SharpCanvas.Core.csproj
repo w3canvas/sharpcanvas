@@ -1,13 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <OutputType>Library</OutputType>
-    <RootNamespace>SharpCanvas.Shared</RootNamespace>
-    <AssemblyName>SharpCanvas.Shared</AssemblyName>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,11 +33,5 @@
     <Compile Include="Shared\TextMetrics.cs" />
     <Compile Include="Shared\Utils.cs" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
-    <PackageReference Include="Jint" Version="4.4.1" />
-  </ItemGroup>
-
 
 </Project>

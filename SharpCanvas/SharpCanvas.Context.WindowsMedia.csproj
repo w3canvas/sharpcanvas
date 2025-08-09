@@ -20,9 +20,10 @@
   <ItemGroup>
     <ProjectReference Include="SharpCanvas.Bitmap.Filter.csproj" />
     <ProjectReference Include="SharpCanvas.Interop.csproj" />
-    <ProjectReference Include="SharpCanvas.Shared.csproj" />
     <ProjectReference Include="SharpCanvas.Prototype.csproj" />
     <ProjectReference Include="SharpCanvas.Host.csproj" />
+    <ProjectReference Include="SharpCanvas.Core\SharpCanvas.Core.csproj" />
+    <ProjectReference Include="SharpCanvas.Common\SharpCanvas.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
