@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace SharpCanvas.Common
+namespace SharpCanvas.Context.Drawing2D
 {
     public static class ColorUtils
     {

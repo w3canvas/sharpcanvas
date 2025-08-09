@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 
-namespace SharpCanvas.Common
+namespace SharpCanvas.Context.Drawing2D
 {
     public static class FontUtils
     {
@@ -87,7 +87,7 @@ namespace SharpCanvas.Common
                 switch (metric)
                 {
                     case "pt": //according to http://alanle.com/2009/02/27/font-size-tip-for-silverlight/
-                        //Traditionally, a point is 1/72 of an inch. A Silverlight pixel renders at 1/96 of an inch. 
+                        //Traditionally, a point is 1/72 of an inch. A Silverlight pixel renders at 1/96 of an inch.
                         //To convert a point to a pixel, I need to multiply the point by 96/72 or 1.333
                         sizeDouble = ConvertPtToPixel(sizeDouble, dpi);
                         break;

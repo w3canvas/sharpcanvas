@@ -4,9 +4,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Microsoft.JScript;
 using SharpCanvas.Interop;
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Host.Browser
 {
@@ -26,7 +25,7 @@ namespace SharpCanvas.Host.Browser
         /// <param name="type"></param>
         /// <param name="listener"></param>
         /// <param name="useCapture"></param>
-        public static void addEventListener(IEventTarget eventTarget, Dictionary<string, List<IEventRegistration>> events, string type, ScriptFunction listener, bool useCapture)
+        public static void addEventListener(IEventTarget eventTarget, Dictionary<string, List<IEventRegistration>> events, string type, Delegate listener, bool useCapture)
         {
             //events always contain event's names without 'on' prefix
             type = NormalizeEventName(type);
@@ -66,7 +65,7 @@ namespace SharpCanvas.Host.Browser
             return type;
         }
 
-        public static void removeEventListener(IEventTarget eventTarget, string type, ScriptFunction listener, bool useCapture)
+        public static void removeEventListener(IEventTarget eventTarget, string type, Delegate listener, bool useCapture)
         {
             //events always contain event's names without 'on' prefix
             type = NormalizeEventName(type);
@@ -351,7 +350,7 @@ namespace SharpCanvas.Host.Browser
         /// <param name="sender"></param> 
         /// <param name="e"></param>
         /// <param name="eventName"></param>
-        public bool FireEvent(ScriptFunction sf, Event e, object scope)
+        public bool FireEvent(Delegate sf, Event e, object scope)
         {
             object result = sf.Invoke(scope, new object[] {e});
             //todo: check whether result is NULL?

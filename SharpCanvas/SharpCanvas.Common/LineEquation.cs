@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace SharpCanvas.Context.Drawing2D
+namespace SharpCanvas.Common
 {
     public class LineEquation
     {

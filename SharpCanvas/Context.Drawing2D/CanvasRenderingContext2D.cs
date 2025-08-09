@@ -9,14 +9,16 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 using SharpCanvas.Interop;
+using SharpCanvas.Common;
+using SharpCanvas.StandardFilter;
 
 // FIXME: This library has not been converted to use the ObjectWithPrototype class.
 // FIXME: Used only with InvokeMember, currently only used with drawImage (bug?).
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Shared;
 using Convert = System.Convert;
 
 //namespace SharpCanvas.Drawing
-namespace SharpCanvas.Forms
+namespace SharpCanvas.Context.Drawing2D
 {
     
     [ComVisible(true),

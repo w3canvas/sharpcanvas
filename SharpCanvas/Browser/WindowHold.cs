@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using IECanvasHost.Prototype;
+using SharpCanvas.Host.Prototype;
 
-namespace IECanvasHost
+namespace SharpCanvas.Host.Browser
 {
     public class WindowHold: ObjectWithPrototype
     {

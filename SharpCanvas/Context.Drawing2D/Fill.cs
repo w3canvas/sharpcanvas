@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace SharpCanvas.Forms
+namespace SharpCanvas.Context.Drawing2D
 {
     public class Fill : IFill
     {

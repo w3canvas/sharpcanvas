@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using SharpCanvas.Interop;
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Host.Browser
 {
@@ -48,7 +48,7 @@ namespace SharpCanvas.Host.Browser
             get{ return _parentWindow;}
         }
 
-        public IHTMLElementBase body { get; set; }
+        public object body { get; set; }
 
         public string title { get; set; }
 

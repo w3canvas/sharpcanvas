@@ -1,8 +1,10 @@
 namespace SharpCanvas.Host.Browser
 {
+    public delegate void OnSaveFileHandler(byte[] data);
+
     public interface ILocation
     {
-        event Location.OnSaveFileHandler OnSaveFile;
+        event OnSaveFileHandler OnSaveFile;
         object hash { get; set; }
         object host { get; set; }
         object hostname { get; set; }

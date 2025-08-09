@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using SharpCanvas.Common;
 
-namespace SharpCanvas.Forms
+namespace SharpCanvas.Context.Drawing2D
 {
     public class LinearCanvasGradient : ILinearCanvasGradient
     {

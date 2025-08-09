@@ -2,7 +2,8 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using SharpCanvas.Interop;
-using SharpCanvas.Core.Shared;
+using SharpCanvas.Host.Browser;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Host
 {
@@ -151,7 +152,7 @@ namespace SharpCanvas.Host
         /// Factory method returns appropriate HTMLCanvasElement instance, dependent on loaded framework version
         /// </summary>
         /// <returns></returns>
-        public IHTMLCanvasElement CreateCanvasElement(ICanvasProxy proxy)
+        public SharpCanvas.Shared.IHTMLCanvasElement CreateCanvasElement(SharpCanvas.Shared.ICanvasProxy proxy)
         {
             Assembly assembly = GetAssembly();
             if (assembly != null)
@@ -162,7 +163,7 @@ namespace SharpCanvas.Host
                     if (_currentTypeFactory == null) return null;
                 }
                 //TODO: make proxy optional?
-                IHTMLCanvasElement element = Activator.CreateInstance(_currentTypeFactory, proxy) as IHTMLCanvasElement;
+                SharpCanvas.Shared.IHTMLCanvasElement element = Activator.CreateInstance(_currentTypeFactory, proxy) as SharpCanvas.Shared.IHTMLCanvasElement;
                 return element;
             }
             return null;

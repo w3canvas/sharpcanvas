@@ -6,8 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using SharpCanvas.Host.Browser;
-using SharpCanvas.Core.Shared;
-using Microsoft.JScript;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Host.Browser
 {
@@ -16,7 +15,6 @@ namespace SharpCanvas.Host.Browser
         private static readonly Browser _instance = new Browser();
         private static Dictionary<int, int> _registeredZIndexes = new Dictionary<int, int>();
         public static object sync = new object();
-        private GlobalScope _globalScope;
         WindowProxy _window;
         Size _defaultSize = new Size(900, 950);
 
@@ -31,19 +29,6 @@ namespace SharpCanvas.Host.Browser
         public static Browser Instance
         {
             get { return _instance; }
-        }
-
-        public GlobalScope GlobalScope
-        {
-            get { return _globalScope; }
-            set
-            {
-                object v = value;
-                if (v is GlobalScope)
-                {
-                    _globalScope = v as GlobalScope;
-                }
-            }
         }
 
         //private const int WS_EX_COMPOSITED = 0x02000000;
