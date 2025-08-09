@@ -223,7 +223,7 @@ namespace SharpCanvas.Host.Browser
                 {
                     MouseEvent me = (MouseEvent)e;
                     IWindow window = sender is IWindow ? (IWindow)sender : ((IDocument)((IHTMLElementBase)sender).ownerDocument).defaultView;
-                    BuildTargetsListByXY(window, me.pageX, me.pageY, targetsXY);
+                    BuildTargetsListByXY((INode)window, me.pageX, me.pageY, targetsXY);
                 }
 
                 //Broadcast event starting from target's node
@@ -352,7 +352,7 @@ namespace SharpCanvas.Host.Browser
         /// <param name="eventName"></param>
         public bool FireEvent(Delegate sf, Event e, object scope)
         {
-            object result = sf.Invoke(scope, new object[] {e});
+            object result = sf.DynamicInvoke(scope, new object[] {e});
             //todo: check whether result is NULL?
             return result is bool ? (bool)result : false;
         }

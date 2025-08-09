@@ -20,10 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="Bitmap.Shader\SharpCanvas.Bitmap.Shader.csproj" />
     <ProjectReference Include="Browser.WinForms\SharpCanvas.Browser.WinForms.csproj" />
-    <ProjectReference Include="Browser.WindowsMedia\SharpCanvas.Browser.WindowsMedia.csproj" />
     <ProjectReference Include="Browser\SharpCanvas.Browser.csproj" />
     <ProjectReference Include="Context.Drawing2D\SharpCanvas.Context.Drawing2D.csproj" />
-    <ProjectReference Include="Context.WindowsMedia\SharpCanvas.Context.WindowsMedia.csproj" />
     <ProjectReference Include="Host\SharpCanvas.Host.csproj" />
     <ProjectReference Include="Interop\SharpCanvas.Interop.csproj" />
     <ProjectReference Include="Prototype\SharpCanvas.Prototype.csproj" />

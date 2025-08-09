@@ -34,13 +34,13 @@ namespace SharpCanvas.Host.Browser
             //if member was not found in WindowProxy nor arbitrary fields collection, try to find it in GlobalScope
             if(member == null)
             {
-                MemberInfo[] memberInfos = Browser.Instance.GlobalScope.GetMember(name,
-                                                                                  BindingFlags.Public | BindingFlags.GetProperty |
-                                                                                  BindingFlags.GetField);
-                if(memberInfos.Length > 0)
-                {
-                    member = (T)memberInfos[0];
-                }
+                //MemberInfo[] memberInfos = Browser.Instance.GlobalScope.GetMember(name,
+                //                                                                  BindingFlags.Public | BindingFlags.GetProperty |
+                //                                                                  BindingFlags.GetField);
+                //if(memberInfos.Length > 0)
+                //{
+                //    member = (T)memberInfos[0];
+                //}
             }
         }
 
@@ -274,7 +274,7 @@ namespace SharpCanvas.Host.Browser
         /// <summary>
         /// Reference to the direct parent node
         /// </summary>
-        public INode parentNode
+        public object parentNode
         {
             get { return _realObject.parentNode; }
         }
@@ -282,7 +282,7 @@ namespace SharpCanvas.Host.Browser
         /// <summary>
         /// A NodeList that contains all children of this node. If there are no children, this is a NodeList containing no nodes.
         /// </summary>
-        public List<INode> childNodes
+        public object childNodes
         {
             get { return _realObject.childNodes; }
         }
