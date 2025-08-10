@@ -1718,13 +1718,27 @@ namespace SharpCanvas.Context.Drawing2D
         /// If canvas is invisible than we should return empty bitmap, otherwise return bitmap we've drawn on.
         /// </summary>
         /// <returns>Bitmap to draw on parent element</returns>
-        public Bitmap GetBitmap()
+        public byte[] GetBitmap()
         {
+            Bitmap bitmapToConvert;
             if (_visible)
-                return _surfaceBitmap;
-            else return new Bitmap((int) surface.VisibleClipBounds.Width, (int) surface.VisibleClipBounds.Height);
-            //return _surfaceBitmap;
-            //return _bitmap;
+            {
+                bitmapToConvert = _surfaceBitmap;
+            }
+            else
+            {
+                bitmapToConvert = new Bitmap((int) surface.VisibleClipBounds.Width, (int) surface.VisibleClipBounds.Height);
+            }
+
+            using (var stream = new System.IO.MemoryStream())
+            {
+                // HACK: In the Linux environment, we need to do this trick to get the image to save
+                // correctly. See https://stackoverflow.com/questions/33631405/system-drawing-save-adding-black-background-to-png
+                using (Bitmap bmp = new Bitmap(bitmapToConvert)) {
+                    bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                }
+                return stream.ToArray();
+            }
         }
 
         public bool IsVisible
