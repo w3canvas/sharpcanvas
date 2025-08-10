@@ -1,4 +1,3 @@
-﻿using System.Drawing;
 using System.Runtime.InteropServices;
 
 // using FilterSequence.FilterSet;
@@ -219,7 +218,7 @@ namespace SharpCanvas
         /// Provides with latest image from the Canvas
         /// </summary>
         /// <returns></returns>
-        Bitmap GetBitmap();
+        byte[] GetBitmap();
 
         /// <summary>
         /// Change size of canvas and underlying controls.

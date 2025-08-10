@@ -26,7 +26,11 @@ namespace SharpCanvas.Context.Drawing2D
             Bitmap bmp;
             if (_context2D != null)
             {
-                bmp = _context2D.GetBitmap();
+                byte[] bytes = _context2D.GetBitmap();
+                using (var ms = new System.IO.MemoryStream(bytes))
+                {
+                    bmp = new Bitmap(ms);
+                }
             }
             else
             {
