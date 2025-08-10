@@ -166,6 +166,8 @@ namespace SharpCanvas
         [DispId(92)]
         void drawImage([In] object pImg, [In] double dx, [In] double dy);
 
+        void drawImage(object pImg, float dx, float dy);
+
         // poInt-membership test
         [DispId(100)]
         bool isPointInPath([In] double x, [In] double y);

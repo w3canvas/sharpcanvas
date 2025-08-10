@@ -92,64 +92,6 @@
           "Microsoft.WindowsDesktop.App.WPF"
         ]
       },
-      "SharpCanvas.Browser.Forms/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "SharpCanvas.Browser": "1.0.0",
-          "SharpCanvas.Context.Drawing2D": "1.0.0",
-          "SharpCanvas.Interop": "1.0.0",
-          "SharpCanvas.Prototype": "1.0.0",
-          "System.Drawing.Common": "8.0.0"
-        },
-        "compile": {
-          "bin/placeholder/SharpCanvas.Browser.Forms.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SharpCanvas.Browser.Forms.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WindowsForms"
-        ]
-      },
-      "SharpCanvas.Common/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "SharpCanvas.Core": "1.0.0",
-          "System.Drawing.Common": "8.0.0"
-        },
-        "compile": {
-          "bin/placeholder/SharpCanvas.Common.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SharpCanvas.Common.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WindowsForms"
-        ]
-      },
-      "SharpCanvas.Context.Drawing2D/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "SharpCanvas.Common": "1.0.0",
-          "SharpCanvas.Core": "1.0.0",
-          "SharpCanvas.Interop": "1.0.0",
-          "SharpCanvas.Prototype": "1.0.0",
-          "SharpCanvas.StandardFilter": "1.0.0",
-          "System.Drawing.Common": "8.0.0"
-        },
-        "compile": {
-          "bin/placeholder/SharpCanvas.Context.Drawing2D.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SharpCanvas.Context.Drawing2D.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WindowsForms"
-        ]
-      },
       "SharpCanvas.Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
@@ -222,22 +164,6 @@
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WPF"
-        ]
-      },
-      "SharpCanvas.StandardFilter/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "System.Drawing.Common": "8.0.0"
-        },
-        "compile": {
-          "bin/placeholder/SharpCanvas.StandardFilter.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SharpCanvas.StandardFilter.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WindowsForms"
         ]
       }
     }
@@ -363,21 +289,6 @@
       "path": "Browser/SharpCanvas.Browser.csproj",
       "msbuildProject": "Browser/SharpCanvas.Browser.csproj"
     },
-    "SharpCanvas.Browser.Forms/1.0.0": {
-      "type": "project",
-      "path": "Browser.WinForms/SharpCanvas.Browser.WinForms.csproj",
-      "msbuildProject": "Browser.WinForms/SharpCanvas.Browser.WinForms.csproj"
-    },
-    "SharpCanvas.Common/1.0.0": {
-      "type": "project",
-      "path": "SharpCanvas.Common/SharpCanvas.Common.csproj",
-      "msbuildProject": "SharpCanvas.Common/SharpCanvas.Common.csproj"
-    },
-    "SharpCanvas.Context.Drawing2D/1.0.0": {
-      "type": "project",
-      "path": "Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj",
-      "msbuildProject": "Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj"
-    },
     "SharpCanvas.Core/1.0.0": {
       "type": "project",
       "path": "SharpCanvas.Core/SharpCanvas.Core.csproj",
@@ -402,19 +313,12 @@
       "type": "project",
       "path": "Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj",
       "msbuildProject": "Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj"
-    },
-    "SharpCanvas.StandardFilter/1.0.0": {
-      "type": "project",
-      "path": "Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj",
-      "msbuildProject": "Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0-windows7.0": [
       "Jint >= 4.4.1",
       "SharpCanvas.Browser >= 1.0.0",
-      "SharpCanvas.Browser.Forms >= 1.0.0",
-      "SharpCanvas.Context.Drawing2D >= 1.0.0",
       "SharpCanvas.Host >= 1.0.0",
       "SharpCanvas.Interop >= 1.0.0",
       "SharpCanvas.Prototype >= 1.0.0",
@@ -450,14 +354,8 @@
             "/app/SharpCanvas/Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj": {
               "projectPath": "/app/SharpCanvas/Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj"
             },
-            "/app/SharpCanvas/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj": {
-              "projectPath": "/app/SharpCanvas/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj"
-            },
             "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj": {
               "projectPath": "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj"
-            },
-            "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj": {
-              "projectPath": "/app/SharpCanvas/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj"
             },
             "/app/SharpCanvas/Host/SharpCanvas.Host.csproj": {
               "projectPath": "/app/SharpCanvas/Host/SharpCanvas.Host.csproj"
