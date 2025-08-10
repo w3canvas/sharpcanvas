@@ -76,13 +76,13 @@ namespace SharpCanvas.Host.Browser
                     //fire onload
                     if (onload != null)
                     {
-                        ((ScriptFunction) onload).Invoke(this, new object[] {});
+                        ((Action<object>) onload).Invoke(this);
                     }
                 }
             }
         }
 
-        public object onload { get; set; } //what type should it be? maybe it should be delegate?
+        public Action<object> onload { get; set; } //what type should it be? maybe it should be delegate?
 /*
         public void drawImage(object image)
         {

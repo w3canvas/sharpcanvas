@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using SharpCanvas;
 using System.Drawing;
+using SharpCanvas.Context.Drawing2D;
 using SharpCanvas.Forms;
 using SharpCanvas.Host.Prototype;
 using SharpCanvas.Interop;
@@ -14,7 +15,7 @@ using SharpCanvas.Shared;
 
 namespace SharpCanvas.Browser.Forms
 {
-    [ComDefaultInterface(typeof(global::SharpCanvas.Interop.IHTMLCanvasElement))]
+    [ComDefaultInterface(typeof(global::SharpCanvas.Shared.IHTMLCanvasElement))]
     [ClassInterface(ClassInterfaceType.AutoDual)]
     public class ContextProxy: ObjectWithPrototype, ICanvasRenderingContext2D, IReflect, IContextProxy
     {
@@ -28,7 +29,7 @@ namespace SharpCanvas.Browser.Forms
 
         #region Constructors
 
-        public ContextProxy(Graphics s, Bitmap bitmap, Pen stroke, IFill fill, bool visible, ICanvasProxy canvasElement)
+        public ContextProxy(Graphics s, Bitmap bitmap, Pen stroke, SharpCanvas.Context.Drawing2D.IFill fill, bool visible, ICanvasProxy canvasElement)
             : base(Guid.NewGuid())
         {
             _target = new CanvasRenderingContext2D(s, bitmap, stroke, fill, visible, canvasElement);

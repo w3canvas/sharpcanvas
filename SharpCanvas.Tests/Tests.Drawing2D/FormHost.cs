@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using SharpCanvas.Forms;
+using SharpCanvas.Context.Drawing2D;
 
 namespace SharpCanvas.Tests.Forms
 {

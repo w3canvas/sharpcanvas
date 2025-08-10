@@ -5,7 +5,7 @@
         int width { get; set; }
         int height { get; set; }
         string src { get; set; }
-        object onload { get; set; }
+        System.Action<object> onload { get; set; }
 //        void drawImage(object image);
         object getImage();
     }

@@ -6,6 +6,7 @@ using SharpCanvas.Browser.Forms;
 using SharpCanvas.Browser;
 using System.Windows.Forms;
 using SharpCanvas;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Tests
 {
@@ -13,7 +14,7 @@ namespace SharpCanvas.Tests
     {
         private readonly Control container;
         public ICanvasRenderingContext2D _ctx;
-        public SharpCanvas.Interop.IHTMLCanvasElement canvas;
+        public IHTMLCanvasElement canvas;
         public BrowserContext(Control container)
         {
             // SharpCanvas.Host.Standalone.CreateCanvasElement()

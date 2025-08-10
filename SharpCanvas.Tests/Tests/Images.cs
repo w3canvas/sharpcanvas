@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Tests
 {
@@ -109,20 +110,21 @@ namespace SharpCanvas.Tests
             uint imgWidth = image.width;
             uint imgHeight = image.height;
             var imageData = (ImageData) ctx.getImageData(0, 0, imgWidth, imgHeight);
+            var data = (byte[])imageData.data;
             for (ulong i = 0; i < imageData.height; i++)
             {
                 for (ulong j = 0; j < imageData.width; j++)
                 {
                     ulong index = (i*4)*imageData.width + (j*4);
-                    var red = (byte) imageData.data[index];
-                    var green = (byte) imageData.data[index + 1];
-                    var blue = (byte) imageData.data[index + 2];
-                    var alpha = (byte) imageData.data[index + 3];
+                    var red = data[index];
+                    var green = data[index + 1];
+                    var blue = data[index + 2];
+                    var alpha = data[index + 3];
                     var average = (byte) ((red + green + blue)/3);
-                    imageData.data[index] = average;
-                    imageData.data[index + 1] = average;
-                    imageData.data[index + 2] = average;
-                    imageData.data[index + 3] = alpha;
+                    data[index] = average;
+                    data[index + 1] = average;
+                    data[index + 2] = average;
+                    data[index + 3] = alpha;
                 }
             }
             ctx.putImageData(imageData, imageData.width + 5, 0, 0, 0, imageData.width, imageData.height);

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using SharpCanvas.Tests;
 using SharpCanvas.Forms;
+using SharpCanvas.Context.Drawing2D;
 
 namespace SharpCanvas.Tests.Forms
 {

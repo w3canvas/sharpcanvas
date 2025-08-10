@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>SharpCanvas.Tests.Forms</RootNamespace>
+    <AssemblyName>SharpCanvas.Tests.Drawing2D</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharpCanvas\SharpCanvas.csproj" />
+    <ProjectReference Include="..\..\SharpCanvas\Browser\SharpCanvas.Browser.csproj" />
+    <ProjectReference Include="..\..\SharpCanvas\Browser.WinForms\SharpCanvas.Browser.WinForms.csproj" />
+    <ProjectReference Include="..\..\SharpCanvas\Context.Drawing2D\SharpCanvas.Context.Drawing2D.csproj" />
+    <ProjectReference Include="..\..\SharpCanvas\Host\SharpCanvas.Host.csproj" />
+    <ProjectReference Include="..\..\SharpCanvas\Interop\SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="..\..\SharpCanvas\Prototype\SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="..\..\SharpCanvas\SharpCanvas.Core\SharpCanvas.Core.csproj" />
+    <ProjectReference Include="..\..\SharpCanvas\Bitmap.Filter\SharpCanvas.Bitmap.Filter.csproj" />
+    <ProjectReference Include="..\Tests\SharpCanvas.Tests.csproj" />
+  </ItemGroup>
+
+</Project>
