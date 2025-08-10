@@ -8,7 +8,7 @@ namespace SharpCanvas
     [ComVisible(true)]
     public class FilterChain
     {
-        private readonly List<IFilter> filterChain = new List<IFilter>();
+        private readonly List<IFilter?> filterChain = new List<IFilter?>();
 
         public FilterChain()
         {
@@ -31,9 +31,9 @@ namespace SharpCanvas
             return filterChain.Count;
         }
 
-        public IFilter AddFilterFromString(string filterName)
+        public IFilter? AddFilterFromString(string filterName)
         {
-            IFilter filter = null;
+            IFilter? filter = null;
             switch (filterName.ToLowerInvariant())
             {
                 default:
@@ -49,13 +49,17 @@ namespace SharpCanvas
             return filterChain.Count;
         }
 
-        public Bitmap ApplyFilters(Bitmap bmp)
+        public Bitmap? ApplyFilters(Bitmap bmp)
         {
-            Bitmap result = null;
+            Bitmap? result = null;
             for (int i = 0; i < filterChain.Count; i++)
             {
-                result = filterChain[i].ApplyFilter(bmp);
-                bmp = result;
+                var filter = filterChain[i];
+                if (filter != null)
+                {
+                    result = filter.ApplyFilter(bmp);
+                    bmp = result;
+                }
             }
             return result;
         }

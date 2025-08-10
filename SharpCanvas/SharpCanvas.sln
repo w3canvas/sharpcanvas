@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Context.Skia", "Context.Ski
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Skia", "..\SharpCanvas.Tests\Tests.Skia\Tests.Skia.csproj", "{70D9BDE9-1A1A-4111-BEE2-00A87D2122C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Tests.Skia.Modern", "..\SharpCanvas.Tests\Tests.Skia.Modern\SharpCanvas.Tests.Skia.Modern.csproj", "{4F0282E8-A218-4FC5-AB12-E33536A7CA27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{70D9BDE9-1A1A-4111-BEE2-00A87D2122C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70D9BDE9-1A1A-4111-BEE2-00A87D2122C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70D9BDE9-1A1A-4111-BEE2-00A87D2122C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F0282E8-A218-4FC5-AB12-E33536A7CA27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F0282E8-A218-4FC5-AB12-E33536A7CA27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F0282E8-A218-4FC5-AB12-E33536A7CA27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F0282E8-A218-4FC5-AB12-E33536A7CA27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
