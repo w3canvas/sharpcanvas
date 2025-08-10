@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Reflection.Emit;
 using SharpCanvas.Forms;
+using SharpCanvas.Context.Drawing2D;
 
 namespace SharpCanvas.Tests.Forms
 {

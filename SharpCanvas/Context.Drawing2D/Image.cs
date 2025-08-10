@@ -70,15 +70,15 @@ namespace SharpCanvas.Context.Drawing2D
                         _height = _bitmap.Height;
                     }
                     //fire onload
-                    //if (onload != null)
-                    //{
-                    //    ((ScriptFunction)onload).Invoke(this, new object[] {});
-                    //}
+                    if (onload != null)
+                    {
+                        ((Action<object>)onload).Invoke(this);
+                    }
                 }
             }
         }
 
-        public object onload { get; set; } //what type should it be? maybe it should be delegate?       
+        public Action<object> onload { get; set; } //what type should it be? maybe it should be delegate?
 /*
         public void drawImage(object image)
         {

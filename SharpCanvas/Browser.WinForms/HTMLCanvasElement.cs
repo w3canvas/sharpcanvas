@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
-using SharpCanvas.Forms;
+using SharpCanvas.Context.Drawing2D;
 using SharpCanvas.Host.Browser;
 using SharpCanvas.Interop;
 using SharpCanvas.Shared;
@@ -29,8 +29,8 @@ namespace SharpCanvas.Browser.Forms
     [ComVisible(true),
      ClassInterface(ClassInterfaceType.AutoDispatch),
      Guid("20e14abc-5a67-4723-8da4-c1b00e0853d5"),
-     ComSourceInterfaces(typeof(global::SharpCanvas.Interop.IHTMLCanvasElement))]
-    public class HTMLCanvasElement : HTMLElement, IHTMLPainter, global::SharpCanvas.Interop.IHTMLCanvasElement, IStyleSupported
+     ComSourceInterfaces(typeof(global::SharpCanvas.Shared.IHTMLCanvasElement))]
+    public class HTMLCanvasElement : HTMLElement, IHTMLPainter, global::SharpCanvas.Shared.IHTMLCanvasElement, IStyleSupported
     {
         #region Fields
 
@@ -75,10 +75,10 @@ namespace SharpCanvas.Browser.Forms
             set { _init = value; }
         }
 
-        public IHTMLPaintSite PaintSite
+        object IHTMLCanvasElement.PaintSite
         {
             get { return _paintSite; }
-            set { _paintSite = value; }
+            set { _paintSite = (IHTMLPaintSite)value; }
         }
 
         #endregion
@@ -235,11 +235,11 @@ namespace SharpCanvas.Browser.Forms
         {
            if(string.IsNullOrEmpty(type))
            {
-               type = SharpCanvas.Forms.Image.DEFAULT_TYPE;
+               type = SharpCanvas.Context.Drawing2D.Image.DEFAULT_TYPE;
            }
             Bitmap bitmap = _canvas.GetBitmap();
             string base64String = Utils.ImageToBase64(bitmap, Utils.ImageFormatFromMediaType(type));
-            return type + SharpCanvas.Forms.Image.BASE64 + base64String;
+            return type + SharpCanvas.Context.Drawing2D.Image.BASE64 + base64String;
         }
 
         /// <summary>

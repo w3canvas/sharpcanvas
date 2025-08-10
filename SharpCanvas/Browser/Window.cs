@@ -258,20 +258,20 @@ namespace SharpCanvas.Host.Browser
         {
             if (document != null && document.body != null)
             {
-                var toRedraw = new Dictionary<int, List<global::SharpCanvas.Interop.IHTMLCanvasElement>>();
+                var toRedraw = new Dictionary<int, List<global::SharpCanvas.Shared.IHTMLCanvasElement>>();
                 int maxZIndex = 0;
                 //build the order to redraw
                 UserControl body = document.body as UserControl;
                 foreach (object el in body.Controls)
                 {
-                    if (el is global::SharpCanvas.Interop.IHTMLCanvasElement)
+                    if (el is global::SharpCanvas.Shared.IHTMLCanvasElement)
                     {
-                        global::SharpCanvas.Interop.IHTMLCanvasElement element = (global::SharpCanvas.Interop.IHTMLCanvasElement)el;
+                        global::SharpCanvas.Shared.IHTMLCanvasElement element = (global::SharpCanvas.Shared.IHTMLCanvasElement)el;
                         if (element.style.display != "none")
                         {
                             if (!toRedraw.ContainsKey(element.style.zIndex))
                             {
-                                toRedraw.Add(element.style.zIndex, new List<global::SharpCanvas.Interop.IHTMLCanvasElement>());
+                                toRedraw.Add(element.style.zIndex, new List<global::SharpCanvas.Shared.IHTMLCanvasElement>());
                             }
                             toRedraw[element.style.zIndex].Add(element);
                             if (maxZIndex < element.style.zIndex)
@@ -286,7 +286,7 @@ namespace SharpCanvas.Host.Browser
                 {
                     if (toRedraw.ContainsKey(i))
                     {
-                        foreach (global::SharpCanvas.Interop.IHTMLCanvasElement element in toRedraw[i])
+                        foreach (global::SharpCanvas.Shared.IHTMLCanvasElement element in toRedraw[i])
                         {
                             element.RequestDraw();
                         }

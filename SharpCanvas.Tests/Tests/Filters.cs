@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using SharpCanvas.Shared;
 using SharpCanvas.StandardFilter.FilterSet;
 using SharpCanvas.StandardFilter.FilterSet.ColorMatrix;
 

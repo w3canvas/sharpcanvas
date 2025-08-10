@@ -1,12 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Tests.WindowsMedia", "SharpCanvas.Tests.WindowsMedia.csproj", "{EC6E2BC0-8168-4131-8894-2A67DFD98177}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Tests", "Tests\\SharpCanvas.Tests.csproj", "{F069A7FA-C0E0-4BAA-802D-74ABCD9570FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Tests", "SharpCanvas.Tests.csproj", "{F069A7FA-C0E0-4BAA-802D-74ABCD9570FD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Tests.Drawing2D", "SharpCanvas.Tests.Drawing2D.csproj", "{E966E94C-3116-46A5-B233-53D4A3F7E675}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Tests.BlobSalad", "..\SharpCanvas.Tests.BlobSalad\SharpCanvas.Tests.BlobSalad.csproj", "{B8442E5A-B481-4184-A061-243D695CA08F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpCanvas.Tests.Drawing2D", "Tests.Drawing2D\\SharpCanvas.Tests.Drawing2D.csproj", "{E966E94C-3116-46A5-B233-53D4A3F7E675}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,16 +14,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EC6E2BC0-8168-4131-8894-2A67DFD98177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC6E2BC0-8168-4131-8894-2A67DFD98177}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC6E2BC0-8168-4131-8894-2A67DFD98177}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{EC6E2BC0-8168-4131-8894-2A67DFD98177}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{EC6E2BC0-8168-4131-8894-2A67DFD98177}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EC6E2BC0-8168-4131-8894-2A67DFD98177}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC6E2BC0-8168-4131-8894-2A67DFD98177}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC6E2BC0-8168-4131-8894-2A67DFD98177}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{EC6E2BC0-8168-4131-8894-2A67DFD98177}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{EC6E2BC0-8168-4131-8894-2A67DFD98177}.Release|x86.ActiveCfg = Release|Any CPU
 		{F069A7FA-C0E0-4BAA-802D-74ABCD9570FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F069A7FA-C0E0-4BAA-802D-74ABCD9570FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F069A7FA-C0E0-4BAA-802D-74ABCD9570FD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

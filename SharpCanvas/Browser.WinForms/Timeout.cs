@@ -25,7 +25,7 @@ namespace SharpCanvas.Browser.Forms
         /// <param name="func">func is the function you want to execute after delay milliseconds</param>
         /// <param name="milliseconds">is the number of milliseconds (thousandths of a second) that the function call should be delayed by.</param>
         /// <returns>timeoutID is the ID of the timeout, which can be used with window.clearTimeout.</returns>
-        public int setTimeout(string func, object milliseconds)
+        public int setTimeout(object func, object milliseconds)
         {
             int m = 100;
             int.TryParse(milliseconds.ToString(), out m);
@@ -39,7 +39,7 @@ namespace SharpCanvas.Browser.Forms
                                      if (!isLocked)
                                      {
                                          if (func != null)
-                                             _engine.Execute(func);
+                                             _engine.Execute(func.ToString());
                                          clearTimeout(currentIndex);
                                          Monitor.Exit(sync);
                                      }
@@ -77,7 +77,7 @@ namespace SharpCanvas.Browser.Forms
         /// <param name="func">func is the function you want to be called repeatedly.</param>
         /// <param name="milliseconds">is the number of milliseconds (thousandths of a second) that the setInterval() function should wait before each call to func.</param>
         /// <returns>unique interval ID you can pass to clearInterval().</returns>
-        public int setInterval(string func, object milliseconds)
+        public int setInterval(object func, object milliseconds)
         {
             int m = 100;
             int.TryParse(milliseconds.ToString(), out m);
@@ -90,7 +90,7 @@ namespace SharpCanvas.Browser.Forms
                                      if (!isLocked)
                                      {
                                          if (func != null)
-                                             _engine.Execute(func);
+                                             _engine.Execute(func.ToString());
                                          Monitor.Exit(sync);
                                      }
                                  };

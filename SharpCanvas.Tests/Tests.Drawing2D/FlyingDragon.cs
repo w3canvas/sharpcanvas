@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Timer=System.Timers.Timer;
 using SharpCanvas.Tests;
 using SharpCanvas.Forms;
+using SharpCanvas.Context.Drawing2D;
 
 namespace SharpCanvas.Tests.Forms
 {
