@@ -1,8 +1,18 @@
-﻿using System;
+#if WINDOWS
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Net;
+using Bitmap = System.Drawing.Bitmap;
+using Image = System.Drawing.Image;
+using ImageFormat = System.Drawing.Imaging.ImageFormat;
+#else
+using SkiaSharp;
+using System.Net.Http;
+using Bitmap = SkiaSharp.SKBitmap;
+using ImageFormat = SkiaSharp.SKEncodedImageFormat;
+#endif
+using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Convert = System.Convert;
@@ -13,7 +23,7 @@ namespace SharpCanvas
     {
         private static readonly Regex httpRegex = new Regex(@"http://.*");
 
-
+#if WINDOWS
         public static byte[] CopyBitmapToBytes(int x, int y, int width, int height, Bitmap bmp)
         {
             PixelFormat pxf = bmp.PixelFormat;
@@ -44,31 +54,10 @@ namespace SharpCanvas
             return rgbValues;
         }
 
-        /// <summary>
-        /// Updates a bitmap from a byte array
-        /// </summary>
-        /// <param name="srcData">Should be 32 or 24 bits per pixel (ARGB or RGB format)</param>
-        /// <param name="srcDataWidth">Width of the image srcData represents</param>
-        /// <param name="srcDataHeight">Height of the image srcData represents</param>
-        /// <param name="destBitmap">Bitmap to copy to. Will be recreated if necessary to copy to the array.</param>
         public static void CopyBytesToBitmap(byte[] srcData, int srcDataWidth, int srcDataHeight, ref Bitmap destBitmap)
         {
             int bytesPerPixel = srcData.Length/(srcDataWidth*srcDataHeight);
-            //if (destBitmap == null
-            //    || destBitmap.Width != srcDataWidth
-            //    || destBitmap.Height != srcDataHeight
-            //    || (destBitmap.PixelFormat == PixelFormat.Format32bppArgb && bytesPerPixel == 3)
-            //    || (destBitmap.PixelFormat == PixelFormat.Format32bppRgb && bytesPerPixel == 3)
-            //    || (destBitmap.PixelFormat == PixelFormat.Format24bppRgb && bytesPerPixel == 4))
-            //{
-            //    if (bytesPerPixel == 3)
-            //        destBitmap = new Bitmap(srcDataWidth, srcDataHeight, PixelFormat.Format24bppRgb);
-            //    else
-            //        destBitmap = new Bitmap(srcDataWidth, srcDataHeight, PixelFormat.Format32bppRgb);
-            //}
             BitmapData bmpData = null;
-            //try
-            //{
             if (bytesPerPixel == 3)
                 bmpData = destBitmap.LockBits(new Rectangle(0, 0, srcDataWidth, srcDataHeight), ImageLockMode.WriteOnly,
                                               PixelFormat.Format24bppRgb);
@@ -78,10 +67,6 @@ namespace SharpCanvas
 
             Marshal.Copy(srcData, 0, bmpData.Scan0, srcData.Length);
             destBitmap.UnlockBits(bmpData);
-            //}
-            //catch (Exception)
-            //{
-            //}
         }
 
         public static Bitmap GetBitmapFromUrl(string imageData)
@@ -108,11 +93,8 @@ namespace SharpCanvas
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                // Convert Image to byte[]
                 image.Save(ms, format);
                 byte[] imageBytes = ms.ToArray();
-
-                // Convert byte[] to Base64 String
                 string base64String = Convert.ToBase64String(imageBytes);
                 return base64String;
             }
@@ -125,20 +107,95 @@ namespace SharpCanvas
                 case "image/png":
                 case "image/x-png":
                     return ImageFormat.Png;
-                    break;
                 case "image/jpeg":
                     return ImageFormat.Jpeg;
-                    break;
                 case "image/gif":
                     return ImageFormat.Gif;
-                    break;
                 case "image/bmp":
                     return ImageFormat.Bmp;
-                    break;
                 default:
                     return ImageFormat.Png;
             }
         }
+#else
+        public static byte[] CopyBitmapToBytes(int x, int y, int width, int height, Bitmap bmp)
+        {
+            var info = new SKImageInfo(width, height);
+            using (var subset = new Bitmap(info))
+            {
+                if (bmp.ExtractSubset(subset, new SKRectI(x, y, x + width, y + height)))
+                {
+                    return subset.Bytes;
+                }
+                return bmp.Bytes; // or throw an exception
+            }
+        }
+
+        public static void CopyBytesToBitmap(byte[] srcData, int srcDataWidth, int srcDataHeight, ref Bitmap destBitmap)
+        {
+            var info = new SKImageInfo(srcDataWidth, srcDataHeight, SKColorType.Rgba8888, SKAlphaType.Unpremul);
+            var gcHandle = GCHandle.Alloc(srcData, GCHandleType.Pinned);
+            destBitmap.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, (address, context) => ((GCHandle)context).Free(), gcHandle);
+        }
+
+        public static Bitmap GetBitmapFromUrl(string imageData)
+        {
+            if (httpRegex.IsMatch(imageData))
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    try
+                    {
+                        var response = httpClient.GetAsync(imageData).Result;
+                        response.EnsureSuccessStatusCode();
+                        using (var stream = response.Content.ReadAsStreamAsync().Result)
+                        {
+                            return Bitmap.Decode(stream);
+                        }
+                    }
+                    catch (HttpRequestException)
+                    {
+                        return new Bitmap(1, 1);
+                    }
+                }
+            }
+            else
+            {
+                if (File.Exists(imageData))
+                {
+                    return Bitmap.Decode(imageData);
+                }
+            }
+            return new Bitmap(1, 1);
+        }
+
+        public static string ImageToBase64(SKBitmap image, ImageFormat format)
+        {
+            using (var skImage = SKImage.FromBitmap(image))
+            using (var data = skImage.Encode(format, 100))
+            {
+                return Convert.ToBase64String(data.ToArray());
+            }
+        }
+
+        public static ImageFormat ImageFormatFromMediaType(string type)
+        {
+            switch (type)
+            {
+                case "image/png":
+                case "image/x-png":
+                    return ImageFormat.Png;
+                case "image/jpeg":
+                    return ImageFormat.Jpeg;
+                case "image/gif":
+                    return ImageFormat.Gif;
+                case "image/bmp":
+                    return ImageFormat.Bmp;
+                default:
+                    return ImageFormat.Png;
+            }
+        }
+#endif
 
         public static object ConvertArrayToJSArray(object[] arr)
         {

@@ -1,6 +1,14 @@
-﻿using System;
+#if WINDOWS
 using System.Drawing;
 using System.Drawing.Imaging;
+using Bitmap = System.Drawing.Bitmap;
+using Rectangle = System.Drawing.Rectangle;
+#else
+using SkiaSharp;
+using Bitmap = SkiaSharp.SKBitmap;
+using Rectangle = SkiaSharp.SKRectI;
+#endif
+using System;
 
 namespace SharpCanvas
 {
@@ -45,9 +53,14 @@ namespace SharpCanvas
 
         public void blendImages(Bitmap src1, Bitmap src2)
         {
+#if WINDOWS
             blendImages(src1, src2, new Rectangle(0, 0, src1.Width, src1.Height));
+#else
+            blendImages(src1, src2, new Rectangle(0, 0, src1.Width, src1.Height));
+#endif
         }
 
+#if WINDOWS
         public void blendImages(Bitmap src1, Bitmap src2, Rectangle r)
         {
             if (
@@ -95,6 +108,46 @@ namespace SharpCanvas
                 } //unsafe
             }
         }
+#else
+        public void blendImages(Bitmap src1, Bitmap src2, Rectangle r)
+        {
+            if (
+                (src1.ColorType == SKColorType.Rgba8888) &&
+                (src2.ColorType == SKColorType.Rgba8888)
+                )
+            {
+                if (r.Left >= src1.Width || r.Left < 0) return;
+                if (r.Top >= src1.Height || r.Top < 0) return;
+
+                int width = Math.Min(r.Width, src2.Width);
+                int height = Math.Min(r.Height, src2.Height);
+
+                if (r.Left + width > src1.Width) width = src1.Width - r.Left;
+                if (r.Top + height > src1.Height) height = src1.Height - r.Top;
+
+                r = new Rectangle(r.Left, r.Top, r.Left + width, r.Top + height);
+
+                unsafe
+                {
+                    IntPtr pSrc1 = src1.GetPixels();
+                    IntPtr pSrc2 = src2.GetPixels();
+
+                    for (int y = 0; y < r.Height; y++)
+                    {
+                        for (int x = 0; x < r.Width; x++)
+                        {
+                            uint* p1 = (uint*)((byte*)pSrc1 + (r.Top + y) * src1.RowBytes + (r.Left + x) * 4);
+                            uint* p2 = (uint*)((byte*)pSrc2 + (r.Top + y) * src2.RowBytes + (r.Left + x) * 4);
+
+                            uint p3 = blend(*p1, *p2);
+
+                            *p1 = p3;
+                        }
+                    }
+                } //unsafe
+            }
+        }
+#endif
 
         private uint Lighten(uint col1, uint col2)
         {
