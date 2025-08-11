@@ -1,7 +1,15 @@
-using System;
+#if WINDOWS
 using System.Drawing;
+using Brush = System.Drawing.Brush;
+using Color = System.Drawing.Color;
+#else
+using SkiaSharp;
+using Brush = SkiaSharp.SKPaint;
+using Color = SkiaSharp.SKColor;
+#endif
+using System;
 
-namespace SharpCanvas.Forms
+namespace SharpCanvas.Shared
 {
     public interface IFill : ICloneable
     {

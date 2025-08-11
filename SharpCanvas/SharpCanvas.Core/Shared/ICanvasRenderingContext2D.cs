@@ -4,9 +4,6 @@ using System.Runtime.InteropServices;
 
 namespace SharpCanvas
 {
-    // FIXME: is this used, and should the typo be fixed?
-    public delegate void OnPartialDrawHanlder();
-
     /// <summary>
     /// This is a .NET translation of the canvas rendering context 2D. Parameter types have been tranlated to
     /// corresponding .NET equivalents. Optional parameters (do not exist in .NET but be passed in Type.Missing)
@@ -246,9 +243,5 @@ namespace SharpCanvas
         /// </summary>
         bool IsVisible { get; }
 
-        /// <summary>
-        /// Occurs when some part of image was commited to the surface
-        /// </summary>
-        event OnPartialDrawHanlder OnPartialDraw;
     }
 }

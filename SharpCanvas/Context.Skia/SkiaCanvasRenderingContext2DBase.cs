@@ -1,3 +1,4 @@
+#nullable enable
 using SharpCanvas.Shared;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -19,6 +20,13 @@ namespace SharpCanvas.Context.Skia
             _path = new SKPath();
             _fillPaint = new SKPaint { Style = SKPaintStyle.Fill, Color = SKColors.Black };
             _strokePaint = new SKPaint { Style = SKPaintStyle.Stroke, Color = SKColors.Black, StrokeWidth = 1 };
+            globalCompositeOperation = "source-over";
+            lineCap = "butt";
+            lineJoin = "miter";
+            shadowColor = "rgba(0, 0, 0, 0)";
+            font = "10px sans-serif";
+            textAlign = "start";
+            textBaseLine = "alphabetic";
         }
 
         public void fillRect(double x, double y, double w, double h)
@@ -326,6 +334,5 @@ namespace SharpCanvas.Context.Skia
             return _surface.Canvas.DeviceClipBounds.Width;
         }
 
-        public event OnPartialDrawHanlder? OnPartialDraw;
     }
 }

@@ -1,64 +1,55 @@
-﻿using System;
+#if WINDOWS
+using Bitmap = System.Drawing.Bitmap;
+#else
+using Bitmap = SkiaSharp.SKBitmap;
+#endif
 using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices;
+using SharpCanvas.Shared;
 
-namespace SharpCanvas
+namespace SharpCanvas.Shared
 {
-    [ComVisible(true)]
     public class FilterChain
     {
-        private readonly List<IFilter?> filterChain = new List<IFilter?>();
+        private readonly List<IFilter> filters = new List<IFilter>();
 
-        public FilterChain()
+        public int Count
         {
-            filterChain.Clear();
+            get { return filters.Count; }
         }
 
-        public FilterChain(IFilter filter)
+        public List<IFilter> GetFilters()
         {
-            filterChain.Add(filter);
+            return filters;
         }
 
-        public void resetChain()
+        public void AddFilter(IFilter filter)
         {
-            filterChain.Clear();
+            filters.Add(filter);
         }
 
-        public int AddFilter(IFilter filter)
+        public void RemoveFilter(IFilter filter)
         {
-            filterChain.Add(filter);
-            return filterChain.Count;
+            filters.Remove(filter);
         }
 
-        public IFilter? AddFilterFromString(string filterName)
+        public void RemoveFilterAt(int index)
         {
-            IFilter? filter = null;
-            switch (filterName.ToLowerInvariant())
+            filters.RemoveAt(index);
+        }
+
+        public void Clear()
+        {
+            filters.Clear();
+        }
+
+        public Bitmap? ApplyFilters(Bitmap? source)
+        {
+            Bitmap? result = source;
+            if (filters.Count > 0)
             {
-                default:
-                    new Exception(string.Format("Filter '{0}' doesn't exists.", filterName));
-                    break;
-            }
-            filterChain.Add(filter);
-            return filter;
-        }
-
-        public int GetFilterCount()
-        {
-            return filterChain.Count;
-        }
-
-        public Bitmap? ApplyFilters(Bitmap bmp)
-        {
-            Bitmap? result = null;
-            for (int i = 0; i < filterChain.Count; i++)
-            {
-                var filter = filterChain[i];
-                if (filter != null)
+                foreach (IFilter filter in filters)
                 {
-                    result = filter.ApplyFilter(bmp);
-                    bmp = result;
+                    result = filter.ApplyFilter(result);
                 }
             }
             return result;
