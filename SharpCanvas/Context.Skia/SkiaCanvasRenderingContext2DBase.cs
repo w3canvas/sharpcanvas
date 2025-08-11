@@ -27,6 +27,7 @@ namespace SharpCanvas.Context.Skia
             font = "10px sans-serif";
             textAlign = "start";
             textBaseLine = "alphabetic";
+            this.globalCompositeOperation = "source-over";
         }
 
         public void fillRect(double x, double y, double w, double h)
@@ -117,8 +118,68 @@ namespace SharpCanvas.Context.Skia
             _surface.Canvas.SetMatrix(matrix);
         }
 
-        public double globalAlpha { get; set; }
-        public string globalCompositeOperation { get; set; }
+        private double _globalAlpha = 1.0;
+        public double globalAlpha
+        {
+            get => _globalAlpha;
+            set
+            {
+                if (value >= 0 && value <= 1)
+                {
+                    _globalAlpha = value;
+                    _fillPaint.Color = _fillPaint.Color.WithAlpha((byte)(value * 255));
+                    _strokePaint.Color = _strokePaint.Color.WithAlpha((byte)(value * 255));
+                }
+            }
+        }
+        private string? _globalCompositeOperation;
+        public string? globalCompositeOperation
+        {
+            get => _globalCompositeOperation;
+            set
+            {
+                if (value != null)
+                {
+                    _globalCompositeOperation = value;
+                    _fillPaint.BlendMode = GetBlendMode(value);
+                    _strokePaint.BlendMode = GetBlendMode(value);
+                }
+            }
+        }
+
+        private SKBlendMode GetBlendMode(string compositeOperation)
+        {
+            return compositeOperation.ToLower() switch
+            {
+                "source-over" => SKBlendMode.SrcOver,
+                "source-in" => SKBlendMode.SrcIn,
+                "source-out" => SKBlendMode.SrcOut,
+                "source-atop" => SKBlendMode.SrcATop,
+                "destination-over" => SKBlendMode.DstOver,
+                "destination-in" => SKBlendMode.DstIn,
+                "destination-out" => SKBlendMode.DstOut,
+                "destination-atop" => SKBlendMode.DstATop,
+                "lighter" => SKBlendMode.Lighten,
+                "copy" => SKBlendMode.Src,
+                "xor" => SKBlendMode.Xor,
+                "multiply" => SKBlendMode.Multiply,
+                "screen" => SKBlendMode.Screen,
+                "overlay" => SKBlendMode.Overlay,
+                "darken" => SKBlendMode.Darken,
+                "lighten" => SKBlendMode.Lighten,
+                "color-dodge" => SKBlendMode.ColorDodge,
+                "color-burn" => SKBlendMode.ColorBurn,
+                "hard-light" => SKBlendMode.HardLight,
+                "soft-light" => SKBlendMode.SoftLight,
+                "difference" => SKBlendMode.Difference,
+                "exclusion" => SKBlendMode.Exclusion,
+                "hue" => SKBlendMode.Hue,
+                "saturation" => SKBlendMode.Saturation,
+                "color" => SKBlendMode.Color,
+                "luminosity" => SKBlendMode.Luminosity,
+                _ => SKBlendMode.SrcOver,
+            };
+        }
         public object strokeStyle
         {
             get => _strokePaint.Color.ToString();
