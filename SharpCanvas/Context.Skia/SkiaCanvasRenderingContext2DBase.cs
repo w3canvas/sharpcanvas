@@ -13,13 +13,15 @@ namespace SharpCanvas.Context.Skia
         protected SKPaint _strokePaint;
         protected Stack<SKPaint> _fillPaintStack = new Stack<SKPaint>();
         protected Stack<SKPaint> _strokePaintStack = new Stack<SKPaint>();
+        protected Stack<object> _fillStyleStack = new Stack<object>();
+        protected Stack<object> _strokeStyleStack = new Stack<object>();
 
         public SkiaCanvasRenderingContext2DBase(SKSurface surface)
         {
             _surface = surface;
             _path = new SKPath();
-            _fillPaint = new SKPaint { Style = SKPaintStyle.Fill, Color = SKColors.Black };
-            _strokePaint = new SKPaint { Style = SKPaintStyle.Stroke, Color = SKColors.Black, StrokeWidth = 1 };
+            _fillPaint = new SKPaint { Style = SKPaintStyle.Fill, IsAntialias = true };
+            _strokePaint = new SKPaint { Style = SKPaintStyle.Stroke, StrokeWidth = 1, IsAntialias = true };
             globalCompositeOperation = "source-over";
             lineCap = "butt";
             lineJoin = "miter";
@@ -54,6 +56,8 @@ namespace SharpCanvas.Context.Skia
             _surface.Canvas.Save();
             _fillPaintStack.Push(_fillPaint.Clone());
             _strokePaintStack.Push(_strokePaint.Clone());
+            _fillStyleStack.Push(fillStyle);
+            _strokeStyleStack.Push(strokeStyle);
         }
 
         public void restore()
@@ -62,10 +66,12 @@ namespace SharpCanvas.Context.Skia
             if (_fillPaintStack.Count > 0)
             {
                 _fillPaint = _fillPaintStack.Pop();
+                fillStyle = _fillStyleStack.Pop();
             }
             if (_strokePaintStack.Count > 0)
             {
                 _strokePaint = _strokePaintStack.Pop();
+                strokeStyle = _strokeStyleStack.Pop();
             }
         }
 
@@ -180,27 +186,18 @@ namespace SharpCanvas.Context.Skia
                 _ => SKBlendMode.SrcOver,
             };
         }
-        public object strokeStyle
-        {
-            get => _strokePaint.Color.ToString();
-            set
-            {
-                if (value is string colorString)
-                {
-                    _strokePaint.Color = ColorParser.Parse(colorString);
-                }
-            }
-        }
+        private object _fillStyle = "#000000";
         public object fillStyle
         {
-            get => _fillPaint.Color.ToString();
-            set
-            {
-                if (value is string colorString)
-                {
-                    _fillPaint.Color = ColorParser.Parse(colorString);
-                }
-            }
+            get => _fillStyle;
+            set => _fillStyle = value;
+        }
+
+        private object _strokeStyle = "#000000";
+        public object strokeStyle
+        {
+            get => _strokeStyle;
+            set => _strokeStyle = value;
         }
         public double lineWidth { get; set; }
         public string lineCap { get; set; }
@@ -283,12 +280,47 @@ namespace SharpCanvas.Context.Skia
 
         public void fillText(string text, double x, double y)
         {
-            throw new System.NotImplementedException();
+            using (var textPaint = new SKPaint())
+            {
+                textPaint.Style = SKPaintStyle.Fill;
+                textPaint.IsAntialias = true;
+                var typeface = SKTypeface.FromFamilyName(ParseFontFamily(this.font));
+                if (typeface == null)
+                {
+                    typeface = SKTypeface.Default;
+                }
+                var font = new SKFont { Size = ParseFontSize(this.font), Typeface = typeface };
+
+                if (fillStyle is string colorString)
+                {
+                    textPaint.Color = ColorParser.Parse(colorString).WithAlpha((byte)(globalAlpha * 255));
+                }
+                textPaint.BlendMode = GetBlendMode(globalCompositeOperation);
+                _surface.Canvas.DrawText(text, (float)x, (float)y, font, textPaint);
+            }
         }
 
         public void strokeText(string text, double x, double y)
         {
-            throw new System.NotImplementedException();
+            using (var textPaint = new SKPaint())
+            {
+                textPaint.Style = SKPaintStyle.Stroke;
+                textPaint.IsAntialias = true;
+                textPaint.StrokeWidth = (float)lineWidth;
+                var typeface = SKTypeface.FromFamilyName(ParseFontFamily(this.font));
+                if (typeface == null)
+                {
+                    typeface = SKTypeface.Default;
+                }
+                var font = new SKFont { Size = ParseFontSize(this.font), Typeface = typeface };
+
+                if (strokeStyle is string colorString)
+                {
+                    textPaint.Color = ColorParser.Parse(colorString).WithAlpha((byte)(globalAlpha * 255));
+                }
+                textPaint.BlendMode = GetBlendMode(globalCompositeOperation);
+                _surface.Canvas.DrawText(text, (float)x, (float)y, font, textPaint);
+            }
         }
 
         public void drawImage(object image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh)

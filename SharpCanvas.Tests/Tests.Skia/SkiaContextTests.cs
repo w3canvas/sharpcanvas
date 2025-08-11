@@ -122,5 +122,46 @@ namespace SharpCanvas.Tests.Skia
                 Assert.That(pixel, Is.EqualTo(SKColors.Blue));
             }
         }
+        [Test]
+        public void TestFillText()
+        {
+            var info = new SKImageInfo(100, 100);
+            using (var surface = SKSurface.Create(info))
+            {
+                surface.Canvas.Clear(SKColors.White);
+                var context = new CanvasRenderingContext2D(surface);
+                context.fillStyle = "#000000";
+                context.font = "24px sans-serif";
+                context.fillText("Hello", 10, 50);
+
+                var bitmap = new SKBitmap(info);
+                surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
+
+                // Check a pixel where the text should be
+                var pixel = bitmap.GetPixel(15, 50);
+                Assert.That(pixel, Is.EqualTo(SKColors.Black));
+            }
+        }
+
+        [Test]
+        public void TestStrokeText()
+        {
+            var info = new SKImageInfo(100, 100);
+            using (var surface = SKSurface.Create(info))
+            {
+                surface.Canvas.Clear(SKColors.White);
+                var context = new CanvasRenderingContext2D(surface);
+                context.strokeStyle = "#000000";
+                context.font = "24px sans-serif";
+                context.strokeText("Hello", 10, 50);
+
+                var bitmap = new SKBitmap(info);
+                surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
+
+                // Check a pixel where the text should be
+                var pixel = bitmap.GetPixel(15, 50);
+                Assert.That(pixel, Is.EqualTo(SKColors.Black));
+            }
+        }
     }
 }
