@@ -81,5 +81,46 @@ namespace SharpCanvas.Tests.Skia
                 Assert.That(bitmap.GetPixel(0, 0), Is.EqualTo(SKColors.Black));
             }
         }
+
+        [Test]
+        public void TestGlobalAlpha()
+        {
+            var info = new SKImageInfo(100, 100);
+            using (var surface = SKSurface.Create(info))
+            {
+                var context = new CanvasRenderingContext2D(surface);
+                context.fillStyle = "#FF0000";
+                context.globalAlpha = 0.5;
+                context.fillRect(0, 0, 100, 100);
+
+                var bitmap = new SKBitmap(info);
+                surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
+
+                var pixel = bitmap.GetPixel(50, 50);
+                Assert.That(pixel.Alpha, Is.EqualTo(127).Within(1));
+            }
+        }
+
+        [Test]
+        public void TestGlobalCompositeOperation()
+        {
+            var info = new SKImageInfo(100, 100);
+            using (var surface = SKSurface.Create(info))
+            {
+                var context = new CanvasRenderingContext2D(surface);
+                context.fillStyle = "#FF0000";
+                context.fillRect(0, 0, 50, 50);
+
+                context.globalCompositeOperation = "source-in";
+                context.fillStyle = "#0000FF";
+                context.fillRect(25, 25, 50, 50);
+
+                var bitmap = new SKBitmap(info);
+                surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
+
+                var pixel = bitmap.GetPixel(40, 40);
+                Assert.That(pixel, Is.EqualTo(SKColors.Blue));
+            }
+        }
     }
 }
