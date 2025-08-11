@@ -122,5 +122,32 @@ namespace SharpCanvas.Tests.Skia
                 Assert.That(pixel, Is.EqualTo(SKColors.Blue));
             }
         }
+
+        [Test]
+        public void TestClearRect()
+        {
+            var info = new SKImageInfo(100, 100);
+            using (var surface = SKSurface.Create(info))
+            {
+                var context = new CanvasRenderingContext2D(surface);
+
+                // Fill the canvas with blue
+                context.fillStyle = "blue";
+                context.fillRect(0, 0, 100, 100);
+
+                // Clear a rectangle
+                context.clearRect(10, 10, 50, 50);
+
+                var bitmap = new SKBitmap(info);
+                surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
+
+                // Check a pixel inside the cleared rectangle
+                var transparent = new SKColor(0, 0, 0, 0);
+                Assert.That(bitmap.GetPixel(20, 20), Is.EqualTo(transparent));
+
+                // Check a pixel outside the cleared rectangle
+                Assert.That(bitmap.GetPixel(70, 70), Is.EqualTo(SKColors.Blue));
+            }
+        }
     }
 }

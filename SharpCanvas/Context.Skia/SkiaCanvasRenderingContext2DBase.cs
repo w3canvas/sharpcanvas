@@ -13,6 +13,7 @@ namespace SharpCanvas.Context.Skia
         protected SKPaint _strokePaint;
         protected Stack<SKPaint> _fillPaintStack = new Stack<SKPaint>();
         protected Stack<SKPaint> _strokePaintStack = new Stack<SKPaint>();
+        protected Stack<double> _globalAlphaStack = new Stack<double>();
 
         public SkiaCanvasRenderingContext2DBase(SKSurface surface)
         {
@@ -33,13 +34,19 @@ namespace SharpCanvas.Context.Skia
         public void fillRect(double x, double y, double w, double h)
         {
             var canvas = _surface.Canvas;
-            canvas.DrawRect((float)x, (float)y, (float)w, (float)h, _fillPaint);
+            using (var paint = ApplyPaint(_fillPaint))
+            {
+                canvas.DrawRect((float)x, (float)y, (float)w, (float)h, paint);
+            }
         }
 
         public void strokeRect(double x, double y, double w, double h)
         {
             var canvas = _surface.Canvas;
-            canvas.DrawRect((float)x, (float)y, (float)w, (float)h, _strokePaint);
+            using (var paint = ApplyPaint(_strokePaint))
+            {
+                canvas.DrawRect((float)x, (float)y, (float)w, (float)h, paint);
+            }
         }
 
         public object prototype()
@@ -54,6 +61,7 @@ namespace SharpCanvas.Context.Skia
             _surface.Canvas.Save();
             _fillPaintStack.Push(_fillPaint.Clone());
             _strokePaintStack.Push(_strokePaint.Clone());
+            _globalAlphaStack.Push(_globalAlpha);
         }
 
         public void restore()
@@ -66,6 +74,10 @@ namespace SharpCanvas.Context.Skia
             if (_strokePaintStack.Count > 0)
             {
                 _strokePaint = _strokePaintStack.Pop();
+            }
+            if (_globalAlphaStack.Count > 0)
+            {
+                globalAlpha = _globalAlphaStack.Pop();
             }
         }
 
@@ -127,10 +139,15 @@ namespace SharpCanvas.Context.Skia
                 if (value >= 0 && value <= 1)
                 {
                     _globalAlpha = value;
-                    _fillPaint.Color = _fillPaint.Color.WithAlpha((byte)(value * 255));
-                    _strokePaint.Color = _strokePaint.Color.WithAlpha((byte)(value * 255));
                 }
             }
+        }
+
+        private SKPaint ApplyPaint(SKPaint paint)
+        {
+            var newPaint = paint.Clone();
+            newPaint.Color = newPaint.Color.WithAlpha((byte)(newPaint.Color.Alpha * _globalAlpha));
+            return newPaint;
         }
         private string? _globalCompositeOperation;
         public string? globalCompositeOperation
@@ -218,7 +235,10 @@ namespace SharpCanvas.Context.Skia
 
         public void clearRect(double x, double y, double w, double h)
         {
-            _surface.Canvas.Clear(SKColors.Transparent);
+            using (var paint = new SKPaint { BlendMode = SKBlendMode.Clear })
+            {
+                _surface.Canvas.DrawRect((float)x, (float)y, (float)w, (float)h, paint);
+            }
         }
 
         public void beginPath()
@@ -268,12 +288,18 @@ namespace SharpCanvas.Context.Skia
 
         public void fill()
         {
-            _surface.Canvas.DrawPath(_path, _fillPaint);
+            using (var paint = ApplyPaint(_fillPaint))
+            {
+                _surface.Canvas.DrawPath(_path, paint);
+            }
         }
 
         public void stroke()
         {
-            _surface.Canvas.DrawPath(_path, _strokePaint);
+            using (var paint = ApplyPaint(_strokePaint))
+            {
+                _surface.Canvas.DrawPath(_path, paint);
+            }
         }
 
         public void clip()
