@@ -21,14 +21,13 @@ namespace SharpCanvas.Context.Skia
             _path = new SKPath();
             _fillPaint = new SKPaint { Style = SKPaintStyle.Fill, Color = SKColors.Black };
             _strokePaint = new SKPaint { Style = SKPaintStyle.Stroke, Color = SKColors.Black, StrokeWidth = 1 };
-            globalCompositeOperation = "source-over";
-            lineCap = "butt";
-            lineJoin = "miter";
-            shadowColor = "rgba(0, 0, 0, 0)";
-            font = "10px sans-serif";
-            textAlign = "start";
-            textBaseLine = "alphabetic";
             this.globalCompositeOperation = "source-over";
+            this.lineCap = "butt";
+            this.lineJoin = "miter";
+            this.shadowColor = "rgba(0, 0, 0, 0)";
+            this.font = "10px sans-serif";
+            this.textAlign = "start";
+            this.textBaseLine = "alphabetic";
         }
 
         public void fillRect(double x, double y, double w, double h)
@@ -219,16 +218,184 @@ namespace SharpCanvas.Context.Skia
                 }
             }
         }
-        public double lineWidth { get; set; }
-        public string lineCap { get; set; }
-        public string lineJoin { get; set; }
-        public double miterLimit { get; set; }
-        public double shadowOffsetX { get; set; }
-        public double shadowOffsetY { get; set; }
-        public double shadowBlur { get; set; }
-        public string shadowColor { get; set; }
-        public string font { get; set; }
-        public string textAlign { get; set; }
+        private double _lineWidth;
+        public double lineWidth
+        {
+            get => _lineWidth;
+            set
+            {
+                _lineWidth = value;
+                _strokePaint.StrokeWidth = (float)value;
+            }
+        }
+
+        private string _lineCap;
+        public string lineCap
+        {
+            get => _lineCap;
+            set
+            {
+                _lineCap = value;
+                _strokePaint.StrokeCap = GetStrokeCap(value);
+            }
+        }
+
+        private SKStrokeCap GetStrokeCap(string cap)
+        {
+            return cap.ToLower() switch
+            {
+                "butt" => SKStrokeCap.Butt,
+                "round" => SKStrokeCap.Round,
+                "square" => SKStrokeCap.Square,
+                _ => SKStrokeCap.Butt,
+            };
+        }
+
+        private string _lineJoin;
+        public string lineJoin
+        {
+            get => _lineJoin;
+            set
+            {
+                _lineJoin = value;
+                _strokePaint.StrokeJoin = GetStrokeJoin(value);
+            }
+        }
+
+        private SKStrokeJoin GetStrokeJoin(string join)
+        {
+            return join.ToLower() switch
+            {
+                "round" => SKStrokeJoin.Round,
+                "bevel" => SKStrokeJoin.Bevel,
+                "miter" => SKStrokeJoin.Miter,
+                _ => SKStrokeJoin.Miter,
+            };
+        }
+
+        private double _miterLimit;
+        public double miterLimit
+        {
+            get => _miterLimit;
+            set
+            {
+                _miterLimit = value;
+                _strokePaint.StrokeMiter = (float)value;
+            }
+        }
+        private double _shadowOffsetX;
+        public double shadowOffsetX
+        {
+            get => _shadowOffsetX;
+            set
+            {
+                _shadowOffsetX = value;
+                UpdateShadows();
+            }
+        }
+
+        private double _shadowOffsetY;
+        public double shadowOffsetY
+        {
+            get => _shadowOffsetY;
+            set
+            {
+                _shadowOffsetY = value;
+                UpdateShadows();
+            }
+        }
+
+        private double _shadowBlur;
+        public double shadowBlur
+        {
+            get => _shadowBlur;
+            set
+            {
+                _shadowBlur = value;
+                UpdateShadows();
+            }
+        }
+
+        private string _shadowColor;
+        public string shadowColor
+        {
+            get => _shadowColor;
+            set
+            {
+                _shadowColor = value;
+                UpdateShadows();
+            }
+        }
+
+        private void UpdateShadows()
+        {
+            var color = ColorParser.Parse(_shadowColor ?? "rgba(0,0,0,0)");
+            bool hasShadow = color.Alpha != 0 && (_shadowBlur > 0 || _shadowOffsetX != 0 || _shadowOffsetY != 0);
+
+            _fillPaint.ImageFilter?.Dispose();
+            _strokePaint.ImageFilter?.Dispose();
+
+            if (hasShadow)
+            {
+                _fillPaint.ImageFilter = SKImageFilter.CreateDropShadow(
+                    (float)_shadowOffsetX,
+                    (float)_shadowOffsetY,
+                    (float)_shadowBlur,
+                    (float)_shadowBlur,
+                    color
+                );
+                _strokePaint.ImageFilter = SKImageFilter.CreateDropShadow(
+                    (float)_shadowOffsetX,
+                    (float)_shadowOffsetY,
+                    (float)_shadowBlur,
+                    (float)_shadowBlur,
+                    color
+                );
+            }
+            else
+            {
+                _fillPaint.ImageFilter = null;
+                _strokePaint.ImageFilter = null;
+            }
+        }
+        private string _font;
+        public string font
+        {
+            get => _font;
+            set
+            {
+                _font = value;
+                FontUtils.ApplyFont(_font, _fillPaint);
+                FontUtils.ApplyFont(_font, _strokePaint);
+            }
+        }
+
+        private string _textAlign;
+        public string textAlign
+        {
+            get => _textAlign;
+            set
+            {
+                _textAlign = value;
+                UpdateTextAlign();
+            }
+        }
+
+        private void UpdateTextAlign()
+        {
+            var align = _textAlign.ToLower() switch
+            {
+                "left" => SKTextAlign.Left,
+                "right" => SKTextAlign.Right,
+                "center" => SKTextAlign.Center,
+                "start" => SKTextAlign.Left, // Assuming LTR for now
+                "end" => SKTextAlign.Right, // Assuming LTR for now
+                _ => SKTextAlign.Left,
+            };
+            _fillPaint.TextAlign = align;
+            _strokePaint.TextAlign = align;
+        }
+
         public string textBaseLine { get; set; }
         public object canvas => throw new System.NotImplementedException();
         public bool IsVisible => true;
@@ -309,27 +476,79 @@ namespace SharpCanvas.Context.Skia
 
         public void fillText(string text, double x, double y)
         {
-            throw new System.NotImplementedException();
+            var yOffset = FontUtils.GetYOffset(textBaseLine, _fillPaint);
+            using (var paint = ApplyPaint(_fillPaint))
+            {
+                _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, paint);
+            }
         }
 
         public void strokeText(string text, double x, double y)
         {
-            throw new System.NotImplementedException();
+            var yOffset = FontUtils.GetYOffset(textBaseLine, _strokePaint);
+            using (var paint = ApplyPaint(_strokePaint))
+            {
+                _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, paint);
+            }
         }
 
         public void drawImage(object image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh)
         {
-            throw new System.NotImplementedException();
+            var bitmap = GetBitmapFromImageSource(image);
+            if (bitmap != null)
+            {
+                var sourceRect = new SKRect((float)sx, (float)sy, (float)(sx + sw), (float)(sy + sh));
+                var destRect = new SKRect((float)dx, (float)dy, (float)(dx + dw), (float)(dy + dh));
+                _surface.Canvas.DrawBitmap(bitmap, sourceRect, destRect);
+                if (ShouldDisposeBitmap(image))
+                {
+                    bitmap.Dispose();
+                }
+            }
         }
 
         public void drawImage(object pImg, double dx, double dy, double dw, double dh)
         {
-            throw new System.NotImplementedException();
+            var bitmap = GetBitmapFromImageSource(pImg);
+            if (bitmap != null)
+            {
+                var destRect = new SKRect((float)dx, (float)dy, (float)(dx + dw), (float)(dy + dh));
+                _surface.Canvas.DrawBitmap(bitmap, destRect);
+                if (ShouldDisposeBitmap(pImg))
+                {
+                    bitmap.Dispose();
+                }
+            }
         }
 
         public void drawImage(object pImg, double dx, double dy)
         {
-            throw new System.NotImplementedException();
+            var bitmap = GetBitmapFromImageSource(pImg);
+            if (bitmap != null)
+            {
+                _surface.Canvas.DrawBitmap(bitmap, (float)dx, (float)dy);
+                if (ShouldDisposeBitmap(pImg))
+                {
+                    bitmap.Dispose();
+                }
+            }
+        }
+        private SKBitmap? GetBitmapFromImageSource(object imageSource)
+        {
+            if (imageSource is SKBitmap bitmap) return bitmap;
+            if (imageSource is IImage image) return image.getImage() as SKBitmap;
+            if (imageSource is IHTMLCanvasElement canvas)
+            {
+                var context = canvas.getCanvas();
+                var bytes = context.GetBitmap();
+                return SKBitmap.Decode(bytes);
+            }
+            return null;
+        }
+
+        private bool ShouldDisposeBitmap(object imageSource)
+        {
+            return imageSource is IHTMLCanvasElement;
         }
 
         public void drawImage(object pImg, float dx, float dy)
@@ -362,7 +581,10 @@ namespace SharpCanvas.Context.Skia
 
         public object measureText(string text)
         {
-            throw new System.NotImplementedException();
+            var width = _fillPaint.MeasureText(text);
+            var metrics = _fillPaint.FontMetrics;
+            var height = metrics.Descent - metrics.Ascent;
+            return new TextMetrics { width = (int)width, height = (int)height };
         }
 
         public object getImageData(double sx, double sy, double sw, double sh)
