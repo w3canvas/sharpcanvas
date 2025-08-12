@@ -19,7 +19,26 @@ namespace SharpCanvas.Context.Skia
                     paint.TextSize = sizeValue;
                 }
 
-                paint.Typeface = SKTypeface.FromFamilyName(family);
+                // Try to find the specified font, then try common fallbacks.
+                var typeface = SKTypeface.FromFamilyName(family);
+                if (typeface == null)
+                {
+                    var genericFamily = family.ToLower();
+                    if (genericFamily.Contains("sans-serif"))
+                    {
+                        typeface = SKTypeface.FromFamilyName("DejaVu Sans");
+                    }
+                    else if (genericFamily.Contains("serif"))
+                    {
+                        typeface = SKTypeface.FromFamilyName("DejaVu Serif");
+                    }
+                    else if (genericFamily.Contains("monospace"))
+                    {
+                        typeface = SKTypeface.FromFamilyName("DejaVu Sans Mono");
+                    }
+                }
+
+                paint.Typeface = typeface ?? SKTypeface.Default;
             }
         }
 
