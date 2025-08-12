@@ -56,17 +56,32 @@ namespace SharpCanvas
 
         public static void CopyBytesToBitmap(byte[] srcData, int srcDataWidth, int srcDataHeight, ref Bitmap destBitmap)
         {
-            int bytesPerPixel = srcData.Length/(srcDataWidth*srcDataHeight);
-            BitmapData bmpData = null;
-            if (bytesPerPixel == 3)
-                bmpData = destBitmap.LockBits(new Rectangle(0, 0, srcDataWidth, srcDataHeight), ImageLockMode.WriteOnly,
-                                              PixelFormat.Format24bppRgb);
-            else
-                bmpData = destBitmap.LockBits(new Rectangle(0, 0, srcDataWidth, srcDataHeight), ImageLockMode.WriteOnly,
-                                              PixelFormat.Format32bppRgb);
+            int bytesPerPixel = srcData.Length / (srcDataWidth * srcDataHeight);
+            BitmapData? bmpData = null; // Use nullable type
+            try
+            {
+                if (bytesPerPixel == 3)
+                    bmpData = destBitmap.LockBits(new Rectangle(0, 0, srcDataWidth, srcDataHeight), ImageLockMode.WriteOnly,
+                                                  PixelFormat.Format24bppRgb);
+                else
+                    bmpData = destBitmap.LockBits(new Rectangle(0, 0, srcDataWidth, srcDataHeight), ImageLockMode.WriteOnly,
+                                                  PixelFormat.Format32bppRgb);
 
-            Marshal.Copy(srcData, 0, bmpData.Scan0, srcData.Length);
-            destBitmap.UnlockBits(bmpData);
+                if (bmpData == null)
+                {
+                    // Handle case where LockBits fails
+                    return;
+                }
+
+                Marshal.Copy(srcData, 0, bmpData.Scan0, srcData.Length);
+            }
+            finally
+            {
+                if (bmpData != null)
+                {
+                    destBitmap.UnlockBits(bmpData);
+                }
+            }
         }
 
         public static Bitmap GetBitmapFromUrl(string imageData)

@@ -674,7 +674,17 @@ namespace SharpCanvas.Context.Skia
 
             var info = new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Unpremul);
             var data = new byte[width * height * 4];
-            var success = _surface.ReadPixels(info, data, info.RowBytes, x, y);
+            var gcHandle = System.Runtime.InteropServices.GCHandle.Alloc(data, System.Runtime.InteropServices.GCHandleType.Pinned);
+            bool success;
+            try
+            {
+                var ptr = gcHandle.AddrOfPinnedObject();
+                success = _surface.ReadPixels(info, ptr, info.RowBytes, x, y);
+            }
+            finally
+            {
+                gcHandle.Free();
+            }
 
             if (success)
             {
@@ -775,7 +785,8 @@ namespace SharpCanvas.Context.Skia
 
         public void ChangeSize(int width, int height, bool reset)
         {
-            var newInfo = new SKImageInfo(width, height, _surface.ImageInfo.ColorType, _surface.ImageInfo.AlphaType);
+            var pixmap = _surface.PeekPixels();
+            var newInfo = pixmap != null ? new SKImageInfo(width, height, pixmap.Info.ColorType, pixmap.Info.AlphaType) : new SKImageInfo(width, height);
 
             var newSurface = SKSurface.Create(newInfo);
 

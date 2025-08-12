@@ -13,4 +13,8 @@
     <ProjectReference Include="..\SharpCanvas.Core\SharpCanvas.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="DejaVuSans.ttf" />
+  </ItemGroup>
+
 </Project>

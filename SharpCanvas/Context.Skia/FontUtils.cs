@@ -20,26 +20,16 @@ namespace SharpCanvas.Context.Skia
                     paint.TextSize = sizeValue;
                 }
 
-                // Try to find the specified font, then try common fallbacks.
-                var typeface = SKTypeface.FromFamilyName(family);
-                if (typeface == null)
+                var assembly = typeof(FontUtils).Assembly;
+                var resourceNames = assembly.GetManifestResourceNames();
+                System.Console.WriteLine("Available resources: " + string.Join(", ", resourceNames));
+                var resourceName = "Context.Skia.DejaVuSans.ttf";
+                var stream = assembly.GetManifestResourceStream(resourceName);
+                if (stream == null)
                 {
-                    var genericFamily = family.ToLower();
-                    if (genericFamily.Contains("sans-serif"))
-                    {
-                        typeface = SKTypeface.FromFamilyName("DejaVu Sans");
-                    }
-                    else if (genericFamily.Contains("serif"))
-                    {
-                        typeface = SKTypeface.FromFamilyName("DejaVu Serif");
-                    }
-                    else if (genericFamily.Contains("monospace"))
-                    {
-                        typeface = SKTypeface.FromFamilyName("DejaVu Sans Mono");
-                    }
+                    throw new System.Exception($"Failed to load embedded resource: {resourceName}");
                 }
-
-                paint.Typeface = typeface ?? SKTypeface.Default;
+                paint.Typeface = SKTypeface.FromStream(stream);
             }
 
             paint.IsAntialias = context.textRendering != "optimizeSpeed";
@@ -81,17 +71,19 @@ namespace SharpCanvas.Context.Skia
             switch (textBaseline)
             {
                 case "top":
-                    return -metrics.Ascent;
+                    return -metrics.Top;
                 case "hanging":
-                    return -metrics.CapHeight;
+                    // Not directly supported by SkiaSharp metrics, but Ascent is a good approximation
+                    return -metrics.Ascent;
                 case "middle":
-                    return (-metrics.Ascent - metrics.Descent) / 2;
+                    return -(metrics.Top + metrics.Bottom) / 2;
                 case "alphabetic":
-                    return 0;
+                    return 0; // The default
                 case "ideographic":
+                    // Not directly supported, but Descent is a good approximation
                     return -metrics.Descent;
                 case "bottom":
-                    return -metrics.Descent;
+                    return -metrics.Bottom;
                 default:
                     return 0;
             }
