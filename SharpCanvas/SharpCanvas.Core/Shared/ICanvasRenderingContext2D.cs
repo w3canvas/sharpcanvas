@@ -243,5 +243,54 @@ namespace SharpCanvas
         /// </summary>
         bool IsVisible { get; }
 
+        // Properties from MDN that are not in the original spec
+        [DispId(120)]
+        string direction { get; set; }
+        [DispId(121)]
+        string filter { get; set; }
+        [DispId(122)]
+        string fontKerning { get; set; }
+        [DispId(123)]
+        string fontStretch { get; set; }
+        [DispId(124)]
+        string fontVariantCaps { get; set; }
+        [DispId(125)]
+        bool imageSmoothingEnabled { get; set; }
+        [DispId(126)]
+        string imageSmoothingQuality { get; set; }
+        [DispId(127)]
+        string lang { get; set; }
+        [DispId(128)]
+        string letterSpacing { get; set; }
+        [DispId(129)]
+        double lineDashOffset { get; set; }
+        [DispId(130)]
+        string textRendering { get; set; }
+        [DispId(131)]
+        string wordSpacing { get; set; }
+
+        // Methods from MDN
+        [DispId(140)]
+        void resetTransform();
+        [DispId(141)]
+        object getTransform();
+        [DispId(142)]
+        void reset();
+        [DispId(143)]
+        bool isContextLost();
+        [DispId(144)]
+        void drawFocusIfNeeded(object element);
+        [DispId(145)]
+        void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, bool anticlockwise);
+        [DispId(146)]
+        void roundRect(double x, double y, double w, double h, object radii);
+        [DispId(147)]
+        void setLineDash(object segments);
+        [DispId(148)]
+        object getLineDash();
+        [DispId(149)]
+        object createConicGradient(double startAngle, double x, double y);
+        [DispId(150)]
+        bool isPointInStroke(double x, double y);
     }
 }

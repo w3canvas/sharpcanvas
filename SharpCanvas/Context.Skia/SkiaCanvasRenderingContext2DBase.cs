@@ -2,6 +2,7 @@
 using SharpCanvas.Shared;
 using SkiaSharp;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SharpCanvas.Context.Skia
 {
@@ -50,10 +51,10 @@ namespace SharpCanvas.Context.Skia
 
         public object prototype()
         {
-            throw new System.NotImplementedException();
+            return this;
         }
 
-        public object __proto__ => throw new System.NotImplementedException();
+        public object __proto__ => this;
 
         public void save()
         {
@@ -148,18 +149,15 @@ namespace SharpCanvas.Context.Skia
             newPaint.Color = newPaint.Color.WithAlpha((byte)(newPaint.Color.Alpha * _globalAlpha));
             return newPaint;
         }
-        private string? _globalCompositeOperation;
-        public string? globalCompositeOperation
+        private string _globalCompositeOperation = "source-over";
+        public string globalCompositeOperation
         {
             get => _globalCompositeOperation;
             set
             {
-                if (value != null)
-                {
-                    _globalCompositeOperation = value;
-                    _fillPaint.BlendMode = GetBlendMode(value);
-                    _strokePaint.BlendMode = GetBlendMode(value);
-                }
+                _globalCompositeOperation = value;
+                _fillPaint.BlendMode = GetBlendMode(value);
+                _strokePaint.BlendMode = GetBlendMode(value);
             }
         }
 
@@ -216,6 +214,21 @@ namespace SharpCanvas.Context.Skia
                     _strokePaint.Shader?.Dispose();
                     _strokePaint.Shader = gradient.GetShader();
                 }
+                else if (value is SkiaCanvasPattern pattern)
+                {
+                    _strokePaint.Shader?.Dispose();
+                    _strokePaint.Shader = pattern.GetShader();
+                }
+                else if (value is SkiaRadialCanvasGradient radialGradient)
+                {
+                    _strokePaint.Shader?.Dispose();
+                    _strokePaint.Shader = radialGradient.GetShader();
+                }
+                else if (value is SkiaConicCanvasGradient conicGradient)
+                {
+                    _strokePaint.Shader?.Dispose();
+                    _strokePaint.Shader = conicGradient.GetShader();
+                }
             }
         }
         public object fillStyle
@@ -234,6 +247,21 @@ namespace SharpCanvas.Context.Skia
                 {
                     _fillPaint.Shader?.Dispose();
                     _fillPaint.Shader = gradient.GetShader();
+                }
+                else if (value is SkiaCanvasPattern pattern)
+                {
+                    _fillPaint.Shader?.Dispose();
+                    _fillPaint.Shader = pattern.GetShader();
+                }
+                else if (value is SkiaRadialCanvasGradient radialGradient)
+                {
+                    _fillPaint.Shader?.Dispose();
+                    _fillPaint.Shader = radialGradient.GetShader();
+                }
+                else if (value is SkiaConicCanvasGradient conicGradient)
+                {
+                    _fillPaint.Shader?.Dispose();
+                    _fillPaint.Shader = conicGradient.GetShader();
                 }
             }
         }
@@ -511,14 +539,29 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
+        private SKPaint GetImagePaint()
+        {
+            var filterQuality = imageSmoothingQuality switch
+            {
+                "high" => SKFilterQuality.High,
+                "medium" => SKFilterQuality.Medium,
+                "low" => SKFilterQuality.Low,
+                _ => SKFilterQuality.Low,
+            };
+            return new SKPaint { FilterQuality = imageSmoothingEnabled ? filterQuality : SKFilterQuality.None };
+        }
+
         public void drawImage(object image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh)
         {
             var bitmap = GetBitmapFromImageSource(image);
             if (bitmap != null)
             {
-                var sourceRect = new SKRect((float)sx, (float)sy, (float)(sx + sw), (float)(sy + sh));
-                var destRect = new SKRect((float)dx, (float)dy, (float)(dx + dw), (float)(dy + dh));
-                _surface.Canvas.DrawBitmap(bitmap, sourceRect, destRect);
+                using (var paint = GetImagePaint())
+                {
+                    var sourceRect = new SKRect((float)sx, (float)sy, (float)(sx + sw), (float)(sy + sh));
+                    var destRect = new SKRect((float)dx, (float)dy, (float)(dx + dw), (float)(dy + dh));
+                    _surface.Canvas.DrawBitmap(bitmap, sourceRect, destRect, paint);
+                }
                 if (ShouldDisposeBitmap(image))
                 {
                     bitmap.Dispose();
@@ -531,8 +574,11 @@ namespace SharpCanvas.Context.Skia
             var bitmap = GetBitmapFromImageSource(pImg);
             if (bitmap != null)
             {
-                var destRect = new SKRect((float)dx, (float)dy, (float)(dx + dw), (float)(dy + dh));
-                _surface.Canvas.DrawBitmap(bitmap, destRect);
+                using (var paint = GetImagePaint())
+                {
+                    var destRect = new SKRect((float)dx, (float)dy, (float)(dx + dw), (float)(dy + dh));
+                    _surface.Canvas.DrawBitmap(bitmap, destRect, paint);
+                }
                 if (ShouldDisposeBitmap(pImg))
                 {
                     bitmap.Dispose();
@@ -545,7 +591,10 @@ namespace SharpCanvas.Context.Skia
             var bitmap = GetBitmapFromImageSource(pImg);
             if (bitmap != null)
             {
-                _surface.Canvas.DrawBitmap(bitmap, (float)dx, (float)dy);
+                using (var paint = GetImagePaint())
+                {
+                    _surface.Canvas.DrawBitmap(bitmap, (float)dx, (float)dy, paint);
+                }
                 if (ShouldDisposeBitmap(pImg))
                 {
                     bitmap.Dispose();
@@ -580,7 +629,7 @@ namespace SharpCanvas.Context.Skia
 
         public bool isPointInPath(double x, double y)
         {
-            throw new System.NotImplementedException();
+            return _path.Contains((float)x, (float)y);
         }
 
         public object createLinearGradient(double x0, double y0, double x1, double y1)
@@ -592,12 +641,20 @@ namespace SharpCanvas.Context.Skia
 
         public object createPattern(object pImg, string repeat)
         {
-            throw new System.NotImplementedException();
+            var bitmap = GetBitmapFromImageSource(pImg);
+            if (bitmap != null)
+            {
+                return new SkiaCanvasPattern(bitmap, repeat);
+            }
+            // This behavior is not defined in the spec, but throwing an exception is reasonable.
+            throw new System.ArgumentException("Invalid image source for createPattern");
         }
 
         public object createRadialGradient(double x0, double y0, double r0, double x1, double y1, double r1)
         {
-            throw new System.NotImplementedException();
+            var start = new SKPoint((float)x0, (float)y0);
+            var end = new SKPoint((float)x1, (float)y1);
+            return new SkiaRadialCanvasGradient(start, (float)r0, end, (float)r1);
         }
 
         public object measureText(string text)
@@ -610,27 +667,94 @@ namespace SharpCanvas.Context.Skia
 
         public object getImageData(double sx, double sy, double sw, double sh)
         {
-            throw new System.NotImplementedException();
+            var x = (int)sx;
+            var y = (int)sy;
+            var width = (int)sw;
+            var height = (int)sh;
+
+            var info = new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Unpremul);
+            var data = new byte[width * height * 4];
+            var success = _surface.ReadPixels(info, data, info.RowBytes, x, y);
+
+            if (success)
+            {
+                return new ImageData((uint)width, (uint)height) { data = data };
+            }
+            else
+            {
+                return createImageData(sw, sh);
+            }
         }
 
         public object createImageData(double sw, double sh)
         {
-            throw new System.NotImplementedException();
+            if (double.IsNaN(sw) || double.IsInfinity(sw) || sw <= 0 ||
+                double.IsNaN(sh) || double.IsInfinity(sh) || sh <= 0)
+            {
+                throw new System.NotSupportedException("Invalid arguments for createImageData");
+            }
+            var width = (uint)sw;
+            var height = (uint)sh;
+            var data = new byte[width * height * 4];
+            return new ImageData(width, height) { data = data };
         }
 
         public void putImageData(object pData, double dx, double dy)
         {
-            throw new System.NotImplementedException();
+            if (pData is ImageData imageData && imageData.data is byte[] bytes)
+            {
+                var info = new SKImageInfo((int)imageData.width, (int)imageData.height, SKColorType.Rgba8888, SKAlphaType.Unpremul);
+                using (var bitmap = new SKBitmap(info))
+                {
+                    var gcHandle = System.Runtime.InteropServices.GCHandle.Alloc(bytes, System.Runtime.InteropServices.GCHandleType.Pinned);
+                    try
+                    {
+                        var ptr = gcHandle.AddrOfPinnedObject();
+                        bitmap.InstallPixels(info, ptr);
+                        _surface.Canvas.DrawBitmap(bitmap, (float)dx, (float)dy);
+                    }
+                    finally
+                    {
+                        gcHandle.Free();
+                    }
+                }
+            }
         }
 
         public void putImageData(object imagedata, double dx, double dy, double dirtyX, double dirtyY, double dirtyWidth, double dirtyHeight)
         {
-            throw new System.NotImplementedException();
+            if (imagedata is ImageData sourceImageData && sourceImageData.data is byte[] bytes)
+            {
+                var info = new SKImageInfo((int)sourceImageData.width, (int)sourceImageData.height, SKColorType.Rgba8888, SKAlphaType.Unpremul);
+
+                var gcHandle = System.Runtime.InteropServices.GCHandle.Alloc(bytes, System.Runtime.InteropServices.GCHandleType.Pinned);
+                try
+                {
+                    var ptr = gcHandle.AddrOfPinnedObject();
+                    using (var fullBitmap = new SKBitmap())
+                    {
+                        fullBitmap.InstallPixels(info, ptr);
+
+                        var subsetRect = SKRectI.Create((int)dirtyX, (int)dirtyY, (int)dirtyWidth, (int)dirtyHeight);
+                        using (var subsetBitmap = new SKBitmap(subsetRect.Width, subsetRect.Height))
+                        {
+                            if (fullBitmap.ExtractSubset(subsetBitmap, subsetRect))
+                            {
+                                _surface.Canvas.DrawBitmap(subsetBitmap, (float)dx, (float)dy);
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    gcHandle.Free();
+                }
+            }
         }
 
         public object createFilterChain()
         {
-            throw new System.NotImplementedException();
+            return new SkiaFilterChain();
         }
 
         public void commit()
@@ -651,7 +775,24 @@ namespace SharpCanvas.Context.Skia
 
         public void ChangeSize(int width, int height, bool reset)
         {
-            throw new System.NotImplementedException();
+            var newInfo = new SKImageInfo(width, height, _surface.ImageInfo.ColorType, _surface.ImageInfo.AlphaType);
+
+            var newSurface = SKSurface.Create(newInfo);
+
+            if (!reset)
+            {
+                using (var snapshot = _surface.Snapshot())
+                {
+                    var sourceRect = new SKRect(0, 0, snapshot.Width, snapshot.Height);
+                    var destRect = new SKRect(0, 0, width, height);
+                    newSurface.Canvas.DrawImage(snapshot, sourceRect, destRect);
+                }
+            }
+
+            _surface.Dispose();
+            _surface = newSurface;
+
+            _path.Reset();
         }
 
         public int GetHeight()
@@ -664,5 +805,169 @@ namespace SharpCanvas.Context.Skia
             return _surface.Canvas.DeviceClipBounds.Width;
         }
 
+        // MDN properties
+        public string direction { get; set; } = "ltr"; // TODO: Implement
+        public string filter { get; set; } = "none"; // TODO: Implement
+
+        public string fontKerning { get; set; } = "auto"; // TODO: Implement
+        public string fontStretch { get; set; } = "normal"; // TODO: Implement
+        public string fontVariantCaps { get; set; } = "normal"; // TODO: Implement
+        public bool imageSmoothingEnabled { get; set; } = true;
+        public string imageSmoothingQuality { get; set; } = "low";
+        public string lang { get; set; } = "en-US";
+
+        public string letterSpacing { get; set; } = "0px"; // TODO: Implement
+        private double _lineDashOffset = 0.0;
+        public double lineDashOffset
+        {
+            get => _lineDashOffset;
+            set
+            {
+                _lineDashOffset = value;
+                UpdateLineDash();
+            }
+        }
+        public string textRendering { get; set; } = "auto"; // TODO: Implement
+
+        public string wordSpacing { get; set; } = "0px"; // TODO: Implement
+
+        public void resetTransform()
+        {
+            _surface.Canvas.ResetMatrix();
+        }
+
+        public object getTransform()
+        {
+            var matrix = _surface.Canvas.TotalMatrix;
+            return new DOMMatrix(matrix.ScaleX, matrix.SkewY, matrix.SkewX, matrix.ScaleY, matrix.TransX, matrix.TransY);
+        }
+
+        public void reset()
+        {
+            // Resetting the entire context state to default values.
+            // This is a simplified version. A full implementation would reset all properties.
+            resetTransform();
+            globalAlpha = 1.0;
+            globalCompositeOperation = "source-over";
+            strokeStyle = "#000000";
+            fillStyle = "#000000";
+            lineWidth = 1.0;
+            lineCap = "butt";
+            lineJoin = "miter";
+            miterLimit = 10.0;
+            shadowOffsetX = 0;
+            shadowOffsetY = 0;
+            shadowBlur = 0;
+            shadowColor = "rgba(0, 0, 0, 0)";
+            font = "10px sans-serif";
+            textAlign = "start";
+            textBaseLine = "alphabetic";
+            // Reset dash list
+        }
+
+        public bool isContextLost()
+        {
+            return false; // SkiaSharp context is not lost in the same way a WebGL context is.
+        }
+
+        public void drawFocusIfNeeded(object element)
+        {
+            // No-op for now. This is for accessibility and browser focus rings.
+        }
+
+        public void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, bool anticlockwise)
+        {
+            // TODO: This implementation ignores startAngle, endAngle, and anticlockwise. It draws a full ellipse.
+            using (var ellipsePath = new SKPath())
+            {
+                var rect = new SKRect((float)(x - radiusX), (float)(y - radiusY), (float)(x + radiusX), (float)(y + radiusY));
+                ellipsePath.AddOval(rect);
+
+                if (rotation != 0)
+                {
+                    var matrix = SKMatrix.CreateRotation((float)rotation, (float)x, (float)y);
+                    ellipsePath.Transform(matrix);
+                }
+                _path.AddPath(ellipsePath);
+            }
+        }
+
+        public void roundRect(double x, double y, double w, double h, object radii)
+        {
+            // TODO: This is a simplified implementation that only supports a single radius value.
+            var rect = new SKRect((float)x, (float)y, (float)(x + w), (float)(y + h));
+            float r = 0;
+            if (radii is double || radii is int || radii is float)
+            {
+                r = System.Convert.ToSingle(radii);
+            }
+            else if (radii is System.Collections.IEnumerable enumerable)
+            {
+                var first = Enumerable.FirstOrDefault(Enumerable.Cast<object>(enumerable));
+                if (first is double || first is int || first is float)
+                {
+                    r = System.Convert.ToSingle(first);
+                }
+            }
+            _path.AddRoundRect(rect, r, r);
+        }
+
+        private double[] _lineDash = new double[0];
+
+        private void UpdateLineDash()
+        {
+            if (_lineDash == null || _lineDash.Length == 0)
+            {
+                _strokePaint.PathEffect = null;
+            }
+            else
+            {
+                var intervals = _lineDash.Select(d => (float)d).ToArray();
+                if (intervals.Length % 2 != 0)
+                {
+                    intervals = intervals.Concat(intervals).ToArray();
+                }
+                _strokePaint.PathEffect = SKPathEffect.CreateDash(intervals, (float)lineDashOffset);
+            }
+        }
+
+        public void setLineDash(object segments)
+        {
+            if (segments is System.Collections.IEnumerable enumerable)
+            {
+                var list = new List<double>();
+                foreach (var item in enumerable)
+                {
+                    list.Add(System.Convert.ToDouble(item));
+                }
+                _lineDash = list.ToArray();
+            }
+            else
+            {
+                _lineDash = new double[0];
+            }
+            UpdateLineDash();
+        }
+
+        public object getLineDash()
+        {
+            return _lineDash;
+        }
+
+        public object createConicGradient(double startAngle, double x, double y)
+        {
+            var center = new SKPoint((float)x, (float)y);
+            var startDegrees = (float)(startAngle * 180 / System.Math.PI);
+            return new SkiaConicCanvasGradient(startDegrees, center);
+        }
+
+        public bool isPointInStroke(double x, double y)
+        {
+            using (var strokePath = new SKPath())
+            {
+                _strokePaint.GetFillPath(_path, strokePath);
+                return strokePath.Contains((float)x, (float)y);
+            }
+        }
     }
 }
