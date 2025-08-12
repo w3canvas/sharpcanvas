@@ -276,7 +276,7 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
-        private string _lineCap;
+        private string _lineCap = "butt";
         public string lineCap
         {
             get => _lineCap;
@@ -298,7 +298,7 @@ namespace SharpCanvas.Context.Skia
             };
         }
 
-        private string _lineJoin;
+        private string _lineJoin = "miter";
         public string lineJoin
         {
             get => _lineJoin;
@@ -363,7 +363,7 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
-        private string _shadowColor;
+        private string _shadowColor = "rgba(0, 0, 0, 0)";
         public string shadowColor
         {
             get => _shadowColor;
@@ -405,19 +405,19 @@ namespace SharpCanvas.Context.Skia
                 _strokePaint.ImageFilter = null;
             }
         }
-        private string _font;
+        private string _font = "10px sans-serif";
         public string font
         {
             get => _font;
             set
             {
                 _font = value;
-                FontUtils.ApplyFont(_font, _fillPaint);
-                FontUtils.ApplyFont(_font, _strokePaint);
+                FontUtils.ApplyFont(this, _fillPaint);
+                FontUtils.ApplyFont(this, _strokePaint);
             }
         }
 
-        private string _textAlign;
+        private string _textAlign = "start";
         public string textAlign
         {
             get => _textAlign;

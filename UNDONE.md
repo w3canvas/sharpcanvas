@@ -6,8 +6,10 @@ This document lists features that are currently unimplemented, incomplete, or ha
 The following features are not yet implemented in the Skia backend. The goal is to achieve feature parity with the legacy `System.Drawing` context.
 
 ### Unimplemented Methods
-- `putImageData(...)` (all overloads)
 - `ChangeSize(int width, int height, bool reset)`
+
+### Known Issues
+- **`putImageData` build error**: There is a persistent build error related to the `putImageData` method in `SkiaCanvasRenderingContext2DBase.cs`. The error is `CS1503: Argument 2: cannot convert from 'byte[]' to 'nint'`, and it occurs even when the method body is commented out. This suggests a problem with the build environment or a dependency issue that needs further investigation.
 
 ### Partially Implemented Features
 - **Text Rendering**: The `fontVariantCaps` property is not fully implemented.

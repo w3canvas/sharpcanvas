@@ -17,4 +17,9 @@
     <Compile Include="ApiUsageTests.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharpCanvas\SharpCanvas.Core\SharpCanvas.Core.csproj" />
+    <ProjectReference Include="..\..\SharpCanvas\Context.Skia\Context.Skia.csproj" />
+  </ItemGroup>
+
 </Project>

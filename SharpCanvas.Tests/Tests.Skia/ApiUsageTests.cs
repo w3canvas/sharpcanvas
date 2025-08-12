@@ -1,4 +1,6 @@
 using NUnit.Framework;
+using SharpCanvas.Shared;
+using SharpCanvas.Context.Skia;
 using SkiaSharp;
 
 namespace SharpCanvas.Tests.Skia
@@ -78,5 +80,6 @@ namespace SharpCanvas.Tests.Skia
                 }
             }
         }
+
     }
 }
