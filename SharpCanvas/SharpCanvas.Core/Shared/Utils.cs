@@ -73,11 +73,18 @@ namespace SharpCanvas
         {
             if (httpRegex.IsMatch(imageData))
             {
-                WebRequest request = WebRequest.Create(imageData);
-                request.Timeout = 10000;
-                var response = (HttpWebResponse) request.GetResponse();
-                Stream dataStream = response.GetResponseStream();
-                return new Bitmap(dataStream);
+                using (var httpClient = new System.Net.Http.HttpClient())
+                {
+                    try
+                    {
+                        var stream = httpClient.GetStreamAsync(imageData).Result;
+                        return new Bitmap(stream);
+                    }
+                    catch (System.Net.Http.HttpRequestException)
+                    {
+                        return new Bitmap(1, 1);
+                    }
+                }
             }
             else //get bitmap from hard disk
             {

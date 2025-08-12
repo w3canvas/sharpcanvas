@@ -13,8 +13,6 @@ using SharpCanvas.Interop;
 using SharpCanvas.Common;
 using SharpCanvas.StandardFilter;
 
-// FIXME: This library has not been converted to use the ObjectWithPrototype class.
-// FIXME: Used only with InvokeMember, currently only used with drawImage (bug?).
 using SharpCanvas.Shared;
 using Convert = System.Convert;
 
@@ -27,14 +25,6 @@ namespace SharpCanvas.Context.Drawing2D
     public class CanvasRenderingContext2D : ICanvasRenderingContext2D
     {
         #region Private Fields
-
-// FIXME: Cleanup and move to Share.
-        private const string CANVAS_STACK_UNDERFLOW =
-            "restore() caused a a buffer underflow: There are no more saved states available to restore.";
-        private const string INDEX_SIZE_ERR =
-            "The specified offset is negative or greater than the number of characters in data, or if the specified count is negative";
-        private const string NOT_SUPPORTED_ERR = "Some of the paramters are invalid";
-        private const string TYPE_MISTMATCH_ERR = "Type mistmatch error";
 
         private const string FONT_REGEX = @"(?<size>\d+)(?<metric>\w+)\W+(?<font>\w+.*)";
 
@@ -92,20 +82,14 @@ namespace SharpCanvas.Context.Drawing2D
             get { return _canvasElement; }
         }
 
-        public virtual object prototype //#CanvasRenderingContext2D object. Its type is CanvasPrototypeContainer
+        public object prototype()
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            return this;
         }
 
-        object ICanvasRenderingContext2D.prototype()
+        public object __proto__
         {
-            throw new NotImplementedException();
-        }
-
-        public virtual object __proto__
-        {
-            get { throw new NotImplementedException(); }
+            get { return this; }
         }
 
         #endregion
@@ -147,8 +131,7 @@ namespace SharpCanvas.Context.Drawing2D
 
         public CanvasRenderingContext2D()
         {
-            // FIXME: Throw debug error.
-            // MessageBox.Show("Empty constr");
+            throw new NotSupportedException("This constructor is not supported and should not be used.");
         }
 
         private void CanvasRenderingContext2D_OnPartialDraw()
@@ -234,7 +217,7 @@ namespace SharpCanvas.Context.Drawing2D
         public void restore()
         {
             if (stack.Count == 0)
-                throw new Exception(CANVAS_STACK_UNDERFLOW);
+                throw new Exception(ErrorMessages.CANVAS_STACK_UNDERFLOW);
             CanvasState state = stack.Pop();
             surface.Restore(state.GraphicsState);
             object ss = state.StrokeStyle;
@@ -444,7 +427,7 @@ namespace SharpCanvas.Context.Drawing2D
         public object createRadialGradient(double x0, double y0, double r0, double x1, double y1, double r1)
         {
             if (r0 < 0 || r1 < 0)
-                throw new Exception(INDEX_SIZE_ERR);
+                throw new Exception(ErrorMessages.INDEX_SIZE_ERR);
             PointF[] points = InternalTransform(x0, y0, x1, y1);
             //PointF[] points = new PointF[]{new PointF((float)x0, (float)y0), new PointF((float)x1, (float)y1)  };
             return new PathCanvasGradient(points[0], (float) r0,
@@ -1062,7 +1045,7 @@ namespace SharpCanvas.Context.Drawing2D
         {
             float x1 = (float) px1, x2 = (float) px2, y1 = (float) py1, y2 = (float) py2, radius = (float) pradius;
             if (radius < 0)
-                throw new Exception(INDEX_SIZE_ERR);
+                throw new Exception(ErrorMessages.INDEX_SIZE_ERR);
             PointF point = path.GetLastPoint();
             //transfrom points
             PointF[] points = InternalTransform(x1, y1, x2, y2);
@@ -1133,7 +1116,7 @@ namespace SharpCanvas.Context.Drawing2D
         public void arc(double x, double y, double radius, double startAngle, double endAngle, bool anticlockwise)
         {
             if (radius < 0)
-                throw new Exception(INDEX_SIZE_ERR);
+                throw new Exception(ErrorMessages.INDEX_SIZE_ERR);
             //transform passed coordinates accoring to internal transformation matrix
             PointF[] points = InternalTransform(x, y);
             x = points[0].X;
@@ -1548,7 +1531,10 @@ namespace SharpCanvas.Context.Drawing2D
             var rect = new RectangleF((float) sx, (float) sy, (float) sw, (float) sh);
             Bitmap cropped = curBitmap.Clone(rect, curBitmap.PixelFormat);
             PointF[] points = InternalTransform(dx, dy);
+            var originalInterpolationMode = surface.InterpolationMode;
+            surface.InterpolationMode = GetInterpolationMode();
             surface.DrawImage(cropped, points[0].X, points[0].Y, (float) dw, (float) dh);
+            surface.InterpolationMode = originalInterpolationMode;
             if (OnPartialDraw != null)
                 OnPartialDraw();
         }
@@ -1598,7 +1584,10 @@ namespace SharpCanvas.Context.Drawing2D
             }
             if (curBitmap != null)
             {
+                var originalInterpolationMode = surface.InterpolationMode;
+                surface.InterpolationMode = GetInterpolationMode();
                 surface.DrawImage(curBitmap, points[0].X, points[0].Y);
+                surface.InterpolationMode = originalInterpolationMode;
                 if (OnPartialDraw != null)
                     OnPartialDraw();
             }
@@ -1649,7 +1638,10 @@ namespace SharpCanvas.Context.Drawing2D
                 dw = curBitmap.Width;
                 dh = curBitmap.Height;
             }
+            var originalInterpolationMode = surface.InterpolationMode;
+            surface.InterpolationMode = GetInterpolationMode();
             surface.DrawImage(curBitmap, points[0].X, points[0].Y, (float) dw, (float) dh);
+            surface.InterpolationMode = originalInterpolationMode;
             if (OnPartialDraw != null)
                 OnPartialDraw();
         }
@@ -1657,6 +1649,21 @@ namespace SharpCanvas.Context.Drawing2D
         public void commit()
         {
             //do nothing
+        }
+
+        private InterpolationMode GetInterpolationMode()
+        {
+            if (!imageSmoothingEnabled)
+            {
+                return InterpolationMode.NearestNeighbor;
+            }
+            return imageSmoothingQuality switch
+            {
+                "high" => InterpolationMode.HighQualityBicubic,
+                "medium" => InterpolationMode.Bilinear,
+                "low" => InterpolationMode.Low,
+                _ => InterpolationMode.Low,
+            };
         }
 
         #endregion
@@ -1667,7 +1674,7 @@ namespace SharpCanvas.Context.Drawing2D
         {
             if (double.IsNaN(sw) || double.IsInfinity(sw) || double.IsInfinity(sh) || double.IsNaN(sh))
             {
-                throw new NotSupportedException(NOT_SUPPORTED_ERR);
+                throw new NotSupportedException(ErrorMessages.NOT_SUPPORTED_ERR);
             }
             var img = new ImageData(Convert.ToUInt32(sw), Convert.ToUInt32(sh));
             var arr = new List<object>();
@@ -1692,7 +1699,7 @@ namespace SharpCanvas.Context.Drawing2D
             if (double.IsNaN(sw) || double.IsInfinity(sw) || double.IsInfinity(sh) || double.IsNaN(sh)
                 || double.IsNaN(sx) || double.IsInfinity(sx) || double.IsInfinity(sy) || double.IsNaN(sy))
             {
-                throw new NotSupportedException(NOT_SUPPORTED_ERR);
+                throw new NotSupportedException(ErrorMessages.NOT_SUPPORTED_ERR);
             }
             var img = new ImageData(Convert.ToUInt32(sw), Convert.ToUInt32(sh));
             if (sw == 1 && sh == 1)
@@ -1758,11 +1765,11 @@ namespace SharpCanvas.Context.Drawing2D
                 || double.IsInfinity(dirtyWidth) || double.IsNaN(dirtyWidth) || double.IsInfinity(dirtyHeight) ||
                 double.IsNaN(dirtyHeight))
             {
-                throw new NotSupportedException(NOT_SUPPORTED_ERR);
+                throw new NotSupportedException(ErrorMessages.NOT_SUPPORTED_ERR);
             }
             if (!(imagedata is ImageData))
             {
-                throw new Exception(TYPE_MISTMATCH_ERR);
+                throw new Exception(ErrorMessages.TYPE_MISTMATCH_ERR);
             }
             var img = imagedata as ImageData;
             if (dirtyWidth < 0)
@@ -1816,11 +1823,11 @@ namespace SharpCanvas.Context.Drawing2D
         {
             if (double.IsNaN(dx) || double.IsInfinity(dx) || double.IsInfinity(dy) || double.IsNaN(dy))
             {
-                throw new NotSupportedException(NOT_SUPPORTED_ERR);
+                throw new NotSupportedException(ErrorMessages.NOT_SUPPORTED_ERR);
             }
             if (!(imagedata is ImageData))
             {
-                throw new Exception(TYPE_MISTMATCH_ERR);
+                throw new Exception(ErrorMessages.TYPE_MISTMATCH_ERR);
             }
             var img = imagedata as ImageData;
 
@@ -1924,7 +1931,138 @@ namespace SharpCanvas.Context.Drawing2D
 
         #endregion
 
+        #region MDN Properties
+
+        public string direction { get; set; } = "ltr";
+        public string filter { get; set; } = "none";
+        public string fontKerning { get; set; } = "auto";
+        public string fontStretch { get; set; } = "normal";
+        public string fontVariantCaps { get; set; } = "normal";
+        public bool imageSmoothingEnabled { get; set; } = true;
+        public string imageSmoothingQuality { get; set; } = "low";
+        public string lang { get; set; } = "en-US";
+        public string letterSpacing { get; set; } = "0px";
+        private double _lineDashOffset = 0.0;
+        public double lineDashOffset
+        {
+            get => _lineDashOffset;
+            set
+            {
+                _lineDashOffset = value;
+                _stroke.DashOffset = (float)value;
+            }
+        }
+        public string textRendering { get; set; } = "auto";
+        public string wordSpacing { get; set; } = "0px";
+
+        #endregion
+
         #region Utils
+
+        public void resetTransform()
+        {
+            setTransform(1, 0, 0, 1, 0, 0);
+        }
+
+        public object getTransform()
+        {
+            var elements = _transformation.Elements;
+            return new Shared.DOMMatrix(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5]);
+        }
+
+        public void reset()
+        {
+            _reset();
+        }
+
+        public bool isContextLost()
+        {
+            return false;
+        }
+
+        public void drawFocusIfNeeded(object element)
+        {
+            // No-op
+        }
+
+        public void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, bool anticlockwise)
+        {
+            // TODO: This implementation ignores startAngle, endAngle, and anticlockwise. It draws a full ellipse.
+            using (var ellipsePath = new GraphicsPath())
+            {
+                ellipsePath.AddEllipse((float)(x - radiusX), (float)(y - radiusY), (float)(radiusX * 2), (float)(radiusY * 2));
+
+                if (rotation != 0)
+                {
+                    using (var matrix = new Matrix())
+                    {
+                        matrix.RotateAt((float)(rotation * 180 / Math.PI), new PointF((float)x, (float)y));
+                        ellipsePath.Transform(matrix);
+                    }
+                }
+                path.AddPath(ellipsePath, false);
+            }
+        }
+
+        public void roundRect(double x, double y, double w, double h, object radii)
+        {
+            // TODO: Implement. This requires manual path construction with arcs and lines, which is non-trivial.
+            // For now, this will draw a regular rectangle.
+            rect(x, y, w, h);
+        }
+
+        private double[] _lineDash = new double[0];
+
+        private void UpdateLineDash()
+        {
+            if (_lineDash == null || _lineDash.Length == 0)
+            {
+                _stroke.DashStyle = DashStyle.Solid;
+            }
+            else
+            {
+                _stroke.DashStyle = DashStyle.Custom;
+                var intervals = _lineDash.Select(d => (float)d).ToArray();
+                if (intervals.Length % 2 != 0)
+                {
+                    intervals = intervals.Concat(intervals).ToArray();
+                }
+                _stroke.DashPattern = intervals;
+            }
+        }
+
+        public void setLineDash(object segments)
+        {
+            if (segments is System.Collections.IEnumerable enumerable)
+            {
+                var list = new List<double>();
+                foreach (var item in enumerable)
+                {
+                    list.Add(System.Convert.ToDouble(item));
+                }
+                _lineDash = list.ToArray();
+            }
+            else
+            {
+                _lineDash = new double[0];
+            }
+            UpdateLineDash();
+        }
+
+        public object getLineDash()
+        {
+            return _lineDash;
+        }
+
+        public object createConicGradient(double startAngle, double x, double y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool isPointInStroke(double x, double y)
+        {
+            return path.IsOutlineVisible((float)x, (float)y, _stroke);
+        }
 
         //todo: move it to geometry utils
         /// <summary>
@@ -1939,7 +2077,7 @@ namespace SharpCanvas.Context.Drawing2D
         /// <summary>
         /// Reset Canvas fields to their initial value.
         /// </summary>
-        private void reset()
+        private void _reset()
         {
             SetDefaultValues();
             _stroke = _initialConfig.Stroke;
@@ -1982,7 +2120,9 @@ namespace SharpCanvas.Context.Drawing2D
 
         #region Implementation of IReflect
 
-// FIXME: Wrap IExpando from Host. This one targets JScript.
+// NOTE: This custom IReflect implementation is for JScript interop. The original author suggested wrapping an IExpando object from the host.
+// However, without the host environment for testing, changing this could break functionality. This implementation is being left in place
+// to ensure continued compatibility with the legacy environment.
 
         //IExpando
 
