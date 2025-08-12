@@ -5,8 +5,9 @@ namespace SharpCanvas.Context.Skia
 {
     public static class FontUtils
     {
-        public static void ApplyFont(string font, SKPaint paint)
+        public static void ApplyFont(SkiaCanvasRenderingContext2DBase context, SKPaint paint)
         {
+            var font = context.font;
             var regex = new Regex(@"(?<size>\d+)(?<metric>\w+)\W+(?<font>[\w\s]+.*)");
             if (regex.IsMatch(font))
             {
@@ -40,6 +41,38 @@ namespace SharpCanvas.Context.Skia
 
                 paint.Typeface = typeface ?? SKTypeface.Default;
             }
+
+            paint.IsAntialias = context.textRendering != "optimizeSpeed";
+            paint.SubpixelText = context.textRendering == "optimizeLegibility";
+
+            // The following properties are not available in this version of SkiaSharp.
+            // paint.TextKerning = context.fontKerning == "normal";
+            //
+            // if (float.TryParse(context.letterSpacing.Replace("px", ""), out var letterSpacing))
+            // {
+            //     paint.LetterSpacing = letterSpacing;
+            // }
+            //
+            // if (float.TryParse(context.wordSpacing.Replace("px", ""), out var wordSpacing))
+            // {
+            //     paint.WordSpacing = wordSpacing;
+            // }
+
+            // fontStretch is more complex, requiring specific typeface selection or transformations.
+            // For simplicity, we can use TextScaleX, but a full implementation would need more logic.
+            paint.TextScaleX = context.fontStretch switch
+            {
+                "ultra-condensed" => 0.5f,
+                "extra-condensed" => 0.625f,
+                "condensed" => 0.75f,
+                "semi-condensed" => 0.875f,
+                "normal" => 1.0f,
+                "semi-expanded" => 1.125f,
+                "expanded" => 1.25f,
+                "extra-expanded" => 1.5f,
+                "ultra-expanded" => 2.0f,
+                _ => 1.0f,
+            };
         }
 
         public static float GetYOffset(string textBaseline, SKPaint paint)

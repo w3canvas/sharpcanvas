@@ -805,18 +805,44 @@ namespace SharpCanvas.Context.Skia
             return _surface.Canvas.DeviceClipBounds.Width;
         }
 
-        // MDN properties
-        public string direction { get; set; } = "ltr"; // TODO: Implement
-        public string filter { get; set; } = "none"; // TODO: Implement
+        private void UpdateFont()
+        {
+            FontUtils.ApplyFont(this, _fillPaint);
+            FontUtils.ApplyFont(this, _strokePaint);
+        }
 
-        public string fontKerning { get; set; } = "auto"; // TODO: Implement
-        public string fontStretch { get; set; } = "normal"; // TODO: Implement
-        public string fontVariantCaps { get; set; } = "normal"; // TODO: Implement
+        private void UpdateFilters()
+        {
+            var imageFilter = FilterParser.Parse(filter);
+            _fillPaint.ImageFilter = imageFilter;
+            _strokePaint.ImageFilter = imageFilter;
+        }
+        // MDN properties
+        private string _direction = "ltr";
+        public string direction { get => _direction; set { _direction = value; UpdateTextAlign(); } }
+        private string _filter = "none";
+        public string filter
+        {
+            get => _filter;
+            set
+            {
+                _filter = value;
+                UpdateFilters();
+            }
+        }
+
+        private string _fontKerning = "auto";
+        public string fontKerning { get => _fontKerning; set { _fontKerning = value; UpdateFont(); } }
+        private string _fontStretch = "normal";
+        public string fontStretch { get => _fontStretch; set { _fontStretch = value; UpdateFont(); } }
+        private string _fontVariantCaps = "normal";
+        public string fontVariantCaps { get => _fontVariantCaps; set { _fontVariantCaps = value; UpdateFont(); } }
         public bool imageSmoothingEnabled { get; set; } = true;
         public string imageSmoothingQuality { get; set; } = "low";
         public string lang { get; set; } = "en-US";
 
-        public string letterSpacing { get; set; } = "0px"; // TODO: Implement
+        private string _letterSpacing = "0px";
+        public string letterSpacing { get => _letterSpacing; set { _letterSpacing = value; UpdateFont(); } }
         private double _lineDashOffset = 0.0;
         public double lineDashOffset
         {
@@ -827,9 +853,11 @@ namespace SharpCanvas.Context.Skia
                 UpdateLineDash();
             }
         }
-        public string textRendering { get; set; } = "auto"; // TODO: Implement
+        private string _textRendering = "auto";
+        public string textRendering { get => _textRendering; set { _textRendering = value; UpdateFont(); } }
 
-        public string wordSpacing { get; set; } = "0px"; // TODO: Implement
+        private string _wordSpacing = "0px";
+        public string wordSpacing { get => _wordSpacing; set { _wordSpacing = value; UpdateFont(); } }
 
         public void resetTransform()
         {
@@ -877,39 +905,105 @@ namespace SharpCanvas.Context.Skia
 
         public void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, bool anticlockwise)
         {
-            // TODO: This implementation ignores startAngle, endAngle, and anticlockwise. It draws a full ellipse.
+            if (radiusX < 0 || radiusY < 0)
+            {
+                throw new System.NotSupportedException("Radius values for ellipse must be non-negative.");
+            }
+
+            var rect = new SKRect((float)(x - radiusX), (float)(y - radiusY), (float)(x + radiusX), (float)(y + radiusY));
+            var startDegrees = (float)(startAngle * 180 / System.Math.PI);
+            var endDegrees = (float)(endAngle * 180 / System.Math.PI);
+
+            var sweepAngle = endDegrees - startDegrees;
+            if (anticlockwise)
+            {
+                if (sweepAngle > 0)
+                {
+                    sweepAngle -= 360;
+                }
+            }
+            else
+            {
+                if (sweepAngle < 0)
+                {
+                    sweepAngle += 360;
+                }
+            }
+
             using (var ellipsePath = new SKPath())
             {
-                var rect = new SKRect((float)(x - radiusX), (float)(y - radiusY), (float)(x + radiusX), (float)(y + radiusY));
-                ellipsePath.AddOval(rect);
-
                 if (rotation != 0)
                 {
                     var matrix = SKMatrix.CreateRotation((float)rotation, (float)x, (float)y);
                     ellipsePath.Transform(matrix);
                 }
+
+                ellipsePath.AddArc(rect, startDegrees, sweepAngle);
                 _path.AddPath(ellipsePath);
             }
         }
 
         public void roundRect(double x, double y, double w, double h, object radii)
         {
-            // TODO: This is a simplified implementation that only supports a single radius value.
             var rect = new SKRect((float)x, (float)y, (float)(x + w), (float)(y + h));
-            float r = 0;
-            if (radii is double || radii is int || radii is float)
+            var radiiList = new List<float>();
+
+            if (radii is System.Collections.IEnumerable enumerable)
             {
-                r = System.Convert.ToSingle(radii);
-            }
-            else if (radii is System.Collections.IEnumerable enumerable)
-            {
-                var first = Enumerable.FirstOrDefault(Enumerable.Cast<object>(enumerable));
-                if (first is double || first is int || first is float)
+                foreach (var item in enumerable)
                 {
-                    r = System.Convert.ToSingle(first);
+                    radiiList.Add(System.Convert.ToSingle(item));
                 }
             }
-            _path.AddRoundRect(rect, r, r);
+            else if (radii is double || radii is int || radii is float)
+            {
+                radiiList.Add(System.Convert.ToSingle(radii));
+            }
+
+            if (radiiList.Count == 0)
+            {
+                _path.AddRect(rect);
+                return;
+            }
+
+            float topLeft, topRight, bottomRight, bottomLeft;
+            switch (radiiList.Count)
+            {
+                case 1:
+                    topLeft = topRight = bottomRight = bottomLeft = radiiList[0];
+                    break;
+                case 2:
+                    topLeft = bottomRight = radiiList[0];
+                    topRight = bottomLeft = radiiList[1];
+                    break;
+                case 3:
+                    topLeft = radiiList[0];
+                    topRight = bottomLeft = radiiList[1];
+                    bottomRight = radiiList[2];
+                    break;
+                case 4:
+                    topLeft = radiiList[0];
+                    topRight = radiiList[1];
+                    bottomRight = radiiList[2];
+                    bottomLeft = radiiList[3];
+                    break;
+                default:
+                    // Spec says to use the first 4 values if more are provided.
+                    topLeft = radiiList[0];
+                    topRight = radiiList[1];
+                    bottomRight = radiiList[2];
+                    bottomLeft = radiiList[3];
+                    break;
+            }
+            var roundRect = new SKRoundRect(rect);
+            roundRect.SetRectRadii(rect, new[]
+            {
+                new SKPoint(topLeft, topLeft),
+                new SKPoint(topRight, topRight),
+                new SKPoint(bottomRight, bottomRight),
+                new SKPoint(bottomLeft, bottomLeft),
+            });
+            _path.AddRoundRect(roundRect);
         }
 
         private double[] _lineDash = new double[0];
