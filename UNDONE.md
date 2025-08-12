@@ -38,3 +38,34 @@ The following `FIXME` items exist in the legacy codebase and should be addressed
   - `FIXME: Cleanup and move to Share.`
   - `FIXME: Throw debug error.`
   - `FIXME: Wrap IExpando from Host. This one targets JScript.`
+
+## 3. Missing Properties and Methods from MDN
+The following properties and methods are defined in the MDN documentation for `CanvasRenderingContext2D` but are not present in the `ICanvasRenderingContext2D` interface.
+
+### Missing Properties
+- `direction`
+- `filter`
+- `fontKerning`
+- `fontStretch`
+- `fontVariantCaps`
+- `imageSmoothingEnabled`
+- `imageSmoothingQuality`
+- `lang`
+- `letterSpacing`
+- `lineDashOffset`
+- `textRendering`
+- `wordSpacing`
+
+### Missing Methods
+- `createConicGradient()`
+- `drawFocusIfNeeded()`
+- `ellipse()`
+- `getContextAttributes()`
+- `getLineDash()`
+- `getTransform()`
+- `isContextLost()`
+- `isPointInStroke()`
+- `reset()`
+- `resetTransform()`
+- `roundRect()`
+- `setLineDash()`
