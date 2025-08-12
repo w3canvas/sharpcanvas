@@ -196,25 +196,44 @@ namespace SharpCanvas.Context.Skia
                 _ => SKBlendMode.SrcOver,
             };
         }
+        private object _fillStyleObject = "#000000";
+        private object _strokeStyleObject = "#000000";
+
         public object strokeStyle
         {
-            get => _strokePaint.Color.ToString();
+            get => _strokeStyleObject;
             set
             {
+                _strokeStyleObject = value;
                 if (value is string colorString)
                 {
+                    _strokePaint.Shader?.Dispose();
+                    _strokePaint.Shader = null;
                     _strokePaint.Color = ColorParser.Parse(colorString);
+                }
+                else if (value is SkiaLinearCanvasGradient gradient)
+                {
+                    _strokePaint.Shader?.Dispose();
+                    _strokePaint.Shader = gradient.GetShader();
                 }
             }
         }
         public object fillStyle
         {
-            get => _fillPaint.Color.ToString();
+            get => _fillStyleObject;
             set
             {
+                _fillStyleObject = value;
                 if (value is string colorString)
                 {
+                    _fillPaint.Shader?.Dispose();
+                    _fillPaint.Shader = null;
                     _fillPaint.Color = ColorParser.Parse(colorString);
+                }
+                else if (value is SkiaLinearCanvasGradient gradient)
+                {
+                    _fillPaint.Shader?.Dispose();
+                    _fillPaint.Shader = gradient.GetShader();
                 }
             }
         }
@@ -566,7 +585,9 @@ namespace SharpCanvas.Context.Skia
 
         public object createLinearGradient(double x0, double y0, double x1, double y1)
         {
-            throw new System.NotImplementedException();
+            var startPoint = new SKPoint((float)x0, (float)y0);
+            var endPoint = new SKPoint((float)x1, (float)y1);
+            return new SkiaLinearCanvasGradient(startPoint, endPoint);
         }
 
         public object createPattern(object pImg, string repeat)
