@@ -4,6 +4,79 @@
     "/app/SharpCanvas/SharpCanvas.csproj": {}
   },
   "projects": {
+    "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj",
+        "projectName": "SharpCanvas.StandardFilter",
+        "projectPath": "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj",
+        "packagesPath": "/home/jules/.nuget/packages/",
+        "outputPath": "/app/SharpCanvas/Bitmap.Filter/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/jules/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WindowsForms": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "/app/SharpCanvas/Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -278,6 +351,9 @@
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
+              "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj": {
+                "projectPath": "/app/SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj"
+              },
               "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
                 "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
               },

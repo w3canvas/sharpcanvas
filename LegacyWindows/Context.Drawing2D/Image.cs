@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace SharpCanvas.Context.Drawing2D
 {
@@ -36,44 +38,61 @@ namespace SharpCanvas.Context.Drawing2D
             get { return _src; }
             set
             {
+                // This is a simplified synchronous setter. The original asynchronous logic is now in SetSrcAsync.
                 _src = value;
-                //load image to memory
-                string prefix = DEFAULT_TYPE + BASE64;
-                if (!string.IsNullOrEmpty(_src))
+                SetSrcAsync(value).ContinueWith(task =>
                 {
-                    int startIndex = _src.IndexOf(prefix) + prefix.Length;
-                    if (startIndex > 16)
+                    if (task.IsFaulted)
                     {
-                        string data = _src.Substring(startIndex);
-                        byte[] imageData = Convert.FromBase64String(data);
-                        var stream = new MemoryStream(imageData);
-                        _bitmap = new Bitmap(stream);
+                        // Handle exceptions here, e.g., log them.
+                        // For now, we'll just output to console.
+                        Console.WriteLine(task.Exception);
                     }
-                    else if (_src.Contains("http:"))
-                    {
-                        var uriObj = new Uri(_src);
-                        var request = (HttpWebRequest) WebRequest.CreateDefault(uriObj);
-                        request.Timeout = 5000; // 5 seconds in milliseconds
-                        request.ReadWriteTimeout = 20000; // allow up to 20 seconds to elapse
-                        var response = (HttpWebResponse)
-                                       request.GetResponse();
+                });
+            }
+        }
 
-                        _bitmap = (Bitmap) System.Drawing.Image.FromStream(response.GetResponseStream());
-                    }
-                    else
+        public async Task SetSrcAsync(string value)
+        {
+            _src = value;
+            //load image to memory
+            string prefix = DEFAULT_TYPE + BASE64;
+            if (!string.IsNullOrEmpty(_src))
+            {
+                int startIndex = _src.IndexOf(prefix) + prefix.Length;
+                if (startIndex > 16)
+                {
+                    string data = _src.Substring(startIndex);
+                    byte[] imageData = Convert.FromBase64String(data);
+                    var stream = new MemoryStream(imageData);
+                    _bitmap = new Bitmap(stream);
+                }
+                else if (_src.Contains("http:") || _src.Contains("https:"))
+                {
+                    using (var httpClient = new HttpClient())
                     {
-                        _bitmap = (Bitmap) System.Drawing.Image.FromFile(_src);
+                        httpClient.Timeout = TimeSpan.FromSeconds(5);
+                        var response = await httpClient.GetAsync(_src);
+                        response.EnsureSuccessStatusCode();
+                        using (var stream = await response.Content.ReadAsStreamAsync())
+                        {
+                            _bitmap = new Bitmap(stream);
+                        }
                     }
-                    if (_bitmap != null)
-                    {
-                        _width = _bitmap.Width;
-                        _height = _bitmap.Height;
-                    }
-                    //fire onload
-                    if (onload != null)
-                    {
-                        ((Action<object>)onload).Invoke(this);
-                    }
+                }
+                else
+                {
+                    _bitmap = (Bitmap)System.Drawing.Image.FromFile(_src);
+                }
+                if (_bitmap != null)
+                {
+                    _width = _bitmap.Width;
+                    _height = _bitmap.Height;
+                }
+                //fire onload
+                if (onload != null)
+                {
+                    ((Action<object>)onload).Invoke(this);
                 }
             }
         }

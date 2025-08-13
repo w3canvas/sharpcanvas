@@ -8,6 +8,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseWindowsForms>true</UseWindowsForms>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
@@ -22,6 +23,19 @@
     <ProjectReference Include="../Interop/SharpCanvas.Interop.csproj" />
     <ProjectReference Include="../Prototype/SharpCanvas.Prototype.csproj" />
     <ProjectReference Include="../SharpCanvas.Core/SharpCanvas.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="window\AssemblyLocator.cs" />
+    <Compile Include="window\CanvasProxy.cs" />
+    <Compile Include="window\Standalone.cs" />
+    <Compile Include="window\StandaloneBootstrapper.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
+    <ProjectReference Include="../Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj" />
+    <Compile Include="window\FilterProxy.cs" />
+    <Compile Include="mshtml\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>

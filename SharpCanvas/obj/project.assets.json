@@ -352,6 +352,7 @@
           "SharpCanvas.Core": "1.0.0",
           "SharpCanvas.Interop": "1.0.0",
           "SharpCanvas.Prototype": "1.0.0",
+          "SharpCanvas.StandardFilter": "1.0.0",
           "System.Drawing.Common": "8.0.0"
         },
         "compile": {
@@ -404,6 +405,22 @@
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WPF"
+        ]
+      },
+      "SharpCanvas.StandardFilter/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "System.Drawing.Common": "8.0.0"
+        },
+        "compile": {
+          "bin/placeholder/SharpCanvas.StandardFilter.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SharpCanvas.StandardFilter.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WindowsForms"
         ]
       }
     }
@@ -698,6 +715,11 @@
       "type": "project",
       "path": "Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj",
       "msbuildProject": "Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj"
+    },
+    "SharpCanvas.StandardFilter/1.0.0": {
+      "type": "project",
+      "path": "Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj",
+      "msbuildProject": "Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj"
     }
   },
   "projectFileDependencyGroups": {

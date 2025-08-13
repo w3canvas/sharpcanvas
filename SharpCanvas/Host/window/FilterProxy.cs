@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using SharpCanvas.Host.Prototype;
+using SharpCanvas.StandardFilter;
 
 namespace SharpCanvas
 {
