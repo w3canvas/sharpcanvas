@@ -2,6 +2,7 @@
 using SharpCanvas.Shared;
 using SkiaSharp;
 using System.Collections.Generic;
+using SkiaSharp.Views.Desktop;
 
 namespace SharpCanvas.Context.Skia
 {
@@ -16,10 +17,14 @@ namespace SharpCanvas.Context.Skia
 
         public SKBitmap? ApplyFilter(SKBitmap? source)
         {
+#if WINDOWS
             foreach (var filter in _filters)
             {
-                source = filter.ApplyFilter(source);
+                var bitmap = source?.ToBitmap();
+                var filteredBitmap = filter.ApplyFilter(bitmap);
+                source = filteredBitmap?.ToSKBitmap();
             }
+#endif
             return source;
         }
     }

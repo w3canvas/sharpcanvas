@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using SharpCanvas.Common;
 //using System.Linq;
 
 namespace SharpCanvas.Media
@@ -25,7 +26,6 @@ namespace SharpCanvas.Media
         private GeometryGroup _cachedData;
         private Brush _cachedFillBrush;
         private Brush _cachedStrokeBrush;
-        private Path _cachedPath;
 
         #endregion
 
@@ -227,7 +227,7 @@ namespace SharpCanvas.Media
         public void MoveToWithoutTransformation(double x, double y)
         {
             //some start point exists but there is no segments inside the figure
-            if (_figure.StartPoint != null && _figure.Segments.Count == 0)
+            if (_figure.Segments.Count == 0)
             {
                 _figure.StartPoint = new Point(x + _figure.StartPoint.X, y + _figure.StartPoint.Y);
             }
@@ -253,7 +253,7 @@ namespace SharpCanvas.Media
         {
             Point transformedPoint = _transformation.Transform(new Point(x, y));
             //some start point exists but there is no segments inside the figure
-            if (_figure.StartPoint != null && _figure.Segments.Count == 0)
+            if (_figure.Segments.Count == 0)
             {
                 _figure.StartPoint = new Point(transformedPoint.X + _figure.StartPoint.X,
                                                transformedPoint.Y + _figure.StartPoint.Y);
@@ -740,31 +740,13 @@ namespace SharpCanvas.Media
         private void DrawText(string font, string text, double x, double y, string textAlign, string textBaseLine,
                               Brush brush)
         {
-            string fontFamily = FontUtils.ExtractFontName(font);
-            double fontEmSize = FontUtils.ExtractFontEmSize(font, 96);
-            var formatted_text = new FormattedText(text,
-                                                   CultureInfo.CurrentCulture,
-                                                   FlowDirection.LeftToRight,
-                                                   new Typeface(fontFamily),
-                                                   fontEmSize,
-                                                   brush);
-            // build geometry from the formatted text
-            Point[] points = TransformPoints(new Point(x, y));
-            TextMetrics size = FontUtils.MeasureText(text, fontFamily, fontEmSize);
-            Point point = FontUtils.ApplyTextAlign(points[0], textAlign, text, size);
-            point = FontUtils.ApplyBaseLine(point, textBaseLine, formatted_text.Baseline, formatted_text.OverhangLeading,
-                                            formatted_text.Height);
-            Geometry text_geometry = formatted_text.BuildGeometry(point);
-            _geometry.AddGeometry(text_geometry);
-            _isEmpty = false;
+            throw new NotImplementedException();
         }
 
 
         public TextMetrics MeasureText(string text, string font)
         {
-            string fontFamily = FontUtils.ExtractFontName(font);
-            double fontEmSize = FontUtils.ExtractFontEmSize(font, 96);
-            return FontUtils.MeasureText(text, fontFamily, fontEmSize);
+            throw new NotImplementedException();
         }
 
         #endregion

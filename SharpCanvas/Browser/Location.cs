@@ -32,19 +32,19 @@ namespace SharpCanvas.Host.Browser
             get { return _assembly; }
         }
 
-        public object hash { get; set; }
+        public object hash { get; set; } = new object();
 
         /// <summary>
         /// This attribute represents the network host of the Location's URI. If the port attribute is not null then the host attribute's value is 
         /// the concatenation of the hostname attribute, a colon (:) and the port attribute. If the port attribute is null then the host attribute's value 
         /// is identical to the hostname attribute.
         /// </summary>
-        public object host { get; set; }
+        public object host { get; set; } = new object();
 
         /// <summary>
         /// This attribute represents the name or IP address of the network location without any port number.
         /// </summary>
-        public object hostname { get; set; }
+        public object hostname { get; set; } = new object();
 
         /// <summary>
         /// The value of the href attribute MUST be the absolute URI reference.
@@ -109,22 +109,22 @@ namespace SharpCanvas.Host.Browser
         /// <summary>
         /// This attribute represents the path component of the Location's URI which consists of everything after the host and port up to and excluding the first question mark (?) or hash mark (#).
         /// </summary>
-        public object pathname { get; set; }
+        public object pathname { get; set; } = string.Empty;
 
         /// <summary>
         /// This attribute represents the port number of the network location.
         /// </summary>
-        public object port { get; set; }
+        public object port { get; set; } = string.Empty;
 
         /// <summary>
         /// This attribute represents the scheme of the URI including the trailing colon (:)
         /// </summary>
-        public object protocol { get; set; }
+        public object protocol { get; set; } = string.Empty;
 
         /// <summary>
         /// This attribute represents the query portion of a URI. It consists of everything after the pathname up to and excluding the first hash mark (#).
         /// </summary>
-        public object search { get; set; }
+        public object search { get; set; } = string.Empty;
 
         public void assign(string url)
         {

@@ -12,8 +12,8 @@ namespace SharpCanvas.Host.Browser
     internal class LFSLoader: IFileLoader
     {
         private Uri _uri;
-        private byte[] _content;
-        public event FileLoadedEventHandler FileLoaded;
+        private byte[] _content = null!;
+        public event FileLoadedEventHandler? FileLoaded;
 
         public LFSLoader(Uri uri)
         {
@@ -38,7 +38,7 @@ namespace SharpCanvas.Host.Browser
             }
         }
 
-        public byte[] Load()
+        public byte[]? Load()
         {
             string path = _uri.PathAndQuery;
             if (File.Exists(path))
@@ -53,7 +53,8 @@ namespace SharpCanvas.Host.Browser
         // read operation and fire appropriate event
         public void EndReadCallback(IAsyncResult asyncResult)
         {
-            State state = (State)asyncResult.AsyncState;
+            State? state = asyncResult.AsyncState as State;
+            if (state == null) return;
             int readCount = state.FStream.EndRead(asyncResult);
             //store bytes inside class instance
             _content = state.Buffer;

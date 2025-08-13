@@ -24,3 +24,5 @@
 /app/SharpCanvas/obj/Debug/net8.0-windows/refint/SharpCanvas.dll
 /app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.pdb
 /app/SharpCanvas/obj/Debug/net8.0-windows/ref/SharpCanvas.dll
+/app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.StandardFilter.dll
+/app/SharpCanvas/bin/Debug/net8.0-windows/SharpCanvas.StandardFilter.pdb

@@ -33,8 +33,9 @@ namespace SharpCanvas.Host.Browser
                     psi.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                     psi.UseShellExecute = false;
                     psi.RedirectStandardOutput = true;
-                    System.Diagnostics.Process compile;
+                    System.Diagnostics.Process? compile;
                     compile = System.Diagnostics.Process.Start(psi);
+                    if (compile == null) return;
                     System.IO.StreamReader myOutput = compile.StandardOutput;
                     compile.WaitForExit(2000);
                     if (compile.HasExited)

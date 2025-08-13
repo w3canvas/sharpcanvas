@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
+using SharpCanvas.Common;
 //using System.Linq;
 
 namespace SharpCanvas.Media
@@ -46,7 +47,9 @@ namespace SharpCanvas.Media
                 throw new Exception(SYNTAX_ERR);
             if (offset < 0 || offset > 1)
                 throw new Exception(INDEX_SIZE_ERR);
-            _brush.GradientStops.Add(new GradientStop(ColorUtils.ParseColor(color),
+            System.Drawing.Color drawingColor = ColorUtils.ParseColor(color);
+            var mediaColor = System.Windows.Media.Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B);
+            _brush.GradientStops.Add(new GradientStop(mediaColor,
                                                       OffsetMinimum + (offset*OffsetMultiplier)));
         }
 

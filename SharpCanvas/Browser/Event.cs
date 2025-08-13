@@ -101,6 +101,7 @@ namespace SharpCanvas.Host.Browser
             _bubbles = bubbles;
             _cancelable = cancelable;
             _args = args;
+            _currentTarget = null!;
         }
 
         #endregion

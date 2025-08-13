@@ -5,13 +5,31 @@
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Interop</RootNamespace>
     <AssemblyName>SharpCanvas.Interop</AssemblyName>
-    <UseWindowsForms>true</UseWindowsForms>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
     <DefineConstants>WINDOWS</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="HTMLDispIDs.cs" />
+    <Compile Include="IHTMLDocument4.cs" />
+    <Compile Include="IHTMLEventObj2.cs" />
+    <Compile Include="IHTMLPaintSite.cs" />
+    <Compile Include="IHTMLRenderStyle.cs" />
+    <Compile Include="IHTMLScriptElement.cs" />
+    <Compile Include="INode.cs" />
+    <Compile Include="IStyleSupported.cs" />
+    <Compile Include="InteropDefs.cs" />
+    <Compile Include="MSHtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
+    <Compile Include="IHTMLElementBase.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Jint" Version="4.4.1" />

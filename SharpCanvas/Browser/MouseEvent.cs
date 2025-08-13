@@ -19,8 +19,12 @@ namespace SharpCanvas.Host.Browser
             int y = Cursor.Position.Y;
             if (e is MouseEventArgs)
             {
-                x = (e as MouseEventArgs).X;
-                y = (e as MouseEventArgs).Y;
+                var mea = e as MouseEventArgs;
+                if (mea != null)
+                {
+                    x = mea.X;
+                    y = mea.Y;
+                }
             }
             pageX = x;
             pageY = y;

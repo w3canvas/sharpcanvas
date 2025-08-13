@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
-    <UseWPF>true</UseWPF>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Browser</RootNamespace>
     <AssemblyName>SharpCanvas.Browser</AssemblyName>
@@ -12,6 +11,7 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
     <DefineConstants>WINDOWS</DefineConstants>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>

@@ -50,3 +50,6 @@ project.nuget.cache
 !*readme.txt
 !*README.txt
 !**/warning.txt
+
+# Ignore dll files
+*.dll

@@ -57,8 +57,8 @@ namespace SharpCanvas.Browser.Forms
         //back reference to proxy class
         private ICanvasProxy _proxy;
         
-        private object _init;
-        private ICSSStyleDeclaration _style;
+        private object _init = new object();
+        private ICSSStyleDeclaration _style = null!;
 
         private object _sync = new object();
 
@@ -220,7 +220,7 @@ namespace SharpCanvas.Browser.Forms
             }
         }
 
-        public ICSSStyleDeclaration style
+        public new ICSSStyleDeclaration style
         {
             get { return _style; }
         }

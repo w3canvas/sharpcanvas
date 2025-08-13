@@ -47,7 +47,7 @@ namespace SharpCanvas.Host.Browser
         #region Implementation of IWindow
 
         [DispId(1)]
-        public ILocation location
+        public ILocation? location
         {
             get { return _realObject.location; }
             set { _realObject.location = value; }

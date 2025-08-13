@@ -35,10 +35,10 @@ namespace SharpCanvas.Host.Browser
         /// <param name="sender"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        private Assembly Location_ResolveEventHandler(object sender, ResolveEventArgs args)
+        private Assembly? Location_ResolveEventHandler(object? sender, ResolveEventArgs args)
         {
             //Retrieve the list of referenced assemblies in an array of AssemblyName.
-            Assembly loadedAssembly, objExecutingAssemblies;
+            Assembly objExecutingAssemblies;
             string strTempAssmbPath = "";
 
             objExecutingAssemblies = Assembly.GetExecutingAssembly();
