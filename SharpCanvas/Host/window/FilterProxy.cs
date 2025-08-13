@@ -1,61 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
+#nullable enable
+using System;
+using System.Reflection;
+using SharpCanvas.Shared;
 using System.Drawing;
-using System.Runtime.InteropServices;
-using SharpCanvas.Host.Prototype;
-using SharpCanvas.StandardFilter;
 
-namespace SharpCanvas
+namespace SharpCanvas.Host.Window
 {
-    [ComVisible(true)]
-    public class FilterProxy : ObjectWithPrototype
+    public class FilterProxy : IFilter
     {
+        private object? _filter;
+        private MethodInfo? _method;
+        private MethodInfo? _methodWithRect;
 
-        // ProxyTarget
-        private FilterProxy _target;
-
-        // ObjectWithPrototype
-        private object _init;
-
-        public object init
+        public FilterProxy(string name, params object[] args)
         {
-            get { return _init; }
-            set { _init = value; }
+            Assembly assembly = Assembly.Load("SharpCanvas.StandardFilter");
+            Type? type = assembly.GetType(string.Format("SharpCanvas.StandardFilter.FilterSet.{0}Filter", name), true, true);
+            if (type != null)
+            {
+                _filter = Activator.CreateInstance(type, args);
+                _method = type.GetMethod("ApplyFilter", new Type[] { typeof(Bitmap) });
+                _methodWithRect = type.GetMethod("ApplyFilter", new Type[] { typeof(Bitmap), typeof(Rectangle) });
+            }
         }
 
-        public FilterProxy()
-            : base(Guid.Empty)
+        public Bitmap? ApplyFilter(Bitmap? source)
         {
+            if (_method != null && _filter != null)
+            {
+                return (Bitmap?)_method.Invoke(_filter, new object?[] { source });
+            }
+            return null;
         }
 
-        public FilterProxy(Guid scope)
-            : base(scope)
+        public Bitmap? ApplyFilter(Bitmap? source, Rectangle area)
         {
-        }
-
-        public void resetChain()
-        {
-            _target.resetChain();
-        }
-
-        public int AddFilter(IFilter filter)
-        {
-            return _target.AddFilter(filter);
-        }
-
-        public IFilter AddFilterFromString(string filterName)
-        {
-            return _target.AddFilterFromString(filterName);
-        }
-
-        public int GetFilterCount()
-        {
-            return _target.GetFilterCount();
-        }
-
-        public Bitmap ApplyFilters(Bitmap bmp)
-        {
-            return _target.ApplyFilters(bmp);
+            if (_methodWithRect != null && _filter != null)
+            {
+                return (Bitmap?)_methodWithRect.Invoke(_filter, new object?[] { source, area });
+            }
+            return null;
         }
     }
 }

@@ -5,12 +5,12 @@
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.ShaderFilter</RootNamespace>
     <AssemblyName>SharpCanvas.ShaderFilter</AssemblyName>
-    <UseWPF>true</UseWPF>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
     <DefineConstants>WINDOWS</DefineConstants>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>

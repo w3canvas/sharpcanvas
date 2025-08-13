@@ -56,7 +56,7 @@ namespace SharpCanvas.Host
                 // is no overhead; we need it loaded anyway. If it fails, we don't have WPF installed.
                 //////////
                 //TODO: remove false from condition below. JUST FOR TESTING PURPOSES
-                if (Assembly.LoadWithPartialName("WindowsBase") != null && false)
+                if (Assembly.Load("WindowsBase") != null && false)
                 {
                     // WPF installed, use that
                     factoryType = Type.GetType(StandaloneBootstrapper.wpfFactoryTypename);
@@ -75,7 +75,7 @@ namespace SharpCanvas.Host
                 factoryType = Type.GetType(StandaloneBootstrapper.wpfFactoryTypename);
             }
 
-            if (Assembly.LoadWithPartialName("System.Windows.Media.Effects") != null)
+            if (Assembly.Load("System.Windows.Media.Effects") != null)
             {
                 libFactoryType = Type.GetType(StandaloneBootstrapper.shaderFactoryTypename);
             }

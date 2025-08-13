@@ -32,13 +32,13 @@ namespace SharpCanvas.Host.Browser
             this.Resize += new EventHandler(Document_Resize);
         }
 
-        void Document_Resize(object sender, EventArgs e)
+        void Document_Resize(object? sender, EventArgs e)
         {
             ((UserControl) body).Width = this.Width;
             ((UserControl) body).Height = this.Height;
         }
 
-        void Document_ControlAdded(object sender, ControlEventArgs e)
+        void Document_ControlAdded(object? sender, ControlEventArgs e)
         {
             ((IDocument)this).defaultView.RedrawChildren();
         }
@@ -50,11 +50,11 @@ namespace SharpCanvas.Host.Browser
 
         public object body { get; set; }
 
-        public string title { get; set; }
+        public string title { get; set; } = string.Empty;
 
-        public Graphics Graphics { get; set; }
+        public Graphics Graphics { get; set; } = null!;
 
-        public ILocation location
+        public ILocation? location
         {
             get
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable SYSLIB0014
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -31,18 +32,20 @@ using Size = System.Windows.Size;
 
 // FIXME: This library has not been converted to use the ObjectWithPrototype class.
 // FIXME: Used only with InvokeMember, currently only used with drawImage (bug?).
-using Microsoft.JScript;
 using SharpCanvas.Interop;
 using System.Globalization;
-using System.Runtime.InteropServices.Expando;
+using SharpCanvas.Shared;
+using SharpCanvas.Common;
+//using SharpCanvas.Prototype;
 // FIXME: Should be handled by Host
 using SharpCanvas.StandardFilter.FilterSet;
 
 namespace SharpCanvas.Media
 {
-    [ComVisible(true),
-     ComSourceInterfaces(typeof(ICanvasRenderingContext2D))]
-    public class CanvasRenderingContext2D : IExpando, ICanvasRenderingContext2D
+    public delegate void OnPartialDrawHanlder();
+
+    [ComVisible(true)]
+    public class CanvasRenderingContext2D : ICanvasRenderingContext2D//, IExpando
     {
         #region Fields
 
@@ -180,6 +183,79 @@ namespace SharpCanvas.Media
             throw new NotImplementedException();
         }
 
+        public string direction { get; set; }
+        public string filter { get; set; }
+        public string fontKerning { get; set; }
+        public string fontStretch { get; set; }
+        public string fontVariantCaps { get; set; }
+        public bool imageSmoothingEnabled { get; set; }
+        public string imageSmoothingQuality { get; set; }
+        public string lang { get; set; }
+        public string letterSpacing { get; set; }
+        public double lineDashOffset { get; set; }
+        public string textRendering { get; set; }
+        public string wordSpacing { get; set; }
+
+        public bool isPointInStroke(double x, double y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object createConicGradient(double startAngle, double x, double y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object getLineDash()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void setLineDash(object segments)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void roundRect(double x, double y, double w, double h, object radii)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, bool anticlockwise)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void drawFocusIfNeeded(object element)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool isContextLost()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void reset()
+        {
+            throw new NotImplementedException();
+        }
+
+        public object getTransform()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void resetTransform()
+        {
+            throw new NotImplementedException();
+        }
+
+        byte[] ICanvasRenderingContext2D.GetBitmap()
+        {
+            throw new NotImplementedException();
+        }
+
         public object __proto__
         {
             get { throw new NotImplementedException(); }
@@ -259,8 +335,9 @@ namespace SharpCanvas.Media
                     _strokeStyle = value;
                     if (_strokeStyle is string)
                     {
-                        Color color = ColorUtils.ParseColor((string)_strokeStyle);
-                        var brush = new SolidColorBrush(color);
+                    System.Drawing.Color drawingColor = ColorUtils.ParseColor((string)_strokeStyle);
+                    var mediaColor = System.Windows.Media.Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B);
+                    var brush = new SolidColorBrush(mediaColor);
                         _style.Stroke = brush;
                     }
                     if (_strokeStyle is ILinearCanvasGradient)
@@ -290,8 +367,9 @@ namespace SharpCanvas.Media
                     _fillStyle = value;
                     if (_fillStyle is string)
                     {
-                        Color color = ColorUtils.ParseColor((string)_fillStyle);
-                        var brush = new SolidColorBrush(color);
+                    System.Drawing.Color drawingColor = ColorUtils.ParseColor((string)_fillStyle);
+                    var mediaColor = System.Windows.Media.Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B);
+                    var brush = new SolidColorBrush(mediaColor);
                         _style.Fill = brush;
                     }
                     if (_fillStyle is ILinearCanvasGradient)
@@ -495,6 +573,11 @@ namespace SharpCanvas.Media
             }
         }
 
+        public void drawImage(object image, float dx, float dy)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// The beginPath()  method must empty the list of subpaths so that the context once again has zero subpaths.
         /// </summary>
@@ -642,6 +725,7 @@ namespace SharpCanvas.Media
             }
         }
 
+#pragma warning disable SYSLIB0014
         public void drawImage(object pImg, double sx, double sy, double sw, double sh, double dx, double dy, double dw,
                               double dh)
         {
@@ -662,6 +746,7 @@ namespace SharpCanvas.Media
                         imageSource.EndInit();
                     }
                 }
+#pragma warning restore SYSLIB0014
                 else
                 {
                     imageSource = new BitmapImage();
@@ -734,6 +819,7 @@ namespace SharpCanvas.Media
 
         public void drawImage(object pImg, double dx, double dy)
         {
+#pragma warning restore SYSLIB0014
             if (pImg is ImageData)
             {
                 var imageData = ((ImageData)pImg);
@@ -948,7 +1034,7 @@ namespace SharpCanvas.Media
 
         public object createFilterChain()
         {
-            return new FilterChain();
+            return new SharpCanvas.StandardFilter.FilterSet.FilterChain();
         }
 
         public Bitmap GetBitmap()
@@ -1013,158 +1099,6 @@ namespace SharpCanvas.Media
 
         #endregion
 
-        #region Implementation of IReflect
-
-        //IExpando
-
-        private readonly SortedList<string, FieldInfo> _arbitraryFields = new SortedList<string, FieldInfo>();
-        private readonly SortedList<string, PropertyInfo> _arbitraryProperties = new SortedList<string, PropertyInfo>();
-        private FieldInfo[] _fields;
-        private MethodInfo[] _methods;
-
-        private object _myApply = new object();
-        private PropertyInfo[] _properties;
-        private string _propertyToExecute;
-
-        public object myApply
-        {
-            get { return _myApply; }
-            set { _myApply = value; }
-        }
-
-        public MethodInfo GetMethod(string name, BindingFlags bindingAttr, Binder binder, Type[] types,
-                                    ParameterModifier[] modifiers)
-        {
-            return typeof(CanvasRenderingContext2D).GetMethod(name, bindingAttr, binder, types, modifiers);
-        }
-
-        public MethodInfo GetMethod(string name, BindingFlags bindingAttr)
-        {
-            return typeof(CanvasRenderingContext2D).GetMethod(name, bindingAttr);
-        }
-
-        public MethodInfo[] GetMethods(BindingFlags bindingAttr)
-        {
-            return typeof(CanvasRenderingContext2D).GetMethods(bindingAttr);
-        }
-
-        public FieldInfo GetField(string name, BindingFlags bindingAttr)
-        {
-            return typeof(CanvasRenderingContext2D).GetField(name, bindingAttr);
-        }
-
-        public FieldInfo[] GetFields(BindingFlags bindingAttr)
-        {
-            return typeof(CanvasRenderingContext2D).GetFields(bindingAttr);
-        }
-
-        public PropertyInfo GetProperty(string name, BindingFlags bindingAttr)
-        {
-            if (_arbitraryProperties.ContainsKey(name))
-                return _arbitraryProperties[name];
-            return typeof(CanvasRenderingContext2D).GetProperty(name, bindingAttr);
-        }
-
-        public PropertyInfo GetProperty(string name, BindingFlags bindingAttr, Binder binder, Type returnType,
-                                        Type[] types, ParameterModifier[] modifiers)
-        {
-            if (_arbitraryProperties.ContainsKey(name))
-                return _arbitraryProperties[name];
-            return typeof(CanvasRenderingContext2D).GetProperty(name, bindingAttr, binder, returnType, types, modifiers);
-        }
-
-        public PropertyInfo[] GetProperties(BindingFlags bindingAttr)
-        {
-            return typeof(CanvasRenderingContext2D).GetProperties(bindingAttr);
-        }
-
-        public MemberInfo[] GetMember(string name, BindingFlags bindingAttr)
-        {
-            if (_arbitraryProperties.ContainsKey(name))
-            {
-                _propertyToExecute = name;
-                return typeof(CanvasRenderingContext2D).GetMember("InvokeArbirtaryProperty");
-            }
-            return typeof(CanvasRenderingContext2D).GetMember(name, bindingAttr);
-        }
-
-        public MemberInfo[] GetMembers(BindingFlags bindingAttr)
-        {
-            return typeof(CanvasRenderingContext2D).GetMembers(bindingAttr);
-        }
-
-        public object InvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target, object[] args,
-                                   ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)
-        {
-            if (_arbitraryFields.ContainsKey(name))
-            {
-                return InvokeArbitraryMember(name, invokeAttr, binder, target, args, modifiers, culture, namedParameters);
-            }
-
-            if (name != "drawImage")
-            {
-                return typeof(CanvasRenderingContext2D).InvokeMember(name, invokeAttr, binder, target, args,
-                                                                      modifiers, culture,
-                                                                      namedParameters);
-            }
-            else
-            {
-                switch (args.Length)
-                {
-                    case 3:
-                        drawImage(args[0], Convert.ToDouble(args[1]), Convert.ToDouble(args[2]));
-                        break;
-                    case 5:
-                        drawImage(args[0], Convert.ToDouble(args[1]), Convert.ToDouble(args[2]),
-                                  Convert.ToDouble(args[3]), Convert.ToDouble(args[4]));
-                        break;
-                    case 9:
-                        drawImage(args[0], Convert.ToDouble(args[1]), Convert.ToDouble(args[2]),
-                                  Convert.ToDouble(args[3]), Convert.ToDouble(args[4]), Convert.ToDouble(args[5]),
-                                  Convert.ToDouble(args[6]), Convert.ToDouble(args[7]), Convert.ToDouble(args[8]));
-                        break;
-                }
-            }
-            return null;
-        }
-
-        public Type UnderlyingSystemType
-        {
-            get { return typeof(CanvasRenderingContext2D); }
-        }
-
-        public void InvokeArbirtaryProperty(params object[] args)
-        {
-            if (!string.IsNullOrEmpty(_propertyToExecute))
-            {
-                //ScriptFunction sf = (ScriptFunction)((PrototypePropertyInfo)_arbitraryProperties[_propertyToExecute]).Value;
-                //sf.Invoke(this, args);
-                //_propertyToExecute = string.Empty;
-            }
-        }
-
-        public object InvokeArbitraryMember(string name, BindingFlags attr, Binder binder, object target, object[] args,
-                                            ParameterModifier[] modifiers, CultureInfo culture, string[] parameters)
-        {
-            if (attr == (BindingFlags.PutDispProperty | BindingFlags.OptionalParamBinding) ||
-                attr == (BindingFlags.SetProperty | BindingFlags.OptionalParamBinding))
-            {
-                _arbitraryFields[name].SetValue(this, args[0]);
-            }
-            if (attr == (BindingFlags.GetProperty | BindingFlags.OptionalParamBinding))
-            {
-                return _arbitraryFields[name].GetValue(this).ToString();
-            }
-            if (attr == (BindingFlags.InvokeMethod | BindingFlags.OptionalParamBinding))
-            {
-                object function = _arbitraryFields[name].GetValue(this);
-                _myApply.GetType().InvokeMember("", BindingFlags.InvokeMethod, null, _myApply,
-                                                new[] { function, this, GlobalObject.Array.ConstructArray(args) });
-            }
-            return null;
-        }
-
-        #endregion
 
         #region Implementation of IExpando
 
@@ -1295,7 +1229,8 @@ namespace SharpCanvas.Media
 
         private void ApplyShadows()
         {
-            Color color = ColorUtils.ParseColor(_shadowColor);
+            System.Drawing.Color drawingColor = ColorUtils.ParseColor(_shadowColor);
+            var color = System.Windows.Media.Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B);
             if (ColorUtils.isValidColor(_shadowColor) && color.A != 0
                 && _shadowBlur != 0 && (_shadowOffsetX != 0 || _shadowOffsetY != 0))
             {

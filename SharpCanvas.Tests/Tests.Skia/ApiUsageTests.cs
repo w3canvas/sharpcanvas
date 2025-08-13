@@ -39,9 +39,11 @@ namespace SharpCanvas.Tests.Skia
                 context.fillStyle = "red";
                 context.fillRect(0, 0, 50, 50);
                 context.ChangeSize(200, 200, false);
-                var bitmap = new SKBitmap(200, 200);
-                surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
-                Assert.That(bitmap.GetPixel(25, 25), Is.EqualTo(SKColors.Red));
+                var bytes = context.GetBitmap();
+                using (var bitmap = SKBitmap.Decode(bytes))
+                {
+                    Assert.That(bitmap.GetPixel(25, 25), Is.EqualTo(SKColors.Red));
+                }
             }
         }
     }

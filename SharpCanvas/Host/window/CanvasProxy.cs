@@ -200,7 +200,7 @@ namespace SharpCanvas.Host.Browser
             {
                 return Convert.ChangeType(value, type);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

@@ -61,8 +61,12 @@ namespace SharpCanvas.Host.Browser
             _window.Top = 0;
 
             //BackColor = Color.Green;
-            (_window.GetRealObject() as UserControl).BackColor = Color.White;
-            Controls.Add(_window.GetRealObject() as UserControl);
+            var realObject = _window.GetRealObject() as UserControl;
+            if (realObject != null)
+            {
+                realObject.BackColor = Color.White;
+                Controls.Add(realObject);
+            }
         }
 
         public int GetRelativeZIndex(int absoluteZIndex)

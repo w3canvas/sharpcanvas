@@ -22,9 +22,9 @@ namespace SharpCanvas.Host.Browser
         
 
         private readonly object sync = new object();
-        private IHTMLDocument4 _document;
+        private IHTMLDocument4 _document = null!;
 
-        private object _parent;
+        private object _parent = null!;
         private List<INode> _childNodes = new List<INode>();
 
         protected bool _isChanged;
@@ -34,7 +34,7 @@ namespace SharpCanvas.Host.Browser
         #region Properties
 
         //TODO: remove - event is obsolete
-        public event ControlsTreeChangeHandler ControlsTreeChange;
+        public event ControlsTreeChangeHandler? ControlsTreeChange;
 
         /// <summary>
         /// Flag to determine wherever image on the current surface was changed or not
@@ -49,17 +49,17 @@ namespace SharpCanvas.Host.Browser
         /// An object representing the declarations of an element's style attributes.
         /// </summary>
         //TODO: migrate to ICSSStyleDeclaration usage
-        public object style { get; set; }
+        public object style { get; set; } = new object();
 
         /// <summary>
         /// Gets/sets the name attribute of an element.
         /// </summary>
-        public string name { get; set; }
+        public string name { get; set; } = string.Empty;
 
         /// <summary>
         /// Workaround for IE env. - uses instead of native id property
         /// </summary>
-        public string Identifier { get; set; }
+        public string Identifier { get; set; } = string.Empty;
 
         /// <summary>
         /// Reference to the direct parent object
@@ -131,7 +131,7 @@ namespace SharpCanvas.Host.Browser
             RecreateHandle();
         }
 
-        private void HTMLElement_Move(object sender, EventArgs e)
+        private void HTMLElement_Move(object? sender, EventArgs e)
         {
             RecreateHandle();
         }
@@ -181,35 +181,39 @@ namespace SharpCanvas.Host.Browser
 
         protected void InitializeEvents()
         {
-            IEventModel eventModel;
+            IEventModel? eventModel;
             if (this is IDocument)
             {
                 eventModel = ((IWindow)this._parent).eventModel;
             }
             else
             {
+                if (ownerDocument == null) return;
                 eventModel = ((IDocument) ownerDocument).defaultView.eventModel;
             }
-            Click += eventModel.click;
-            DragDrop += eventModel.drag;
-            DragEnter += eventModel.dragenter;
-            DragLeave += eventModel.dragleave;
-            DragOver += eventModel.dragover;
-            DoubleClick += eventModel.dblclick;
-            Enter += eventModel.focus;
-            KeyDown += eventModel.keydown;
-            KeyPress += eventModel.keypress;
-            KeyUp += eventModel.keyup;
-            Load += eventModel.load;
-            MouseClick += eventModel.click;
-            MouseHover += eventModel.mouseover;
-            MouseDown += eventModel.mousedown;
-            MouseUp += eventModel.mouseup;
-            MouseMove += eventModel.mousemove;
-            MouseLeave += eventModel.mouseout;
-            MouseWheel += eventModel.mousewheel;
-            Scroll += eventModel.scroll;
-            Move += HTMLElement_Move;
+            if (eventModel != null)
+            {
+                Click += eventModel.click;
+                DragDrop += eventModel.drag;
+                DragEnter += eventModel.dragenter;
+                DragLeave += eventModel.dragleave;
+                DragOver += eventModel.dragover;
+                DoubleClick += eventModel.dblclick;
+                Enter += eventModel.focus;
+                KeyDown += eventModel.keydown;
+                KeyPress += eventModel.keypress;
+                KeyUp += eventModel.keyup;
+                Load += eventModel.load;
+                MouseClick += eventModel.click;
+                MouseHover += eventModel.mouseover;
+                MouseDown += eventModel.mousedown;
+                MouseUp += eventModel.mouseup;
+                MouseMove += eventModel.mousemove;
+                MouseLeave += eventModel.mouseout;
+                MouseWheel += eventModel.mousewheel;
+                Scroll += eventModel.scroll;
+                Move += HTMLElement_Move;
+            }
         }
 
         /// <summary>
@@ -258,13 +262,12 @@ namespace SharpCanvas.Host.Browser
 
         Random r = new Random();
         private static Color[] colors = new Color[]{ Color.Orange, Color.Pink, Color.Gray, Color.Lime, Color.Red};
-        private static int i;
         
 
         /// <summary>
         /// Reference to the direct parent node
         /// </summary>
-        public INode parentNode
+        public INode? parentNode
         {
             get { return _parent as INode; }
         }
@@ -359,7 +362,7 @@ namespace SharpCanvas.Host.Browser
         /// <summary>
         /// The Document object associated with this node. This is also the Document object used to create new nodes.
         /// </summary>
-        public object ownerDocument
+        public object? ownerDocument
         {
             get
             {
@@ -378,7 +381,7 @@ namespace SharpCanvas.Host.Browser
         /// </summary>
         /// <param name="id">id is a case-sensitive string representing the unique ID of the element being sought. </param>
         /// <returns></returns>
-        public object getElementById(string id)
+        public object? getElementById(string id)
         {
             foreach (IHTMLElementBase o in Controls) //Image is not HTMLElement!!
             {
@@ -394,7 +397,7 @@ namespace SharpCanvas.Host.Browser
                 }
                 else
                 {
-                    object c = o.getElementById(id);
+                    object? c = o.getElementById(id);
                     if (c != null)
                         return c;
                 }

@@ -53,7 +53,7 @@ namespace SharpCanvas.Host
                 // Try to load any (the preferred) version of a core WPF assembly. If this succeeds, there
                 // is no overload; we need it loaded anyway. If it fails, we don't have WPF installed.
                 //////////
-                if (Assembly.LoadWithPartialName("WindowsBase") != null)
+                if (Assembly.Load("WindowsBase") != null)
                 {
                     // WPF installed, use that
                     _clsidForContext = CLSID_WPFCanvas;

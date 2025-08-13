@@ -96,31 +96,33 @@ namespace SharpCanvas.Host.Browser
 
         #region Internal Event Handlers
 
-        public void scroll(object sender, EventArgs e)
+        public void scroll(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "scroll");
         }
 
-        public void mousewheel(object sender, EventArgs e)
+        public void mousewheel(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "mousewheel");
         }
 
-        public void mouseout(object sender, EventArgs e)
+        public void mouseout(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "mouseout");
         }
 
-        public void mousemove(object sender, EventArgs e)
+        public void mousemove(object? sender, EventArgs e)
         {
+            if (sender == null) return;
             MouseEventArgs abse = new MouseEventArgs(((MouseEventArgs) e).Button, ((MouseEventArgs) e).Clicks,
                                                      ((MouseEventArgs) e).X + ((UserControl) sender).Left,
                                                      ((MouseEventArgs)e).Y + ((UserControl)sender).Top, ((MouseEventArgs)e).Delta);
             ProcessEvent(sender, abse, "mousemove");
         }
 
-        public void mouseup(object sender, EventArgs e)
+        public void mouseup(object? sender, EventArgs e)
         {
+            if (sender == null) return;
             MouseEventArgs abse = new MouseEventArgs(((MouseEventArgs) e).Button, ((MouseEventArgs) e).Clicks,
                                                      ((MouseEventArgs) e).X + ((UserControl) sender).Left,
                                                      ((MouseEventArgs) e).Y + ((UserControl) sender).Top,
@@ -128,8 +130,9 @@ namespace SharpCanvas.Host.Browser
             ProcessEvent(sender, abse, "mouseup");
         }
 
-        public void mousedown(object sender, EventArgs e)
+        public void mousedown(object? sender, EventArgs e)
         {
+            if (sender == null) return;
             MouseEventArgs abse = new MouseEventArgs(((MouseEventArgs) e).Button, ((MouseEventArgs) e).Clicks,
                                                      ((MouseEventArgs) e).X + ((UserControl) sender).Left,
                                                      ((MouseEventArgs) e).Y + ((UserControl) sender).Top,
@@ -137,69 +140,69 @@ namespace SharpCanvas.Host.Browser
             ProcessEvent(sender, abse, "mousedown");
         }
 
-        public void mouseover(object sender, EventArgs e)
+        public void mouseover(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "mouseover");
         }
 
-        public void load(object sender, EventArgs e)
+        public void load(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "load");
         }
 
-        public void keyup(object sender, EventArgs e)
+        public void keyup(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "keyup");
         }
 
-        public void keypress(object sender, EventArgs e)
+        public void keypress(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "keypress");
         }
 
-        public void keydown(object sender, EventArgs e)
+        public void keydown(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "keydown");
         }
 
-        public void focus(object sender, EventArgs e)
+        public void focus(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "focus");
         }
 
-        public void dblclick(object sender, EventArgs e)
+        public void dblclick(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "dblclick");
         }
 
-        public void dragover(object sender, EventArgs e)
+        public void dragover(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "dragover");
         }
 
-        public void dragleave(object sender, EventArgs e)
+        public void dragleave(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "dragleave");
         }
 
-        public void dragenter(object sender, EventArgs e)
+        public void dragenter(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "dragenter");
         }
 
-        public void drag(object sender, EventArgs e)
+        public void drag(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "drag");
         }
 
-        public void click(object sender, EventArgs e)
+        public void click(object? sender, EventArgs e)
         {
             ProcessEvent(sender, e, "click");
         }
         
         #endregion
 
-        public void ProcessEvent(object sender, EventArgs args, string eventName)
+        public void ProcessEvent(object? sender, EventArgs args, string eventName)
         {
             if (sender is IEventTarget)
             {
@@ -207,7 +210,7 @@ namespace SharpCanvas.Host.Browser
                 //if we're in IE, then propagate event into the native DOM
                 if (sender is IHTMLElementBase)
                 {
-                    IHTMLDocument4 document = ((IHTMLElementBase)sender).document;
+                    IHTMLDocument4? document = ((IHTMLElementBase)sender).document;
                     if (document != null && !_avoidBubblingEvents.Contains(eventName))
                     {
                         FireEvent(document, "on" + eventName, args);
@@ -297,7 +300,7 @@ namespace SharpCanvas.Host.Browser
             }
         }
 
-        private void CaptureEvent(List<IEventTarget> nodes, Event e, List<IEventTarget> avoidNodes)
+        private void CaptureEvent(List<IEventTarget> nodes, Event e, List<IEventTarget>? avoidNodes)
         {
             e.eventPhase = EventPhases.CAPTURING_PHASE;
             //reverse of the chain make it sorted in order to execute
@@ -311,7 +314,7 @@ namespace SharpCanvas.Host.Browser
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <param name="eventName"></param>
-        public void BubbleEvent(List<IEventTarget> nodes, Event e, List<IEventTarget> avoidNodes)
+        public void BubbleEvent(List<IEventTarget> nodes, Event e, List<IEventTarget>? avoidNodes)
         {
             e.eventPhase = EventPhases.BUBBLING_PHASE;
             //reverse of the chain make it sorted in order to execute
@@ -319,7 +322,7 @@ namespace SharpCanvas.Host.Browser
             BroadcastEvent(e, nodes, avoidNodes);
         }
 
-        private void BroadcastEvent(Event e, List<IEventTarget> nodes, List<IEventTarget> avoidNodes)
+        private void BroadcastEvent(Event e, List<IEventTarget> nodes, List<IEventTarget>? avoidNodes)
         {
             foreach (IEventTarget node in nodes)
             {
@@ -335,7 +338,7 @@ namespace SharpCanvas.Host.Browser
                     List<IEventRegistration> eventRegistrations = events[e.type];
                     foreach (IEventRegistration eventRegistration in eventRegistrations)
                     {
-                        if (eventRegistration.ApplyToPhase == e.eventPhase) //if listener has correct type of eventPahse
+                        if (eventRegistration.Listener != null && eventRegistration.ApplyToPhase == e.eventPhase) //if listener has correct type of eventPahse
                         {
                             FireEvent(eventRegistration.Listener, e, node);
                         }

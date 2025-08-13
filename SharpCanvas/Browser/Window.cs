@@ -29,15 +29,15 @@ namespace SharpCanvas.Host.Browser
         private int _innerHeight;
         private int _innerWidth;
         // FIXME: Abstract to Host.
-        private ITimeout _timeout;
+        private ITimeout _timeout = null!;
         private SaveFileDialog _dlgSaveFile;
         private bool isDialogOpen;
-        private string _src;
-        private IDocument _parent;
+        private string _src = string.Empty;
+        private IDocument _parent = null!;
         private Navigator _navigator = new Navigator();
         protected Dictionary<string, List<IEventRegistration>> _events = new Dictionary<string, List<IEventRegistration>>();
         private EventModel _eventModel;
-        private IWindow _parentWindow;
+        private IWindow _parentWindow = null!;
         private List<INode> _childNodes;
 
         #endregion
@@ -83,7 +83,7 @@ namespace SharpCanvas.Host.Browser
             this.Resize += new EventHandler(Window_Resize);
         }
 
-        void Window_Resize(object sender, EventArgs e)
+        void Window_Resize(object? sender, EventArgs e)
         {
             _document.Width = this.Width;
             _document.Height = this.Height;
@@ -105,12 +105,12 @@ namespace SharpCanvas.Host.Browser
         }
 
 
-        private ILocation _location;
+        private ILocation? _location;
         
         /// <summary>
         /// The value of the location attribute MUST be the Location object that represents the window's current location.
         /// </summary>
-        public ILocation location
+        public ILocation? location
         {
             get
             {
@@ -154,7 +154,7 @@ namespace SharpCanvas.Host.Browser
 
         #endregion 
 
-        public object onload { get; set; }
+        public object onload { get; set; } = new object();
 
         public int innerHeight
         {
@@ -300,7 +300,7 @@ namespace SharpCanvas.Host.Browser
             get { return _eventModel; }
         }
 
-        private void Window_Paint(object sender, PaintEventArgs e)
+        private void Window_Paint(object? sender, PaintEventArgs e)
         {
             InvokeOnload();
         }
@@ -375,18 +375,18 @@ namespace SharpCanvas.Host.Browser
         /// An attribute containing a unique name used to refer to this Window object.
         /// Need to describe how this could come from a containing element. 
         /// </summary>
-        public string name { get; set; }
+        public string name { get; set; } = string.Empty;
 
         /// <summary>
         /// An attribute containing a reference to the topmost Window object in the hierarchy that contains this object.
         /// </summary>
-        public object top { get; set; }
+        public object top { get; set; } = new object();
 
         /// <summary>
         /// referencing <html:frame>, <html:iframe>, <html:object>, <svg:foreignObject>,
         /// <svg:animation> or other embedding point, or null if none
         /// </summary>
-        public object frameElement { get; set; }
+        public object frameElement { get; set; } = new object();
 
         public IWindow parentWindow
         {
