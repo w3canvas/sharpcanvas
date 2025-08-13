@@ -15,7 +15,7 @@ namespace SharpCanvas.Host.Browser
 
         #region Implementation of IFileLoader
 
-        public event FileLoadedEventHandler FileLoaded;
+        public event FileLoadedEventHandler? FileLoaded;
 
         public void BeginLoad()
         {

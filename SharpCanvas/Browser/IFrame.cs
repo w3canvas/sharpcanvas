@@ -22,7 +22,7 @@ namespace SharpCanvas.Host.Browser
             }
         }
 
-        public T getAttribute<T>(string key)
+        public T? getAttribute<T>(string key)
             where T: IConvertible
         {
             if (_attributes.ContainsKey(key))
