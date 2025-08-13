@@ -19,6 +19,8 @@ namespace SharpCanvas.Host.Browser
 
         public void LoadScript(string url)
         {
+            if (url == null)
+                throw new ArgumentNullException("url");
             Uri webUrl;
             if(Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out webUrl))
             {

@@ -118,7 +118,9 @@ namespace SharpCanvas.Host.Browser
             }
             set
             {
+#pragma warning disable CS8601 // Possible null reference assignment.
                 _location = value;
+#pragma warning restore CS8601 // Possible null reference assignment.
             }
         }
 
@@ -184,9 +186,13 @@ namespace SharpCanvas.Host.Browser
 
         public void setAttribute(object name, object value)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             string strName = name.ToString();
             string strValue = value.ToString();
             switch (strName.ToLower())
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             {
                 case "width":
                     {
@@ -310,15 +316,19 @@ namespace SharpCanvas.Host.Browser
         /// </summary>
         public void InvokeOnload()
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (this.onload != null) //run only once
             {
                 if (onload is Delegate)
                 {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                     var function = (Delegate) this.onload;
                     this.onload = null;
                     function.DynamicInvoke(this, new object[] {});
                     RedrawChildren();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 //if(this.onload is LoadAssemblyHandler)
                     //{
                     //    var loadAssembly = (LoadAssemblyHandler)this.onload;
@@ -343,7 +353,9 @@ namespace SharpCanvas.Host.Browser
                                 //GlobalScope globalScope = 
                                 //    Microsoft.JScript.Vsa.VsaEngine.CreateEngineAndGetGlobalScope(false, new string[]{});
 
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
                                 constructor.Invoke(new object[] {this._parentWindow, this._parentWindow.document});
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
                                 //constructor.Invoke(new object[] {});
                                 break;
                             }
@@ -355,6 +367,7 @@ namespace SharpCanvas.Host.Browser
 
         private void location_OnSaveFile(byte[] data)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (!isDialogOpen)
             {
                 DialogResult dialogResult = _dlgSaveFile.ShowDialog();
@@ -365,6 +378,7 @@ namespace SharpCanvas.Host.Browser
                 }
                 isDialogOpen = false;
             }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         #endregion
@@ -553,7 +567,11 @@ namespace SharpCanvas.Host.Browser
         /// </summary>
         public object parentNode
         {
-            get { return null; }
+            get {
+#pragma warning disable CS8603 // Possible null reference return.
+                return null;
+#pragma warning restore CS8603 // Possible null reference return.
+            }
         }
 
         /// <summary>

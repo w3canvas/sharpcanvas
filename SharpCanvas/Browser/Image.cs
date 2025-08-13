@@ -10,16 +10,17 @@ namespace SharpCanvas.Host.Browser
 {
     public class Image : HTMLElement, IImage
     {
-        private Bitmap _bitmap;
+        private Bitmap _bitmap = null!;
 //        private Graphics _graphics;
         private int _height;
-        private string _src;
+        private string _src = string.Empty;
         private int _width;
 
         public Image()
         {
             Paint += Image_Paint;
             Name = "image";
+            onload = delegate { };
         }
 
         #region IImage Members
@@ -98,7 +99,7 @@ namespace SharpCanvas.Host.Browser
 
         #endregion
 
-        private void Image_Paint(object sender, PaintEventArgs e)
+        private void Image_Paint(object? sender, PaintEventArgs e)
         {
             //_graphics = e.Graphics;            
             //if (_bitmap != null) //draw image

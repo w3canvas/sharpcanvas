@@ -9,7 +9,7 @@ namespace SharpCanvas.Shared
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     public interface IWindow
     {
-        object parentNode { get; }
+        object? parentNode { get; }
         object childNodes { get; }
         void appendChild(object child);
         void removeChild(object child);

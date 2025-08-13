@@ -38,14 +38,14 @@ namespace SharpCanvas.Host.Browser
             }
         }
 
-        public byte[]? Load()
+        public byte[] Load()
         {
             string path = _uri.PathAndQuery;
             if (File.Exists(path))
             {
                 return File.ReadAllBytes(path);
             }
-            return null;
+            throw new FileNotFoundException("File not found.", path);
         }
 
         // When BeginRead is finished reading data from the file, the 
