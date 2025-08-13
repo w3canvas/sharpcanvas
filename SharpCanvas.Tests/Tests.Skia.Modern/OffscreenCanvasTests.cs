@@ -12,7 +12,7 @@ namespace SharpCanvas.Tests.Skia.Modern
         {
             var worker = new CanvasWorker();
             var manualResetEvent = new ManualResetEvent(false);
-            SKBitmap resultBitmap = null;
+            SKBitmap? resultBitmap = null;
 
             worker.OnWorkComplete += (sender, bitmap) =>
             {
@@ -29,15 +29,15 @@ namespace SharpCanvas.Tests.Skia.Modern
 
             manualResetEvent.WaitOne();
 
-            Assert.IsNotNull(resultBitmap);
-            Assert.AreEqual(200, resultBitmap.Width);
-            Assert.AreEqual(200, resultBitmap.Height);
+            Assert.That(resultBitmap, Is.Not.Null);
+            Assert.That(resultBitmap.Width, Is.EqualTo(200));
+            Assert.That(resultBitmap.Height, Is.EqualTo(200));
 
             // Check a pixel to make sure it's red
             var pixel = resultBitmap.GetPixel(20, 20);
-            Assert.AreEqual(255, pixel.Red);
-            Assert.AreEqual(0, pixel.Green);
-            Assert.AreEqual(0, pixel.Blue);
+            Assert.That(pixel.Red, Is.EqualTo(255));
+            Assert.That(pixel.Green, Is.EqualTo(0));
+            Assert.That(pixel.Blue, Is.EqualTo(0));
         }
     }
 }
