@@ -13,16 +13,22 @@
         "packagesPath": "/home/jules/.nuget/packages/",
         "outputPath": "/app/SharpCanvas/Bitmap.Shader/obj/",
         "projectStyle": "PackageReference",
+        "crossTargeting": true,
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
+          "net8.0",
           "net8.0-windows"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          },
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {}
@@ -40,6 +46,32 @@
         }
       },
       "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        },
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "imports": [
@@ -80,16 +112,35 @@
         "packagesPath": "/home/jules/.nuget/packages/",
         "outputPath": "/app/SharpCanvas/Browser/obj/",
         "projectStyle": "PackageReference",
+        "crossTargeting": true,
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
+          "net8.0",
           "net8.0-windows"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/app/SharpCanvas/Host/SharpCanvas.Host.csproj": {
+                "projectPath": "/app/SharpCanvas/Host/SharpCanvas.Host.csproj"
+              },
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
+              },
+              "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
+                "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
+              },
+              "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj": {
+                "projectPath": "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj"
+              }
+            }
+          },
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
@@ -120,6 +171,38 @@
         }
       },
       "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        },
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
@@ -166,16 +249,32 @@
         "packagesPath": "/home/jules/.nuget/packages/",
         "outputPath": "/app/SharpCanvas/Host/obj/",
         "projectStyle": "PackageReference",
+        "crossTargeting": true,
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
+          "net8.0",
           "net8.0-windows"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
+              },
+              "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
+                "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
+              },
+              "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj": {
+                "projectPath": "/app/SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj"
+              }
+            }
+          },
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
@@ -203,6 +302,38 @@
         }
       },
       "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        },
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
@@ -249,16 +380,22 @@
         "packagesPath": "/home/jules/.nuget/packages/",
         "outputPath": "/app/SharpCanvas/Interop/obj/",
         "projectStyle": "PackageReference",
+        "crossTargeting": true,
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
+          "net8.0",
           "net8.0-windows"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          },
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {}
@@ -276,6 +413,38 @@
         }
       },
       "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Jint": {
+              "target": "Package",
+              "version": "[4.4.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        },
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
@@ -322,16 +491,26 @@
         "packagesPath": "/home/jules/.nuget/packages/",
         "outputPath": "/app/SharpCanvas/Prototype/obj/",
         "projectStyle": "PackageReference",
+        "crossTargeting": true,
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
+          "net8.0",
           "net8.0-windows"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
+              }
+            }
+          },
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
@@ -353,6 +532,32 @@
         }
       },
       "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        },
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "imports": [
@@ -390,11 +595,13 @@
         "packagesPath": "/home/jules/.nuget/packages/",
         "outputPath": "/app/SharpCanvas/SharpCanvas.Core/obj/",
         "projectStyle": "PackageReference",
+        "crossTargeting": true,
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net8.0"
+          "net8.0",
+          "net8.0-windows"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
@@ -402,6 +609,10 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
+            "projectReferences": {}
+          },
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
             "projectReferences": {}
           }
         },
@@ -419,6 +630,36 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "SkiaSharp": {
+              "target": "Package",
+              "version": "[2.88.8, )"
+            },
+            "SkiaSharp.NativeAssets.Linux": {
+              "target": "Package",
+              "version": "[2.88.8, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        },
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
           "dependencies": {
             "System.Drawing.Common": {
               "target": "Package",
@@ -454,16 +695,38 @@
         "packagesPath": "/home/jules/.nuget/packages/",
         "outputPath": "/app/SharpCanvas/obj/",
         "projectStyle": "PackageReference",
+        "crossTargeting": true,
         "configFilePaths": [
           "/home/jules/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
+          "net8.0",
           "net8.0-windows"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/app/SharpCanvas/Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj": {
+                "projectPath": "/app/SharpCanvas/Bitmap.Shader/SharpCanvas.Bitmap.Shader.csproj"
+              },
+              "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj": {
+                "projectPath": "/app/SharpCanvas/Browser/SharpCanvas.Browser.csproj"
+              },
+              "/app/SharpCanvas/Host/SharpCanvas.Host.csproj": {
+                "projectPath": "/app/SharpCanvas/Host/SharpCanvas.Host.csproj"
+              },
+              "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj": {
+                "projectPath": "/app/SharpCanvas/Interop/SharpCanvas.Interop.csproj"
+              },
+              "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj": {
+                "projectPath": "/app/SharpCanvas/Prototype/SharpCanvas.Prototype.csproj"
+              }
+            }
+          },
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {
@@ -497,6 +760,42 @@
         }
       },
       "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Jint": {
+              "target": "Package",
+              "version": "[4.4.1, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.19, 8.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/jules/.dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        },
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {

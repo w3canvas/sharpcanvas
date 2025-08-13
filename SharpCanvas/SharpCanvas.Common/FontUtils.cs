@@ -74,7 +74,7 @@ namespace SharpCanvas.Common
             return point;
         }
 
-        public static Font ParseFont(string _font, double dpi)
+        public static Font? ParseFont(string _font, double dpi)
         {
             var regex = new Regex(@"(?<size>\d+)(?<metric>\w+)\W+(?<font>[\w\s]+.*)");
             if (regex.IsMatch(_font))
