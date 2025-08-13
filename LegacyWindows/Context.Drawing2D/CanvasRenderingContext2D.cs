@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -19,7 +20,8 @@ using Convert = System.Convert;
 //namespace SharpCanvas.Drawing
 namespace SharpCanvas.Context.Drawing2D
 {
-    
+    public delegate void OnPartialDrawHandler();
+
     [ComVisible(true),
      ComSourceInterfaces(typeof (ICanvasRenderingContext2D))]
     public class CanvasRenderingContext2D : ICanvasRenderingContext2D
@@ -61,7 +63,7 @@ namespace SharpCanvas.Context.Drawing2D
         private Stack<CanvasState> stack;
         private Graphics surface;
 
-        public event OnPartialDrawHanlder OnPartialDraw;
+        public event OnPartialDrawHandler OnPartialDraw;
 
         private ICanvasProxy _canvasElement;
 
@@ -1488,6 +1490,11 @@ namespace SharpCanvas.Context.Drawing2D
 
         #region drawing images
 
+        public void drawImage(object imageData, float dx, float dy)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Can accept Image class instance, HTMLCanvasElement class instance or url as a source (imageData)
         /// </summary>
@@ -2128,9 +2135,6 @@ namespace SharpCanvas.Context.Drawing2D
 
         private readonly SortedList<string, FieldInfo> _arbitraryFields = new SortedList<string, FieldInfo>();
         private readonly SortedList<string, PropertyInfo> _arbitraryProperties = new SortedList<string, PropertyInfo>();
-        private FieldInfo[] _fields;
-        private MethodInfo[] _methods;
-        private PropertyInfo[] _properties;
 
         private object _myApply = new object();
         private string _propertyToExecute;

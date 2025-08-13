@@ -55,3 +55,6 @@ The following properties and methods are defined in the MDN documentation for `C
 - `resetTransform()`
 - `roundRect()`
 - `setLineDash()`
+
+## 4. Build Issues
+- **`IFilter` not found**: There is a persistent build error `CS0246: The type or namespace name 'IFilter' could not be found` when building `SharpCanvas.Host.csproj`. This happens even though the project reference and `using` statement appear to be correct. This needs further investigation.
