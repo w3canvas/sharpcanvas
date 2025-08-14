@@ -6,7 +6,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     
     internal class LFSLoader: IFileLoader

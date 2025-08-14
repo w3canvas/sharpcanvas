@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SharpCanvas.Host.Prototype;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     public class WindowHold: ObjectWithPrototype
     {

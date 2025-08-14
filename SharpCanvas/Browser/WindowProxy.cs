@@ -8,7 +8,7 @@ using SharpCanvas.Host.Prototype;
 using SharpCanvas.Interop;
 using SharpCanvas.Shared;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     public class WindowProxy : ObjectWithPrototype, IWindow
     {
@@ -155,7 +155,7 @@ namespace SharpCanvas.Host.Browser
         /// Reference to parent window
         /// </summary>
         [DispId(13)]
-        public IWindow parentWindow
+        public IWindow? parentWindow
         {
             get { return _realObject.parentWindow; }
             set { _realObject.parentWindow = value; }
@@ -274,7 +274,7 @@ namespace SharpCanvas.Host.Browser
         /// <summary>
         /// Reference to the direct parent node
         /// </summary>
-        public object parentNode
+        public object? parentNode
         {
             get { return _realObject.parentNode; }
         }
@@ -308,7 +308,7 @@ namespace SharpCanvas.Host.Browser
         /// <summary>
         /// The Document object associated with this node. This is also the Document object used to create new nodes.
         /// </summary>
-        public object ownerDocument
+        public object? ownerDocument
         {
             get { return _realObject.ownerDocument; }
         }

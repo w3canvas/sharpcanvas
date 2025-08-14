@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using SharpCanvas.Shared;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     public static class EventFactory
     {

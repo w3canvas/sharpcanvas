@@ -6,7 +6,6 @@ namespace SharpCanvas.Interop
 
     public interface IHTMLElementBase : INode
     {
-        event ControlsTreeChangeHandler ControlsTreeChange;
         /// <summary>
         /// Flag to determine wherever image on the current surface was changed or not
         /// </summary>
@@ -44,7 +43,7 @@ namespace SharpCanvas.Interop
         /// </summary>
         /// <param name="id">id is a case-sensitive string representing the unique ID of the element being sought. </param>
         /// <returns></returns>
-        object getElementById(string id);
+        object? getElementById(string id);
 
         /// <summary>
         /// Returns a boolean indicating whether the object has the specified property.

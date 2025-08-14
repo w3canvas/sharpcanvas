@@ -10,7 +10,7 @@ using SharpCanvas.Host;
 using SharpCanvas.Interop;
 using SharpCanvas.Shared;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     public delegate void LoadAssemblyHandler();
 
@@ -37,7 +37,7 @@ namespace SharpCanvas.Host.Browser
         private Navigator _navigator = new Navigator();
         protected Dictionary<string, List<IEventRegistration>> _events = new Dictionary<string, List<IEventRegistration>>();
         private EventModel _eventModel;
-        private IWindow _parentWindow = null!;
+        private IWindow? _parentWindow = null!;
         private List<INode> _childNodes;
 
         #endregion
@@ -118,9 +118,7 @@ namespace SharpCanvas.Host.Browser
             }
             set
             {
-#pragma warning disable CS8601 // Possible null reference assignment.
                 _location = value;
-#pragma warning restore CS8601 // Possible null reference assignment.
             }
         }
 
@@ -186,13 +184,9 @@ namespace SharpCanvas.Host.Browser
 
         public void setAttribute(object name, object value)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            string strName = name.ToString();
-            string strValue = value.ToString();
-            switch (strName.ToLower())
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+            string? strName = name?.ToString();
+            string? strValue = value?.ToString();
+            switch (strName?.ToLower())
             {
                 case "width":
                     {
@@ -210,13 +204,13 @@ namespace SharpCanvas.Host.Browser
                     }
                 case "name":
                     {
-                        Name = strValue;
+                        Name = strValue ?? string.Empty;
                         break;
                     }
 
                 case "src":
                     {
-                        src = strValue;
+                        src = strValue ?? string.Empty;
                         break;
                     }
             }
@@ -228,7 +222,10 @@ namespace SharpCanvas.Host.Browser
             set
             {
                 _src = value;
-                location.href = _src;
+                if (location != null)
+                {
+                    location.href = _src;
+                }
             }
         }
 
@@ -267,22 +264,24 @@ namespace SharpCanvas.Host.Browser
                 var toRedraw = new Dictionary<int, List<global::SharpCanvas.Shared.IHTMLCanvasElement>>();
                 int maxZIndex = 0;
                 //build the order to redraw
-                UserControl body = document.body as UserControl;
-                foreach (object el in body.Controls)
+                if (document.body is UserControl body)
                 {
-                    if (el is global::SharpCanvas.Shared.IHTMLCanvasElement)
+                    foreach (object el in body.Controls)
                     {
-                        global::SharpCanvas.Shared.IHTMLCanvasElement element = (global::SharpCanvas.Shared.IHTMLCanvasElement)el;
-                        if (element.style.display != "none")
+                        if (el is global::SharpCanvas.Shared.IHTMLCanvasElement)
                         {
-                            if (!toRedraw.ContainsKey(element.style.zIndex))
+                            global::SharpCanvas.Shared.IHTMLCanvasElement element = (global::SharpCanvas.Shared.IHTMLCanvasElement)el;
+                            if (element.style.display != "none")
                             {
-                                toRedraw.Add(element.style.zIndex, new List<global::SharpCanvas.Shared.IHTMLCanvasElement>());
-                            }
-                            toRedraw[element.style.zIndex].Add(element);
-                            if (maxZIndex < element.style.zIndex)
-                            {
-                                maxZIndex = element.style.zIndex;
+                                if (!toRedraw.ContainsKey(element.style.zIndex))
+                                {
+                                    toRedraw.Add(element.style.zIndex, new List<global::SharpCanvas.Shared.IHTMLCanvasElement>());
+                                }
+                                toRedraw[element.style.zIndex].Add(element);
+                                if (maxZIndex < element.style.zIndex)
+                                {
+                                    maxZIndex = element.style.zIndex;
+                                }
                             }
                         }
                     }
@@ -316,26 +315,16 @@ namespace SharpCanvas.Host.Browser
         /// </summary>
         public void InvokeOnload()
         {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (this.onload != null) //run only once
             {
-                if (onload is Delegate)
+                if (onload is Delegate function)
                 {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                    var function = (Delegate) this.onload;
                     this.onload = null;
                     function.DynamicInvoke(this, new object[] {});
                     RedrawChildren();
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                //if(this.onload is LoadAssemblyHandler)
-                    //{
-                    //    var loadAssembly = (LoadAssemblyHandler)this.onload;
-                    //    loadAssembly.Invoke();
-                    //}
             }
-            else if (location.assembly != null)
+            else if (location?.assembly != null)
             {
                 Type[] types = location.assembly.GetTypes();
                 foreach (Type type in types)
@@ -353,9 +342,10 @@ namespace SharpCanvas.Host.Browser
                                 //GlobalScope globalScope = 
                                 //    Microsoft.JScript.Vsa.VsaEngine.CreateEngineAndGetGlobalScope(false, new string[]{});
 
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                                constructor.Invoke(new object[] {this._parentWindow, this._parentWindow.document});
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+                                if (_parentWindow != null && _parentWindow.document != null)
+                                {
+                                    constructor.Invoke(new object[] {this._parentWindow, this._parentWindow.document});
+                                }
                                 //constructor.Invoke(new object[] {});
                                 break;
                             }
@@ -367,8 +357,7 @@ namespace SharpCanvas.Host.Browser
 
         private void location_OnSaveFile(byte[] data)
         {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            if (!isDialogOpen)
+            if (_dlgSaveFile != null && !isDialogOpen)
             {
                 DialogResult dialogResult = _dlgSaveFile.ShowDialog();
                 isDialogOpen = true;
@@ -378,7 +367,6 @@ namespace SharpCanvas.Host.Browser
                 }
                 isDialogOpen = false;
             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         #endregion
@@ -402,7 +390,7 @@ namespace SharpCanvas.Host.Browser
         /// </summary>
         public object frameElement { get; set; } = new object();
 
-        public IWindow parentWindow
+        public IWindow? parentWindow
         {
             get {
                 return _parentWindow;
@@ -565,12 +553,10 @@ namespace SharpCanvas.Host.Browser
         /// <summary>
         /// Reference to the direct parent node
         /// </summary>
-        public object parentNode
+        public object? parentNode
         {
             get {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
         }
 
@@ -603,7 +589,7 @@ namespace SharpCanvas.Host.Browser
         /// <summary>
         /// The Document object associated with this node. This is also the Document object used to create new nodes.
         /// </summary>
-        public object ownerDocument
+        public object? ownerDocument
         {
             get { throw new NotImplementedException(); }
         }

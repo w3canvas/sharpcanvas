@@ -11,7 +11,7 @@ using System.Windows.Forms.Layout;
 using SharpCanvas.Interop;
 using SharpCanvas.Shared;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     [ComVisible(true)]
     public class HTMLElement : UserControl, IHTMLElementBase, IEventTarget
@@ -34,7 +34,6 @@ namespace SharpCanvas.Host.Browser
         #region Properties
 
         //TODO: remove - event is obsolete
-        public event ControlsTreeChangeHandler? ControlsTreeChange;
 
         /// <summary>
         /// Flag to determine wherever image on the current surface was changed or not
@@ -100,9 +99,11 @@ namespace SharpCanvas.Host.Browser
         {
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             //BackColor = Color.Transparent;
-            
-            if (this is IHTMLCanvasElement)
-                this.Size = new Size((int)(this as IHTMLCanvasElement).width, (int)(this as IHTMLCanvasElement).height);
+
+            if (this is IHTMLCanvasElement canvas)
+            {
+                this.Size = new Size((int)canvas.width, (int)canvas.height);
+            }
             //this.AutoSize = true;
         }
 
@@ -189,7 +190,9 @@ namespace SharpCanvas.Host.Browser
             else
             {
                 if (ownerDocument == null) return;
-                eventModel = ((IDocument) ownerDocument).defaultView.eventModel;
+                var defaultView = ((IDocument) ownerDocument).defaultView;
+                if (defaultView == null) return;
+                eventModel = defaultView.eventModel;
             }
             if (eventModel != null)
             {
@@ -286,7 +289,7 @@ namespace SharpCanvas.Host.Browser
         /// <param name="child"></param>
         public void appendChild(object child)
         {
-            UserControl control = null;
+            UserControl? control = null;
             if (child is UserControl)
             {
                 control = (UserControl) child;
@@ -316,7 +319,7 @@ namespace SharpCanvas.Host.Browser
                 //                                         //todo: get loaded assembly and find startPoint class, create isntance of it, initialize document and window props
                 //                                     });
                 wndProxy.parentWindow = frame.ParentWindow;
-                wndProxy.src = frame.getAttribute<string>("src");
+                wndProxy.src = frame.getAttribute<string>("src") ?? string.Empty;
                 control = wndProxy.GetRealObject() as UserControl;
             }
             if (control != null)
@@ -370,7 +373,12 @@ namespace SharpCanvas.Host.Browser
                 {
                     return null;
                 }
-                return name == "body" ? _parent : ((IHTMLElementBase) _parent).ownerDocument;
+                var parentElement = _parent as IHTMLElementBase;
+                if (parentElement != null)
+                {
+                    return name == "body" ? _parent : parentElement.ownerDocument;
+                }
+                return name == "body" ? _parent : null;
             }
         }
 
@@ -417,7 +425,7 @@ namespace SharpCanvas.Host.Browser
                     MemberInfo idInfo = memberInfos[0];
                     if(idInfo is PropertyInfo)
                     {
-                        return (string)((PropertyInfo)idInfo).GetValue(canvasProxy, BindingFlags.Instance, null, null, null);
+                        return ((PropertyInfo)idInfo).GetValue(canvasProxy, BindingFlags.Instance, null, null, null) as string ?? string.Empty;
                     }
                 }
             }

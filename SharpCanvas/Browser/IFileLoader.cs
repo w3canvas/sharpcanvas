@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     public delegate void FileLoadedEventHandler(byte[] data);
 
     internal interface IFileLoader
     {
-        event FileLoadedEventHandler FileLoaded;
         void BeginLoad();
         byte[] Load();
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     /// <summary>
     /// Load specified assembly and all its dependencies (asynchronously?)

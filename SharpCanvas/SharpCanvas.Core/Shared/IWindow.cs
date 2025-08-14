@@ -13,7 +13,7 @@ namespace SharpCanvas.Shared
         object childNodes { get; }
         void appendChild(object child);
         void removeChild(object child);
-        object ownerDocument { get; }
+        object? ownerDocument { get; }
 
         // assigning this has special behavior in ECMAScript, but it is otherwise
         // read only. specifically, in ES a string URI can be assigned to location,
@@ -85,7 +85,7 @@ namespace SharpCanvas.Shared
         /// <summary>
         /// Reference to parent window
         /// </summary>
-        Shared.IWindow parentWindow { get; set; }
+        IWindow? parentWindow { get; set; }
 
         /// <summary>
         /// Left position of the control

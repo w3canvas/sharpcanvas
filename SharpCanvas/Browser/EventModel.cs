@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using SharpCanvas.Interop;
 using SharpCanvas.Shared;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     
     public class EventModel : IEventModel
@@ -73,7 +73,7 @@ namespace SharpCanvas.Host.Browser
             EventPhases phase = useCapture ? EventPhases.CAPTURING_PHASE : EventPhases.BUBBLING_PHASE;
             if (events.ContainsKey(type))
             {
-                IEventRegistration toRemove = null;
+                IEventRegistration? toRemove = null;
                 foreach (IEventRegistration eventRegistration in events[type])
                 {
                   if(eventRegistration.ApplyToPhase == phase)
@@ -225,7 +225,8 @@ namespace SharpCanvas.Host.Browser
                 if (e is MouseEvent)
                 {
                     MouseEvent me = (MouseEvent)e;
-                    IWindow window = sender is IWindow ? (IWindow)sender : ((IDocument)((IHTMLElementBase)sender).ownerDocument).defaultView;
+                    IWindow? window = sender is IWindow ? (IWindow)sender : ((IDocument?)((IHTMLElementBase)sender).ownerDocument)?.defaultView;
+                    if(window == null) return;
                     BuildTargetsListByXY((INode)window, me.pageX, me.pageY, targetsXY);
                 }
 
@@ -245,7 +246,7 @@ namespace SharpCanvas.Host.Browser
             }
         }
 
-        private void BroadcastEventFromNode(INode sender, Event e, List<IEventTarget> avoidTargets)
+        private void BroadcastEventFromNode(INode sender, Event e, List<IEventTarget>? avoidTargets)
         {
             //Build event targets chain
             List<IEventTarget> targets = new List<IEventTarget>();
@@ -355,7 +356,7 @@ namespace SharpCanvas.Host.Browser
         /// <param name="eventName"></param>
         public bool FireEvent(Delegate sf, Event e, object scope)
         {
-            object result = sf.DynamicInvoke(scope, new object[] {e});
+            object? result = sf.DynamicInvoke(scope, new object[] {e});
             //todo: check whether result is NULL?
             return result is bool ? (bool)result : false;
         }
@@ -379,11 +380,13 @@ namespace SharpCanvas.Host.Browser
             }
             //object dummy = null;
             //object oEvt = doc.CreateEventObject(ref dummy);
-            object oEvt = doc.CreateEventObject();
-            var evt = (IHTMLEventObj2)oEvt; //cast
-            //set various properties of the event here.
-            evt.clientX = x;
-            evt.clientY = y;
+            object? oEvt = doc.CreateEventObject();
+            if (oEvt is IHTMLEventObj2 evt)
+            {
+                //set various properties of the event here.
+                evt.clientX = x;
+                evt.clientY = y;
+            }
 
             //fire
             return doc.FireEvent(eventName, oEvt);

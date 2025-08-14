@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using SharpCanvas.Shared;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     [Serializable]
     public class Location : ILocation
@@ -15,19 +15,18 @@ namespace SharpCanvas.Host.Browser
 
         #region Private Fields
         
-        private string _href;
+        private string _href = string.Empty;
 
-        public event OnSaveFileHandler OnSaveFile;
+        public event OnSaveFileHandler? OnSaveFile;
 
-        private Uri _uri;
-        private IFileLoader _dllLoader;
-        private Assembly _assembly;
+        private Uri? _uri;
+        private Assembly? _assembly;
 
         #endregion
 
         #region Public Properties
 
-        public Assembly assembly
+        public Assembly? assembly
         {
             get { return _assembly; }
         }

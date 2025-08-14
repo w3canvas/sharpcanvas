@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     internal class HttpLoader: IFileLoader
     {
@@ -14,8 +14,6 @@ namespace SharpCanvas.Host.Browser
         }
 
         #region Implementation of IFileLoader
-
-        public event FileLoadedEventHandler? FileLoaded;
 
         public void BeginLoad()
         {
