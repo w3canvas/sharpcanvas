@@ -15,7 +15,7 @@ The following features are not yet implemented in the Skia backend. The goal is 
 ## 2. Legacy Code (`System.Drawing`) Known Issues
 The following `FIXME` items exist in the legacy codebase and should be addressed.
 
-- **`LegacyWindows/Context.Drawing2D/CanvasRenderingContext2D.cs`**
+- **`SharpCanvas.Drawing/Context.Drawing2D/CanvasRenderingContext2D.cs`**
   - `FIXME: This library has not been converted to use the ObjectWithPrototype class.`
   - `FIXME: Used only with InvokeMember, currently only used with drawImage (bug?).`
   - `FIXME: Cleanup and move to Share.`

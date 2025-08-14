@@ -18,7 +18,6 @@ using _HTML_PAINTER = SharpCanvas.Interop._HTML_PAINTER;
 using _HTML_PAINTER_INFO = SharpCanvas.Interop._HTML_PAINTER_INFO;
 using IHTMLElement = SharpCanvas.Interop.IHTMLElement;
 using IHTMLPainter = SharpCanvas.Interop.IHTMLPainter;
-using Image = SharpCanvas.Host.Browser.Image;
 using tagPOINT = SharpCanvas.Interop.tagPOINT;
 using tagRECT = SharpCanvas.Interop.tagRECT;
 using tagSIZE = SharpCanvas.Interop.tagSIZE;
@@ -235,11 +234,11 @@ namespace SharpCanvas.Browser.Forms
         {
            if(string.IsNullOrEmpty(type))
            {
-               type = SharpCanvas.Context.Drawing2D.Image.DEFAULT_TYPE;
+               type = "image/png";
            }
-            Bitmap bitmap = _canvas.GetBitmap();
-            string base64String = Utils.ImageToBase64(bitmap, Utils.ImageFormatFromMediaType(type));
-            return type + SharpCanvas.Context.Drawing2D.Image.BASE64 + base64String;
+            byte[] bitmap = _canvas.GetBitmap();
+            string base64String = System.Convert.ToBase64String(bitmap);
+            return "data:" + type + ";base64," + base64String;
         }
 
         /// <summary>
@@ -329,7 +328,7 @@ namespace SharpCanvas.Browser.Forms
                 Graphics tmp = Graphics.FromImage(bmp);
                 _canvas = new ContextProxy(tmp, bmp, new Pen(Color.Black, 1),
                                                        new Fill(Color.Black), _isVisible, _proxy);
-                _canvas.OnPartialDraw += ReDraw;
+                ((ContextProxy)_canvas).OnPartialDraw += ReDraw;
             }
         }
 
@@ -586,7 +585,6 @@ namespace SharpCanvas.Browser.Forms
         /// <param name="rcUpdate">rectangle to update</param>
         private void Draw(Graphics graphics, tagRECT rcBounds, tagRECT rcUpdate)
         {
-            Bitmap bitmap;
             if (_canvas != null)
             {
                 int x = rcUpdate.left;
@@ -598,23 +596,26 @@ namespace SharpCanvas.Browser.Forms
 
                 lock (sync)
                 {
-                    bitmap = _canvas.GetBitmap();
-                    if (bitmap.Width < width1)
+                    byte[] bitmapBytes = _canvas.GetBitmap();
+                    using (var ms = new System.IO.MemoryStream(bitmapBytes))
+                    using (var bitmap = new Bitmap(ms))
                     {
-                        width1 = bitmap.Width;
+                        if (bitmap.Width < width1)
+                        {
+                            width1 = bitmap.Width;
+                        }
+                        if (bitmap.Height < height1)
+                        {
+                            height1 = bitmap.Height;
+                        }
+                        var rect = new Rectangle(x1,
+                                                 y1,
+                                                 width1,
+                                                 height1);
+                        graphics.DrawImage(bitmap, x, y,
+                                           rect,
+                                           GraphicsUnit.Pixel);
                     }
-                    if (bitmap.Height < height1)
-                    {
-                        height1 = bitmap.Height;
-                    }
-                    var rect = new Rectangle(x1,
-                                             y1,
-                                             width1,
-                                             height1);
-                    graphics.DrawImage(bitmap, x, y,
-                                       rect,
-                                       GraphicsUnit.Pixel);
-                    //graphics.DrawString(string.Format("bW = {0}, gW = {1}", bitmap.Width, graphics.VisibleClipBounds.Width), new Font("Arial", 5), new SolidBrush(Color.Black), x1, y1);
                 }
             }
         }

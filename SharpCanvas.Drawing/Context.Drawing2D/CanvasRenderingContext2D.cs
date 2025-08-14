@@ -2071,6 +2071,11 @@ namespace SharpCanvas.Context.Drawing2D
             return path.IsOutlineVisible((float)x, (float)y, _stroke);
         }
 
+        public object getContextAttributes()
+        {
+            return new ContextAttributes();
+        }
+
         //todo: move it to geometry utils
         /// <summary>
         /// Converts radians to degrees

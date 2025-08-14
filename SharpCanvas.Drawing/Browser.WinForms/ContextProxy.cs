@@ -33,7 +33,7 @@ namespace SharpCanvas.Browser.Forms
             : base(Guid.NewGuid())
         {
             _target = new CanvasRenderingContext2D(s, bitmap, stroke, fill, visible, canvasElement);
-            _target.OnPartialDraw += new OnPartialDrawHanlder(_target_OnPartialDraw);
+            ((CanvasRenderingContext2D)_target).OnPartialDraw += new OnPartialDrawHandler(_target_OnPartialDraw);
             //////////
             // Add all members with dispids from the concrete type
             //////////
@@ -268,6 +268,11 @@ namespace SharpCanvas.Browser.Forms
         [DispId(92)]
         public void drawImage([In] object pImg, [In] double dx, [In] double dy) { _target.drawImage(pImg, dx, dy); }
 
+        public void drawImage(object pImg, float dx, float dy)
+        {
+            throw new NotImplementedException();
+        }
+
         // poInt-membership test
         [DispId(100)]
         public bool isPointInPath([In] double x, [In] double y) { return _target.isPointInPath(x, y); }
@@ -329,7 +334,7 @@ namespace SharpCanvas.Browser.Forms
         /// Provides with latest image from the Canvas
         /// </summary>
         /// <returns></returns>
-        public Bitmap GetBitmap() { return _target.GetBitmap(); }
+        public byte[] GetBitmap() { return _target.GetBitmap(); }
 
         /// <summary>
         /// Change size of canvas and underlying controls.
@@ -370,7 +375,7 @@ namespace SharpCanvas.Browser.Forms
         /// <summary>
         /// Occurs when some part of image was commited to the surface
         /// </summary>
-        public event OnPartialDrawHanlder OnPartialDraw;
+        public event OnPartialDrawHandler OnPartialDraw;
 
         //TODO: unify GetRealObject methods and put it into IProxy interface
         public ICanvasRenderingContext2D GetRealObject()
@@ -428,6 +433,83 @@ namespace SharpCanvas.Browser.Forms
             return base.GetMember(name, bindingAttr);
         }
 
+        #endregion
+
+        #region MDN Properties
+        public string direction { get; set; }
+        public string filter { get; set; }
+        public string fontKerning { get; set; }
+        public string fontStretch { get; set; }
+        public string fontVariantCaps { get; set; }
+        public bool imageSmoothingEnabled { get; set; }
+        public string imageSmoothingQuality { get; set; }
+        public string lang { get; set; }
+        public string letterSpacing { get; set; }
+        public double lineDashOffset { get; set; }
+        public string textRendering { get; set; }
+        public string wordSpacing { get; set; }
+        #endregion
+
+        #region MDN Methods
+        public void resetTransform()
+        {
+            _target.resetTransform();
+        }
+
+        public object getTransform()
+        {
+            return _target.getTransform();
+        }
+
+        public void reset()
+        {
+            _target.reset();
+        }
+
+        public bool isContextLost()
+        {
+            return _target.isContextLost();
+        }
+
+        public void drawFocusIfNeeded(object element)
+        {
+            _target.drawFocusIfNeeded(element);
+        }
+
+        public void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, bool anticlockwise)
+        {
+            _target.ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise);
+        }
+
+        public void roundRect(double x, double y, double w, double h, object radii)
+        {
+            _target.roundRect(x, y, w, h, radii);
+        }
+
+        public void setLineDash(object segments)
+        {
+            _target.setLineDash(segments);
+        }
+
+        public object getLineDash()
+        {
+            return _target.getLineDash();
+        }
+
+        public object createConicGradient(double startAngle, double x, double y)
+        {
+            return _target.createConicGradient(startAngle, x, y);
+        }
+
+        public bool isPointInStroke(double x, double y)
+        {
+            return _target.isPointInStroke(x, y);
+        }
+
+        public object getContextAttributes()
+        {
+            return _target.getContextAttributes();
+        }
         #endregion
 
         #region Indexed Properties
