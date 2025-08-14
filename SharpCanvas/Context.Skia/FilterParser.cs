@@ -45,6 +45,32 @@ namespace SharpCanvas.Context.Skia
                                 filters.Add(SKImageFilter.CreateDropShadow(dx, dy, shadowBlur, shadowBlur, color));
                             }
                             break;
+                        case "grayscale":
+                            if (args.Length == 1 && TryParsePercentage(args[0], out var grayAmount))
+                            {
+                                var grayMatrix = new float[]
+                                {
+                                    (float)(0.2126 + 0.7874 * (1 - grayAmount)), (float)(0.7152 - 0.7152 * (1 - grayAmount)), (float)(0.0722 - 0.0722 * (1 - grayAmount)), 0, 0,
+                                    (float)(0.2126 - 0.2126 * (1 - grayAmount)), (float)(0.7152 + 0.2848 * (1 - grayAmount)), (float)(0.0722 - 0.0722 * (1 - grayAmount)), 0, 0,
+                                    (float)(0.2126 - 0.2126 * (1 - grayAmount)), (float)(0.7152 - 0.7152 * (1 - grayAmount)), (float)(0.0722 + 0.9278 * (1 - grayAmount)), 0, 0,
+                                    0, 0, 0, 1, 0
+                                };
+                                filters.Add(SKImageFilter.CreateColorFilter(SKColorFilter.CreateColorMatrix(grayMatrix)));
+                            }
+                            break;
+                        case "sepia":
+                            if (args.Length == 1 && TryParsePercentage(args[0], out var sepiaAmount))
+                            {
+                                var sepiaMatrix = new float[]
+                                {
+                                    (float)(0.393 + 0.607 * (1 - sepiaAmount)), (float)(0.769 - 0.769 * (1 - sepiaAmount)), (float)(0.189 - 0.189 * (1 - sepiaAmount)), 0, 0,
+                                    (float)(0.349 - 0.349 * (1 - sepiaAmount)), (float)(0.686 + 0.314 * (1 - sepiaAmount)), (float)(0.168 - 0.168 * (1 - sepiaAmount)), 0, 0,
+                                    (float)(0.272 - 0.272 * (1 - sepiaAmount)), (float)(0.534 - 0.534 * (1 - sepiaAmount)), (float)(0.131 + 0.869 * (1 - sepiaAmount)), 0, 0,
+                                    0, 0, 0, 1, 0
+                                };
+                                filters.Add(SKImageFilter.CreateColorFilter(SKColorFilter.CreateColorMatrix(sepiaMatrix)));
+                            }
+                            break;
                     }
                 }
             }
@@ -65,6 +91,24 @@ namespace SharpCanvas.Context.Skia
             if (value.EndsWith("px"))
             {
                 return float.TryParse(value.Substring(0, value.Length - 2), out result);
+            }
+            result = 0;
+            return false;
+        }
+
+        private static bool TryParsePercentage(string value, out float result)
+        {
+            if (value.EndsWith("%"))
+            {
+                if (float.TryParse(value.Substring(0, value.Length - 1), out var percentage))
+                {
+                    result = percentage / 100f;
+                    return true;
+                }
+            }
+            else if (float.TryParse(value, out result))
+            {
+                return true;
             }
             result = 0;
             return false;
