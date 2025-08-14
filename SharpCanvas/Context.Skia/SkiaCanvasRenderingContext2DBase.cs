@@ -153,6 +153,7 @@ namespace SharpCanvas.Context.Skia
         {
             var newPaint = paint.Clone();
             newPaint.Color = newPaint.Color.WithAlpha((byte)(newPaint.Color.Alpha * _globalAlpha));
+            newPaint.IsAntialias = true;
             return newPaint;
         }
         private string _globalCompositeOperation = "source-over";
