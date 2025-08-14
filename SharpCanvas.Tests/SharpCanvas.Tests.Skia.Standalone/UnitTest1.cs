@@ -9,8 +9,6 @@ namespace SharpCanvas.Tests.Skia.Standalone
         [Test]
         public void ShouldRenderTextWithFontFromFile()
         {
-            Assert.Ignore("This test is for diagnostic purposes and will fail without the 'fontconfig' native dependency installed in the environment. It is skipped by default.");
-
             var info = new SKImageInfo(100, 100);
             using (var surface = SKSurface.Create(info))
             {
@@ -20,7 +18,8 @@ namespace SharpCanvas.Tests.Skia.Standalone
                 string fontPath = "DejaVuSans.ttf";
                 Assert.That(File.Exists(fontPath), $"Font file not found at {Path.GetFullPath(fontPath)}");
 
-                using (var typeface = SKTypeface.FromFile(fontPath))
+                using (var stream = new FileStream(fontPath, FileMode.Open))
+                using (var typeface = SKTypeface.FromStream(stream))
                 using (var paint = new SKPaint())
                 {
                     paint.Typeface = typeface;
@@ -32,7 +31,7 @@ namespace SharpCanvas.Tests.Skia.Standalone
                 var bitmap = new SKBitmap(info);
                 surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
 
-                Assert.That(bitmap.GetPixel(15, 45), Is.Not.EqualTo(SKColors.White), "The pixel should have been drawn on, but this will fail if 'fontconfig' is missing.");
+                Assert.That(bitmap.GetPixel(12, 35), Is.Not.EqualTo(SKColors.White));
             }
         }
     }
