@@ -29,3 +29,13 @@ When facing persistent build errors or issues with understanding the correct usa
 4.  **Iterate and Fix**: Build and run this minimal test project. Since it's isolated, it will be much easier to debug and get to a passing state. Iterate on the test until it passes, which proves you have found the correct API usage.
 5.  **Apply the Fix**: Once the isolated test is passing, apply the now-verified correct code back to the main project.
 6.  **Fix Forward**: If the main project still fails to build, do not revert your now-correct code. The error must lie elsewhere. Analyze the remaining build errors, knowing that the specific piece of code you tested is correct.
+
+### Environment Dependencies
+
+#### SkiaSharp on Linux
+
+When working with `SkiaSharp` on Linux, be aware that it has native dependencies that must be present on the system for certain features to work.
+
+Specifically for font rendering, `SkiaSharp` relies on the **Fontconfig** library. If `fontconfig` is not installed on the system, any attempts to render text will likely fail silently (i.e., no text will be drawn, and no exceptions will be thrown).
+
+If you encounter issues with text rendering in SkiaSharp tests, ensure that the execution environment has the `fontconfig` package (or its equivalent) installed.
