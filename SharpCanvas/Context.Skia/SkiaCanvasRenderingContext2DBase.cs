@@ -15,6 +15,12 @@ namespace SharpCanvas.Context.Skia
         protected Stack<SKPaint> _fillPaintStack = new Stack<SKPaint>();
         protected Stack<SKPaint> _strokePaintStack = new Stack<SKPaint>();
         protected Stack<double> _globalAlphaStack = new Stack<double>();
+        protected System.Threading.Tasks.Task _fontLoadingTask = System.Threading.Tasks.Task.CompletedTask;
+
+        public void SetFontLoadingTask(System.Threading.Tasks.Task task)
+        {
+            _fontLoadingTask = task;
+        }
 
         public SkiaCanvasRenderingContext2DBase(SKSurface surface)
         {
@@ -444,6 +450,9 @@ namespace SharpCanvas.Context.Skia
         }
 
         public string textBaseLine { get; set; }
+        public FontFaceSet fonts { get; } = new FontFaceSet();
+        object ICanvasRenderingContext2D.fonts => fonts;
+
         public object canvas => throw new System.NotImplementedException();
         public bool IsVisible => true;
 
@@ -546,6 +555,9 @@ namespace SharpCanvas.Context.Skia
 
         public void fillText(string text, double x, double y)
         {
+            _fontLoadingTask.Wait();
+            // Re-apply font settings in case they were loaded asynchronously
+            FontUtils.ApplyFont(this, _fillPaint);
             var yOffset = FontUtils.GetYOffset(textBaseLine, _fillPaint);
             using (var paint = ApplyPaint(_fillPaint))
             {
@@ -555,6 +567,9 @@ namespace SharpCanvas.Context.Skia
 
         public void strokeText(string text, double x, double y)
         {
+            _fontLoadingTask.Wait();
+            // Re-apply font settings in case they were loaded asynchronously
+            FontUtils.ApplyFont(this, _strokePaint);
             var yOffset = FontUtils.GetYOffset(textBaseLine, _strokePaint);
             using (var paint = ApplyPaint(_strokePaint))
             {

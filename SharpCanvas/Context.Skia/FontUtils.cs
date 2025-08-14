@@ -1,3 +1,6 @@
+using System.IO;
+using System.Linq;
+using SharpCanvas.Shared;
 using SkiaSharp;
 using System.Text.RegularExpressions;
 using System.Reflection;
@@ -21,15 +24,29 @@ namespace SharpCanvas.Context.Skia
                     paint.TextSize = sizeValue;
                 }
 
-                var fontPath = System.IO.Path.Combine("Fonts", family.Trim() + ".ttf");
-                if (System.IO.File.Exists(fontPath))
+                var fontFace = context.fonts.values().FirstOrDefault(f => f.family == family);
+                if (fontFace != null)
                 {
-                    paint.Typeface = SKTypeface.FromFile(fontPath);
+                    context.SetFontLoadingTask(fontFace.load());
+                    if (fontFace.status == "loaded")
+                    {
+                        var fontData = fontFace.GetDataAsync().Result;
+                        var data = SKData.Create(new MemoryStream(fontData));
+                        paint.Typeface = SKTypeface.FromData(data);
+                    }
                 }
                 else
                 {
-                    // Fallback to system fonts if the file doesn't exist
-                    paint.Typeface = SKTypeface.FromFamilyName(family.Trim());
+                    var fontPath = System.IO.Path.Combine("Fonts", family.Trim() + ".ttf");
+                    if (System.IO.File.Exists(fontPath))
+                    {
+                        paint.Typeface = SKTypeface.FromFile(fontPath);
+                    }
+                    else
+                    {
+                        // Fallback to system fonts if the file doesn't exist
+                        paint.Typeface = SKTypeface.FromFamilyName(family.Trim());
+                    }
                 }
             }
 

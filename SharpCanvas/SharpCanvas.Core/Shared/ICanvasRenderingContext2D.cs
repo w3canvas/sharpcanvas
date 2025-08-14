@@ -269,6 +269,9 @@ namespace SharpCanvas
         [DispId(131)]
         string wordSpacing { get; set; }
 
+        [DispId(132)]
+        object fonts { get; }
+
         // Methods from MDN
         [DispId(140)]
         void resetTransform();
