@@ -1,5 +1,6 @@
 using SkiaSharp;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace SharpCanvas.Context.Skia
 {
@@ -20,36 +21,29 @@ namespace SharpCanvas.Context.Skia
                     paint.TextSize = sizeValue;
                 }
 
+                // Load the font from the embedded resource, as per user instructions.
+                // The resource name format is {DefaultNamespace}.{FolderPath}.{FileName}
+                string resourceName = "SharpCanvas.Context.Skia.Fonts.DejaVuSans.ttf";
                 var assembly = typeof(FontUtils).Assembly;
-                var resourceNames = assembly.GetManifestResourceNames();
-                System.Console.WriteLine("Available resources: " + string.Join(", ", resourceNames));
-                var resourceName = "Context.Skia.DejaVuSans.ttf";
-                var stream = assembly.GetManifestResourceStream(resourceName);
-                if (stream == null)
+
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
                 {
-                    throw new System.Exception($"Failed to load embedded resource: {resourceName}");
+                    if (stream != null)
+                    {
+                        paint.Typeface = SKTypeface.FromStream(stream);
+                    }
+                    else
+                    {
+                        // Fallback if the resource cannot be found.
+                        // This will likely fail to render text on Linux without a correctly configured fontconfig.
+                        paint.Typeface = SKTypeface.FromFamilyName(family);
+                    }
                 }
-                paint.Typeface = SKTypeface.FromStream(stream);
             }
 
             paint.IsAntialias = context.textRendering != "optimizeSpeed";
             paint.SubpixelText = context.textRendering == "optimizeLegibility";
 
-            // The following properties are not available in this version of SkiaSharp.
-            // paint.TextKerning = context.fontKerning == "normal";
-            //
-            // if (float.TryParse(context.letterSpacing.Replace("px", ""), out var letterSpacing))
-            // {
-            //     paint.LetterSpacing = letterSpacing;
-            // }
-            //
-            // if (float.TryParse(context.wordSpacing.Replace("px", ""), out var wordSpacing))
-            // {
-            //     paint.WordSpacing = wordSpacing;
-            // }
-
-            // fontStretch is more complex, requiring specific typeface selection or transformations.
-            // For simplicity, we can use TextScaleX, but a full implementation would need more logic.
             paint.TextScaleX = context.fontStretch switch
             {
                 "ultra-condensed" => 0.5f,
@@ -73,14 +67,12 @@ namespace SharpCanvas.Context.Skia
                 case "top":
                     return -metrics.Top;
                 case "hanging":
-                    // Not directly supported by SkiaSharp metrics, but Ascent is a good approximation
                     return -metrics.Ascent;
                 case "middle":
                     return -(metrics.Top + metrics.Bottom) / 2;
                 case "alphabetic":
-                    return 0; // The default
+                    return 0;
                 case "ideographic":
-                    // Not directly supported, but Descent is a good approximation
                     return -metrics.Descent;
                 case "bottom":
                     return -metrics.Bottom;
