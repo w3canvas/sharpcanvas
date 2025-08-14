@@ -435,8 +435,8 @@ namespace SharpCanvas.Context.Skia
                 "left" => SKTextAlign.Left,
                 "right" => SKTextAlign.Right,
                 "center" => SKTextAlign.Center,
-                "start" => SKTextAlign.Left, // Assuming LTR for now
-                "end" => SKTextAlign.Right, // Assuming LTR for now
+                "start" => direction == "rtl" ? SKTextAlign.Right : SKTextAlign.Left,
+                "end" => direction == "rtl" ? SKTextAlign.Left : SKTextAlign.Right,
                 _ => SKTextAlign.Left,
             };
             _fillPaint.TextAlign = align;
@@ -490,9 +490,32 @@ namespace SharpCanvas.Context.Skia
             _path.ArcTo((float)x1, (float)y1, (float)x2, (float)y2, (float)radius);
         }
 
-        public void arc(double x, double y, double r, double startAngle, double endAngle, bool clockwise)
+        public void arc(double x, double y, double r, double startAngle, double endAngle, bool anticlockwise)
         {
-            _path.AddArc(new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r)), (float)(startAngle * 180 / System.Math.PI), (float)((endAngle - startAngle) * 180 / System.Math.PI));
+            var startDegrees = (float)(startAngle * 180 / System.Math.PI);
+            var endDegrees = (float)(endAngle * 180 / System.Math.PI);
+            var sweepAngle = endDegrees - startDegrees;
+
+            if (anticlockwise) // we want positive sweep for CCW
+            {
+                if (sweepAngle < 0)
+                {
+                    sweepAngle += 360;
+                }
+            }
+            else // clockwise, we want negative sweep
+            {
+                if (sweepAngle > 0)
+                {
+                    sweepAngle -= 360;
+                }
+            }
+
+            using (var arcPath = new SKPath())
+            {
+                arcPath.AddArc(new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r)), startDegrees, sweepAngle);
+                _path.AddPath(arcPath);
+            }
         }
 
         public void rect(double x, double y, double w, double h)
@@ -883,8 +906,6 @@ namespace SharpCanvas.Context.Skia
 
         public void reset()
         {
-            // Resetting the entire context state to default values.
-            // This is a simplified version. A full implementation would reset all properties.
             resetTransform();
             globalAlpha = 1.0;
             globalCompositeOperation = "source-over";
@@ -901,7 +922,22 @@ namespace SharpCanvas.Context.Skia
             font = "10px sans-serif";
             textAlign = "start";
             textBaseLine = "alphabetic";
-            // Reset dash list
+            direction = "ltr";
+            filter = "none";
+            fontKerning = "auto";
+            fontStretch = "normal";
+            fontVariantCaps = "normal";
+            imageSmoothingEnabled = true;
+            imageSmoothingQuality = "low";
+            lang = "en-US";
+            letterSpacing = "0px";
+            lineDashOffset = 0.0;
+            textRendering = "auto";
+            wordSpacing = "0px";
+            setLineDash(new double[0]);
+            _path.Reset();
+            _surface.Canvas.ResetMatrix();
+            _surface.Canvas.ClipRect(new SKRect(0, 0, _surface.Canvas.DeviceClipBounds.Width, _surface.Canvas.DeviceClipBounds.Height), SKClipOperation.Intersect, true);
         }
 
         public bool isContextLost()
@@ -1073,6 +1109,17 @@ namespace SharpCanvas.Context.Skia
                 _strokePaint.GetFillPath(_path, strokePath);
                 return strokePath.Contains((float)x, (float)y);
             }
+        }
+
+        public object getContextAttributes()
+        {
+            return new ContextAttributes
+            {
+                alpha = true, // SKSurface always has an alpha channel
+                colorSpace = "srgb", // Assuming sRGB for now
+                desynchronized = false, // Not applicable in SkiaSharp
+                willReadFrequently = false // Default value
+            };
         }
     }
 }

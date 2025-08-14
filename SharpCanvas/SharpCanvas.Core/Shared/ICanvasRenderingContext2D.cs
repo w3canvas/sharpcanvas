@@ -119,7 +119,7 @@ namespace SharpCanvas
 
         [DispId(67)]
         void arc([In] double x, [In] double y, [In] double r, [In] double startAngle, [In] double endAngle,
-                 [In] bool clockwise);
+                 [In] bool anticlockwise = false);
 
         [DispId(68)]
         void rect([In] double x, [In] double y, [In] double w, [In] double h);
@@ -292,5 +292,7 @@ namespace SharpCanvas
         object createConicGradient(double startAngle, double x, double y);
         [DispId(150)]
         bool isPointInStroke(double x, double y);
+        [DispId(151)]
+        object getContextAttributes();
     }
 }

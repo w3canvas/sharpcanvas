@@ -5,15 +5,12 @@ This document lists features that are currently unimplemented, incomplete, or ha
 ## 1. Skia Rendering Context (`SkiaCanvasRenderingContext2DBase`)
 The following features are not yet implemented in the Skia backend. The goal is to achieve feature parity with the legacy `System.Drawing` context.
 
-### Unimplemented Methods
-- `ChangeSize(int width, int height, bool reset)`
-
 ### Known Issues
-- **`putImageData` build error**: There is a persistent build error related to the `putImageData` method in `SkiaCanvasRenderingContext2DBase.cs`. The error is `CS1503: Argument 2: cannot convert from 'byte[]' to 'nint'`, and it occurs even when the method body is commented out. This suggests a problem with the build environment or a dependency issue that needs further investigation.
+- **`arc()` method not drawing**: The `arc()` method does not appear to draw anything to the canvas. The implementation logic for calculating the sweep angle based on the `anticlockwise` parameter appears to be correct according to the SkiaSharp documentation, but the unit test consistently fails, finding a transparent pixel where a filled one is expected. Debugging efforts, including using `fill()` instead of `stroke()`, simplifying the test case, and refactoring the implementation, have not resolved the issue. This requires further investigation.
 
 ### Partially Implemented Features
-- **Text Rendering**: The `fontVariantCaps` property is not fully implemented.
-- **`filter` property**: The `filter` property is only partially implemented. Support for more filter functions is needed.
+- **Text Rendering**: The `fontVariantCaps` property is not fully implemented. The `FontUtils` class needs to be updated to handle OpenType font features.
+- **`filter` property**: The `filter` property has been enhanced to support `grayscale` and `sepia` filters. However, other filters like `contrast`, `hue-rotate`, `invert`, `opacity`, and `saturate` are not yet implemented.
 
 ## 2. Legacy Code (`System.Drawing`) Known Issues
 The following `FIXME` items exist in the legacy codebase and should be addressed.
@@ -24,37 +21,3 @@ The following `FIXME` items exist in the legacy codebase and should be addressed
   - `FIXME: Cleanup and move to Share.`
   - `FIXME: Throw debug error.`
   - `FIXME: Wrap IExpando from Host. This one targets JScript.`
-
-## 3. Missing Properties and Methods from MDN
-The following properties and methods are defined in the MDN documentation for `CanvasRenderingContext2D` but are not present in the `ICanvasRenderingContext2D` interface.
-
-### Missing Properties
-- `direction`
-- `filter`
-- `fontKerning`
-- `fontStretch`
-- `fontVariantCaps`
-- `imageSmoothingEnabled`
-- `imageSmoothingQuality`
-- `lang`
-- `letterSpacing`
-- `lineDashOffset`
-- `textRendering`
-- `wordSpacing`
-
-### Missing Methods
-- `createConicGradient()`
-- `drawFocusIfNeeded()`
-- `ellipse()`
-- `getContextAttributes()`
-- `getLineDash()`
-- `getTransform()`
-- `isContextLost()`
-- `isPointInStroke()`
-- `reset()`
-- `resetTransform()`
-- `roundRect()`
-- `setLineDash()`
-
-## 4. Build Issues
-- **`IFilter` not found**: There is a persistent build error `CS0246: The type or namespace name 'IFilter' could not be found` when building `SharpCanvas.Host.csproj`. This happens even though the project reference and `using` statement appear to be correct. This needs further investigation.
