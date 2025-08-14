@@ -13,8 +13,8 @@ using System.Runtime.InteropServices;
 using SharpCanvas.Interop;
 using SharpCanvas.Common;
 using SharpCanvas.StandardFilter;
-
 using SharpCanvas.Shared;
+
 using Convert = System.Convert;
 
 //namespace SharpCanvas.Drawing
@@ -83,6 +83,9 @@ namespace SharpCanvas.Context.Drawing2D
         {
             get { return _canvasElement; }
         }
+
+        public FontFaceSet fonts { get; } = new FontFaceSet();
+        object ICanvasRenderingContext2D.fonts => fonts;
 
         public object prototype()
         {

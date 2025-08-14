@@ -39,6 +39,7 @@ using SharpCanvas.Common;
 //using SharpCanvas.Prototype;
 // FIXME: Should be handled by Host
 using SharpCanvas.StandardFilter.FilterSet;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Media
 {
@@ -175,6 +176,9 @@ namespace SharpCanvas.Media
         {
             get { return _canvasElement; }
         }
+
+        public FontFaceSet fonts { get; } = new FontFaceSet();
+        object ICanvasRenderingContext2D.fonts => fonts;
 
         #region ICanvasRenderingContext2D Members
 
