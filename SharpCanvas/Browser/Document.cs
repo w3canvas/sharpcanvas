@@ -6,8 +6,10 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using SharpCanvas.Interop;
 using SharpCanvas.Shared;
+using SharpCanvas.Host.Prototype;
+using SharpCanvas.Host.Browser;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     [ComVisible(true)]
     public class Document : HTMLElement, IDocument

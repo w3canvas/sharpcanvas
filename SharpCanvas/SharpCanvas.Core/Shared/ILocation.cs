@@ -44,7 +44,7 @@ namespace SharpCanvas.Shared
         [DispId(3000006)]
         object search { get; set; }
 
-        Assembly assembly { get; }
+        Assembly? assembly { get; }
 
         void assign(string url);
         void replace(string url);

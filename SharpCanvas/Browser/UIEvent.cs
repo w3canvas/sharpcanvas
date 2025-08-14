@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SharpCanvas.Shared;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     public class UIEvent: Event
     {

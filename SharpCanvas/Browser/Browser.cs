@@ -5,10 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using SharpCanvas.Host.Browser;
 using SharpCanvas.Shared;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     public class Browser : Form
     {

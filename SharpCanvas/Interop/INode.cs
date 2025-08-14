@@ -9,7 +9,7 @@ namespace SharpCanvas.Interop
         /// <summary>
         /// Reference to the direct parent node
         /// </summary>
-        INode parentNode { get; }
+        INode? parentNode { get; }
 
         /// <summary>
         /// A NodeList that contains all children of this node. If there are no children, this is a NodeList containing no nodes.
@@ -31,6 +31,6 @@ namespace SharpCanvas.Interop
         /// <summary>
         /// The Document object associated with this node. This is also the Document object used to create new nodes.
         /// </summary>
-        object ownerDocument { get; }
+        object? ownerDocument { get; }
     }
 }

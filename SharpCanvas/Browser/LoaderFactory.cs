@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using SharpCanvas.Host.Browser;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     internal static class LoaderFactory
     {

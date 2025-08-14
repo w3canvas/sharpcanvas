@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     internal class ScripLoader
     {

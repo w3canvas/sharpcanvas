@@ -5,8 +5,9 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 using Convert=System.Convert;
+using SharpCanvas.Shared;
 
-namespace SharpCanvas.Host.Browser
+namespace SharpCanvas.Browser
 {
     public class Image : HTMLElement, IImage
     {
