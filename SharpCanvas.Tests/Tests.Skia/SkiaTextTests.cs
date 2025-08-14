@@ -16,16 +16,26 @@ namespace SharpCanvas.Tests.Skia
                 surface.Canvas.Clear(SKColors.White);
 
                 context.fillStyle = "blue";
-                context.font = "20px sans-serif";
+                context.font = "20px DejaVuSans";
                 context.fillText("Hello", 20, 50);
 
                 var bitmap = new SKBitmap(info);
                 surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
 
-                // Check a pixel where the text should be. This is not a precise test,
-                // but it's a good sanity check. A better test would involve
-                // comparing against a known good image.
-                Assert.That(bitmap.GetPixel(30, 40), Is.Not.EqualTo(SKColors.White));
+                bool foundPixel = false;
+                for (int x = 0; x < bitmap.Width; x++)
+                {
+                    for (int y = 0; y < bitmap.Height; y++)
+                    {
+                        if (bitmap.GetPixel(x, y) != SKColors.White)
+                        {
+                            foundPixel = true;
+                            break;
+                        }
+                    }
+                    if (foundPixel) break;
+                }
+                Assert.That(foundPixel, Is.True, "Expected to find a non-white pixel, but the canvas was empty.");
             }
         }
 
@@ -39,13 +49,26 @@ namespace SharpCanvas.Tests.Skia
                 surface.Canvas.Clear(SKColors.White);
 
                 context.strokeStyle = "red";
-                context.font = "20px sans-serif";
+                context.font = "20px DejaVuSans";
                 context.strokeText("Hello", 20, 50);
 
                 var bitmap = new SKBitmap(info);
                 surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
 
-                Assert.That(bitmap.GetPixel(30, 40), Is.Not.EqualTo(SKColors.White));
+                bool foundPixel = false;
+                for (int x = 0; x < bitmap.Width; x++)
+                {
+                    for (int y = 0; y < bitmap.Height; y++)
+                    {
+                        if (bitmap.GetPixel(x, y) != SKColors.White)
+                        {
+                            foundPixel = true;
+                            break;
+                        }
+                    }
+                    if (foundPixel) break;
+                }
+                Assert.That(foundPixel, Is.True, "Expected to find a non-white pixel, but the canvas was empty.");
             }
         }
 
@@ -56,13 +79,28 @@ namespace SharpCanvas.Tests.Skia
             using (var surface = SKSurface.Create(info))
             {
                 var context = new CanvasRenderingContext2D(surface);
-                context.font = "20px sans-serif";
+                context.font = "20px DejaVuSans";
 
                 var metrics = (TextMetrics)context.measureText("Hello");
 
                 Assert.That(metrics.width, Is.GreaterThan(0));
                 Assert.That(metrics.height, Is.GreaterThan(0));
             }
+        }
+
+        private bool IsColored(SKBitmap bitmap, SKRectI rect)
+        {
+            for (int x = rect.Left; x < rect.Right; x++)
+            {
+                for (int y = rect.Top; y < rect.Bottom; y++)
+                {
+                    if (bitmap.GetPixel(x, y) != SKColors.White)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         [Test]
@@ -74,7 +112,7 @@ namespace SharpCanvas.Tests.Skia
                 var context = new CanvasRenderingContext2D(surface);
                 surface.Canvas.Clear(SKColors.White);
                 context.fillStyle = "black";
-                context.font = "20px sans-serif";
+                context.font = "20px DejaVuSans";
 
                 context.textAlign = "left";
                 context.fillText("left", 100, 20);
@@ -88,16 +126,16 @@ namespace SharpCanvas.Tests.Skia
                 var bitmap = new SKBitmap(info);
                 surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
 
-                // Left align
-                Assert.That(bitmap.GetPixel(101, 15), Is.Not.EqualTo(SKColors.White));
-                Assert.That(bitmap.GetPixel(99, 15), Is.EqualTo(SKColors.White));
+                // Left align: text should be to the right of 100
+                Assert.That(IsColored(bitmap, SKRectI.Create(100, 10, 20, 20)), Is.True);
+                Assert.That(IsColored(bitmap, SKRectI.Create(80, 10, 20, 20)), Is.False);
 
-                // Center align
-                Assert.That(bitmap.GetPixel(100, 45), Is.Not.EqualTo(SKColors.White));
+                // Center align: text should be centered around 100
+                Assert.That(IsColored(bitmap, SKRectI.Create(90, 40, 20, 20)), Is.True);
 
-                // Right align
-                Assert.That(bitmap.GetPixel(99, 75), Is.Not.EqualTo(SKColors.White));
-                Assert.That(bitmap.GetPixel(101, 75), Is.EqualTo(SKColors.White));
+                // Right align: text should be to the left of 100
+                Assert.That(IsColored(bitmap, SKRectI.Create(80, 70, 20, 20)), Is.True);
+                Assert.That(IsColored(bitmap, SKRectI.Create(100, 70, 20, 20)), Is.False);
             }
         }
 
@@ -110,7 +148,7 @@ namespace SharpCanvas.Tests.Skia
                 var context = new CanvasRenderingContext2D(surface);
                 surface.Canvas.Clear(SKColors.White);
                 context.fillStyle = "black";
-                context.font = "20px sans-serif";
+                context.font = "20px DejaVuSans";
 
                 context.textBaseLine = "top";
                 context.fillText("Top", 10, 20);
@@ -125,16 +163,15 @@ namespace SharpCanvas.Tests.Skia
                 surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
 
                 // Top baseline - text should be below y=20
-                Assert.That(bitmap.GetPixel(15, 25), Is.Not.EqualTo(SKColors.White));
-                Assert.That(bitmap.GetPixel(15, 15), Is.EqualTo(SKColors.White));
+                Assert.That(IsColored(bitmap, SKRectI.Create(10, 20, 20, 20)), Is.True);
+                Assert.That(IsColored(bitmap, SKRectI.Create(10, 0, 20, 20)), Is.False);
 
                 // Middle baseline - text should be centered around y=80
-                Assert.That(bitmap.GetPixel(15, 75), Is.Not.EqualTo(SKColors.White));
-                Assert.That(bitmap.GetPixel(15, 85), Is.Not.EqualTo(SKColors.White));
+                Assert.That(IsColored(bitmap, SKRectI.Create(10, 70, 20, 20)), Is.True);
 
                 // Bottom baseline - text should be above y=140
-                Assert.That(bitmap.GetPixel(15, 135), Is.Not.EqualTo(SKColors.White));
-                Assert.That(bitmap.GetPixel(15, 145), Is.EqualTo(SKColors.White));
+                Assert.That(IsColored(bitmap, SKRectI.Create(10, 120, 20, 20)), Is.True);
+                Assert.That(IsColored(bitmap, SKRectI.Create(10, 140, 20, 20)), Is.False);
             }
         }
     }

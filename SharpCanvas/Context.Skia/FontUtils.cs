@@ -21,23 +21,15 @@ namespace SharpCanvas.Context.Skia
                     paint.TextSize = sizeValue;
                 }
 
-                // Load the font from the embedded resource, as per user instructions.
-                // The resource name format is {DefaultNamespace}.{FolderPath}.{FileName}
-                string resourceName = "SharpCanvas.Context.Skia.Fonts.DejaVuSans.ttf";
-                var assembly = typeof(FontUtils).Assembly;
-
-                using (var stream = assembly.GetManifestResourceStream(resourceName))
+                var fontPath = System.IO.Path.Combine("Fonts", family.Trim() + ".ttf");
+                if (System.IO.File.Exists(fontPath))
                 {
-                    if (stream != null)
-                    {
-                        paint.Typeface = SKTypeface.FromStream(stream);
-                    }
-                    else
-                    {
-                        // Fallback if the resource cannot be found.
-                        // This will likely fail to render text on Linux without a correctly configured fontconfig.
-                        paint.Typeface = SKTypeface.FromFamilyName(family);
-                    }
+                    paint.Typeface = SKTypeface.FromFile(fontPath);
+                }
+                else
+                {
+                    // Fallback to system fonts if the file doesn't exist
+                    paint.Typeface = SKTypeface.FromFamilyName(family.Trim());
                 }
             }
 
