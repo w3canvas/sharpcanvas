@@ -14,6 +14,7 @@ using SharpCanvas.Interop;
 using SharpCanvas.Common;
 using SharpCanvas.StandardFilter;
 using SharpCanvas.Shared;
+using SharpCanvas.Host.Prototype;
 
 using Convert = System.Convert;
 
@@ -24,7 +25,7 @@ namespace SharpCanvas.Context.Drawing2D
 
     [ComVisible(true),
      ComSourceInterfaces(typeof (ICanvasRenderingContext2D))]
-    public class CanvasRenderingContext2D : ICanvasRenderingContext2D
+    public class CanvasRenderingContext2D : ObjectWithPrototype, ICanvasRenderingContext2D
     {
         #region Private Fields
 
@@ -87,14 +88,14 @@ namespace SharpCanvas.Context.Drawing2D
         public FontFaceSet fonts { get; } = new FontFaceSet();
         object ICanvasRenderingContext2D.fonts => fonts;
 
-        public object prototype()
+        public new object prototype()
         {
-            return this;
+            return base.prototype;
         }
 
         public object __proto__
         {
-            get { return this; }
+            get { return base.prototype; }
         }
 
         #endregion
@@ -115,6 +116,7 @@ namespace SharpCanvas.Context.Drawing2D
         /// <param name="fill">initial Brush configuration</param>
         /// <param name="visible">determing is this object be visible inside container</param>
         public CanvasRenderingContext2D(Graphics s, Bitmap bitmap, Pen stroke, IFill fill, bool visible)
+            : base(Guid.NewGuid())
         {
             var width = (int) s.VisibleClipBounds.Width;
             var height = (int) s.VisibleClipBounds.Height;
@@ -135,6 +137,7 @@ namespace SharpCanvas.Context.Drawing2D
         }
 
         public CanvasRenderingContext2D()
+            : base(Guid.NewGuid())
         {
             throw new NotSupportedException("This constructor is not supported and should not be used.");
         }
@@ -263,7 +266,7 @@ namespace SharpCanvas.Context.Drawing2D
 
         public void rotate(double angle)
         {
-            _transformation.Rotate((float) ConvertRadiansToDegrees(angle), MatrixOrder.Prepend);
+            _transformation.Rotate((float) GeometryUtils.ConvertRadiansToDegrees(angle), MatrixOrder.Prepend);
         }
 
         public void scale(double x, double y)
@@ -1144,9 +1147,9 @@ namespace SharpCanvas.Context.Drawing2D
                 radians = 2*Math.PI;
             int direction = anticlockwise ? -1 : 1;
             path.AddArc((float) (x - radius), (float) (y - radius), (float) radius*2,
-                        (float) radius*2, (float) ConvertRadiansToDegrees(startAngle),
+                        (float) radius*2, (float) GeometryUtils.ConvertRadiansToDegrees(startAngle),
                         (float)
-                        ConvertRadiansToDegrees(direction * radians));
+                        GeometryUtils.ConvertRadiansToDegrees(direction * radians));
         }
 
         /// <summary>
@@ -1244,8 +1247,8 @@ namespace SharpCanvas.Context.Drawing2D
             }
             surface.DrawArc(_stroke, (float) (rX - radius), (float) (rY - radius), (float) radius*2,
                             (float) radius*2,
-                            (float) ConvertRadiansToDegrees(a1),
-                            (float) ConvertRadiansToDegrees(sweepAngle));
+                            (float) GeometryUtils.ConvertRadiansToDegrees(a1),
+                            (float) GeometryUtils.ConvertRadiansToDegrees(sweepAngle));
         }
 
         private PointF FindTangentPoint(float x1, float y1, float x0, float y0, float d)
@@ -2006,7 +2009,7 @@ namespace SharpCanvas.Context.Drawing2D
                 {
                     using (var matrix = new Matrix())
                     {
-                        matrix.RotateAt((float)(rotation * 180 / Math.PI), new PointF((float)x, (float)y));
+                        matrix.RotateAt((float)(GeometryUtils.ConvertRadiansToDegrees(rotation)), new PointF((float)x, (float)y));
                         ellipsePath.Transform(matrix);
                     }
                 }
@@ -2080,14 +2083,6 @@ namespace SharpCanvas.Context.Drawing2D
         }
 
         //todo: move it to geometry utils
-        /// <summary>
-        /// Converts radians to degrees
-        /// </summary>
-        private double ConvertRadiansToDegrees(double radians)
-        {
-            double degrees = (float) (180/Math.PI)*radians;
-            return (degrees);
-        }
 
         /// <summary>
         /// Reset Canvas fields to their initial value.
@@ -2133,102 +2128,10 @@ namespace SharpCanvas.Context.Drawing2D
 
         #endregion
 
-        #region Implementation of IReflect
-
-// NOTE: This custom IReflect implementation is for JScript interop. The original author suggested wrapping an IExpando object from the host.
-// However, without the host environment for testing, changing this could break functionality. This implementation is being left in place
-// to ensure continued compatibility with the legacy environment.
-
-        //IExpando
-
-        private readonly SortedList<string, FieldInfo> _arbitraryFields = new SortedList<string, FieldInfo>();
-        private readonly SortedList<string, PropertyInfo> _arbitraryProperties = new SortedList<string, PropertyInfo>();
-
-        private object _myApply = new object();
-        private string _propertyToExecute;
-
-        public object myApply
-        {
-            get { return _myApply; }
-            set { _myApply = value; }
-        }
-
-        public MethodInfo GetMethod(string name, BindingFlags bindingAttr, Binder binder, Type[] types,
-                                    ParameterModifier[] modifiers)
-        {
-            return typeof (CanvasRenderingContext2D).GetMethod(name, bindingAttr, binder, types, modifiers);
-        }
-
-        public MethodInfo GetMethod(string name, BindingFlags bindingAttr)
-        {
-            return typeof (CanvasRenderingContext2D).GetMethod(name, bindingAttr);
-        }
-
-        public MethodInfo[] GetMethods(BindingFlags bindingAttr)
-        {
-            return typeof (CanvasRenderingContext2D).GetMethods(bindingAttr);
-        }
-
-        public FieldInfo GetField(string name, BindingFlags bindingAttr)
-        {
-            return typeof (CanvasRenderingContext2D).GetField(name, bindingAttr);
-        }
-
-        public FieldInfo[] GetFields(BindingFlags bindingAttr)
-        {
-            return typeof (CanvasRenderingContext2D).GetFields(bindingAttr);
-        }
-
-        public PropertyInfo GetProperty(string name, BindingFlags bindingAttr)
-        {
-            if (_arbitraryProperties.ContainsKey(name))
-                return _arbitraryProperties[name];
-            return typeof (CanvasRenderingContext2D).GetProperty(name, bindingAttr);
-        }
-
-        public PropertyInfo GetProperty(string name, BindingFlags bindingAttr, Binder binder, Type returnType,
-                                        Type[] types, ParameterModifier[] modifiers)
-        {
-            if (_arbitraryProperties.ContainsKey(name))
-                return _arbitraryProperties[name];
-            return typeof (CanvasRenderingContext2D).GetProperty(name, bindingAttr, binder, returnType, types, modifiers);
-        }
-
-        public PropertyInfo[] GetProperties(BindingFlags bindingAttr)
-        {
-            return typeof (CanvasRenderingContext2D).GetProperties(bindingAttr);
-        }
-
-        public MemberInfo[] GetMember(string name, BindingFlags bindingAttr)
-        {
-            if (_arbitraryProperties.ContainsKey(name))
-            {
-                _propertyToExecute = name;
-                return typeof (CanvasRenderingContext2D).GetMember("InvokeArbirtaryProperty");
-            }
-            return typeof (CanvasRenderingContext2D).GetMember(name, bindingAttr);
-        }
-
-        public MemberInfo[] GetMembers(BindingFlags bindingAttr)
-        {
-            return typeof (CanvasRenderingContext2D).GetMembers(bindingAttr);
-        }
-
-        public object InvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target, object[] args,
+        public override object InvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target, object[] args,
                                    ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)
         {
-            if (_arbitraryFields.ContainsKey(name))
-            {
-                return InvokeArbitraryMember(name, invokeAttr, binder, target, args, modifiers, culture, namedParameters);
-            }
-
-            if (name != "drawImage")
-            {
-                return typeof (CanvasRenderingContext2D).InvokeMember(name, invokeAttr, binder, target, args,
-                                                                      modifiers, culture,
-                                                                      namedParameters);
-            }
-            else
+            if (name == "drawImage")
             {
                 switch (args.Length)
                 {
@@ -2245,48 +2148,16 @@ namespace SharpCanvas.Context.Drawing2D
                                   Convert.ToDouble(args[6]), Convert.ToDouble(args[7]), Convert.ToDouble(args[8]));
                         break;
                 }
+                return null;
             }
-            return null;
+            return base.InvokeMember(name, invokeAttr, binder, target, args, modifiers, culture, namedParameters);
         }
 
-        public Type UnderlyingSystemType
-        {
-            get { return typeof (CanvasRenderingContext2D); }
-        }
-
-        public void InvokeArbirtaryProperty(params object[] args)
-        {
-            if (!string.IsNullOrEmpty(_propertyToExecute))
-            {
-                //ScriptFunction sf = (ScriptFunction)((PrototypePropertyInfo)_arbitraryProperties[_propertyToExecute]).Value;
-                //sf.Invoke(this, args);
-                //_propertyToExecute = string.Empty;
-            }
-        }
-
-        public object InvokeArbitraryMember(string name, BindingFlags attr, Binder binder, object target, object[] args,
-                                            ParameterModifier[] modifiers, CultureInfo culture, string[] parameters)
-        {
-            if (attr == (BindingFlags.PutDispProperty | BindingFlags.OptionalParamBinding) ||
-                attr == (BindingFlags.SetProperty | BindingFlags.OptionalParamBinding))
-            {
-                _arbitraryFields[name].SetValue(this, args[0]);
-            }
-            if (attr == (BindingFlags.GetProperty | BindingFlags.OptionalParamBinding))
-            {
-                return _arbitraryFields[name].GetValue(this).ToString();
-            }
-            if (attr == (BindingFlags.InvokeMethod | BindingFlags.OptionalParamBinding))
-            {
-                object function = _arbitraryFields[name].GetValue(this);
-                //_myApply.GetType().InvokeMember("", BindingFlags.InvokeMethod, null, _myApply,
-                //                                new[] {function, this, Microsoft.JScript.GlobalObject.Array.ConstructArray(args)});
-            }
-            return null;
-        }
-
-        #endregion
-
+        //DONE: This library has been converted to use the ObjectWithPrototype class.
+        //The custom IReflect implementation was replaced by inheriting from ObjectWithPrototype.
+        //DEPRECATED: The special handling for drawImage is necessary to resolve overloads when called from JScript.
+        //DEPRECATED: The context for the "Throw debug error" FIXME was lost.
+        //DEPRECATED: Wrapping a host IExpando is not possible without the host environment. The refactoring to ObjectWithPrototype is a sufficient improvement.
 
     }
 }

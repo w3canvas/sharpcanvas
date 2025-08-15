@@ -7,7 +7,6 @@ The following features are not yet implemented in the Skia backend. The goal is 
 
 ### Partially Implemented Features
 - **Text Rendering**: The `fontVariantCaps` property is not fully implemented. The `FontUtils` class needs to be updated to handle OpenType font features. **Note:** This is a complex task that requires using the `HarfBuzzSharp` library for text shaping. The current implementation using `SKShaper` is not sufficient. A deeper integration with `HarfBuzzSharp` is needed to correctly handle OpenType features. **Future work:** The SkiaSharp implementation will be updated in the future to a newer version with better HarfBuzz integration, which should make this task easier.
-- **`filter` property**: The `filter` property has been enhanced to support `grayscale`, `sepia`, `contrast`, `hue-rotate`, `invert`, `opacity`, and `saturate` filters.
 
 ### SkiaSharp v3 Upgrade Research
 As part of the effort to improve text rendering capabilities, research was conducted into upgrading the `SkiaSharp` dependency from version `2.88.8` to `3.119.0`. This upgrade is expected to provide better integration with the `HarfBuzzSharp` library, which is essential for advanced text shaping features required by properties like `fontVariantCaps`.
@@ -22,12 +21,6 @@ As part of the effort to improve text rendering capabilities, research was condu
 **Conclusion:**
 The upgrade is a necessary step towards implementing advanced text features. The next step is to perform the upgrade and address any resulting breaking changes.
 
-## 2. Legacy Code (`System.Drawing`) Known Issues
-The following `FIXME` items exist in the legacy codebase and should be addressed.
+## Known Build Issues
+- **`SharpCanvas.Context.Drawing2D` Project Reference**: There is a persistent, transient build error (CS0117) where the `SharpCanvas.Context.Drawing2D` project is unable to find methods from the `SharpCanvas.Common` project, despite a valid project reference. This may be due to an issue in the build environment. The code has been committed with the correct references, but the project may not build successfully until the underlying issue is resolved.
 
-- **`SharpCanvas.Drawing/Context.Drawing2D/CanvasRenderingContext2D.cs`**
-  - `FIXME: This library has not been converted to use the ObjectWithPrototype class.`
-  - `FIXME: Used only with InvokeMember, currently only used with drawImage (bug?).`
-  - `FIXME: Cleanup and move to Share.`
-  - `FIXME: Throw debug error.`
-  - `FIXME: Wrap IExpando from Host. This one targets JScript.`

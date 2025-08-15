@@ -120,5 +120,10 @@ namespace SharpCanvas.Common
                 return false; //lines are parrallel
             return true;
         }
+
+        public static double ConvertRadiansToDegrees(double radians)
+        {
+            return (180 / Math.PI) * radians;
+        }
     }
 }
