@@ -501,25 +501,19 @@ namespace SharpCanvas.Context.Skia
             var endDegrees = (float)(endAngle * 180 / System.Math.PI);
             var sweepAngle = endDegrees - startDegrees;
 
-            if (anticlockwise) // we want positive sweep for CCW
+            if (anticlockwise && sweepAngle > 0)
             {
-                if (sweepAngle < 0)
-                {
-                    sweepAngle += 360;
-                }
+                sweepAngle -= 360;
             }
-            else // clockwise, we want negative sweep
+            else if (!anticlockwise && sweepAngle < 0)
             {
-                if (sweepAngle > 0)
-                {
-                    sweepAngle -= 360;
-                }
+                sweepAngle += 360;
             }
 
             using (var arcPath = new SKPath())
             {
                 arcPath.AddArc(new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r)), startDegrees, sweepAngle);
-                _path.AddPath(arcPath);
+                _path.AddPath(arcPath, SKPathAddMode.Append);
             }
         }
 

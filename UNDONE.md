@@ -6,7 +6,7 @@ This document lists features that are currently unimplemented, incomplete, or ha
 The following features are not yet implemented in the Skia backend. The goal is to achieve feature parity with the legacy `System.Drawing` context.
 
 ### Partially Implemented Features
-- **Text Rendering**: The `fontVariantCaps` property is not fully implemented. The `FontUtils` class needs to be updated to handle OpenType font features.
+- **Text Rendering**: The `fontVariantCaps` property is not fully implemented. The `FontUtils` class needs to be updated to handle OpenType font features. **Note:** This is a complex task that requires using the `HarfBuzzSharp` library for text shaping. The current implementation using `SKShaper` is not sufficient. A deeper integration with `HarfBuzzSharp` is needed to correctly handle OpenType features. **Future work:** The SkiaSharp implementation will be updated in the future to a newer version with better HarfBuzz integration, which should make this task easier.
 - **`filter` property**: The `filter` property has been enhanced to support `grayscale`, `sepia`, `contrast`, `hue-rotate`, `invert`, `opacity`, and `saturate` filters.
 
 ## 2. Legacy Code (`System.Drawing`) Known Issues

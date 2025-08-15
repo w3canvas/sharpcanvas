@@ -62,6 +62,7 @@ namespace SharpCanvas.Tests.Skia.Modern
 
             // Part 2: Anticlockwise arc (top semi-circle)
             _context.reset();
+            _surface.Canvas.Clear(SKColors.Transparent);
             _context.fillStyle = "black";
             _context.beginPath();
             _context.arc(50, 50, 25, System.Math.PI, 0, true);
