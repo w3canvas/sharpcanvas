@@ -259,7 +259,7 @@ namespace SharpCanvas.Host.Prototype
             return property;
         }
 
-        public object InvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target, object[] args,
+        public virtual object InvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target, object[] args,
                                    ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)
         {
             // Member to invoke (can be either a property, field or method, so typed as base class)
