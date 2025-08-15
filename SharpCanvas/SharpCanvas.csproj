@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas</RootNamespace>
     <AssemblyName>SharpCanvas</AssemblyName>
@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="Bitmap.Shader\SharpCanvas.Bitmap.Shader.csproj" />
-    <ProjectReference Include="Browser\SharpCanvas.Browser.csproj" />
+    <ProjectReference Include="Legacy\Browser\SharpCanvas.Browser.csproj" />
     <ProjectReference Include="Host\SharpCanvas.Host.csproj" />
     <ProjectReference Include="Interop\SharpCanvas.Interop.csproj" />
     <ProjectReference Include="Prototype\SharpCanvas.Prototype.csproj" />

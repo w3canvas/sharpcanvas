@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\SharpCanvas\SharpCanvas.csproj" />
-    <ProjectReference Include="..\..\SharpCanvas\Browser\SharpCanvas.Browser.csproj" />
+    <ProjectReference Include="..\..\Legacy\Browser\SharpCanvas.Browser.csproj" />
     <ProjectReference Include="..\..\SharpCanvas\Host\SharpCanvas.Host.csproj" />
     <ProjectReference Include="..\..\SharpCanvas\Interop\SharpCanvas.Interop.csproj" />
     <ProjectReference Include="..\..\SharpCanvas\Prototype\SharpCanvas.Prototype.csproj" />

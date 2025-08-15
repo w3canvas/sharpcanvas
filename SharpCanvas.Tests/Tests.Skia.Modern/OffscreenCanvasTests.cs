@@ -2,7 +2,8 @@ using NUnit.Framework;
 using SharpCanvas.Context.Skia;
 using SkiaSharp;
 using System.Threading;
-
+using Moq;
+using SharpCanvas.Shared;
 namespace SharpCanvas.Tests.Skia.Modern
 {
     public class OffscreenCanvasTests
@@ -19,13 +20,18 @@ namespace SharpCanvas.Tests.Skia.Modern
                 resultBitmap = bitmap;
                 manualResetEvent.Set();
             };
+            var mockWindow = new Mock<IWindow>();
+            var mockDocument = new Mock<IDocument>();
+            var fontFaceSet = new FontFaceSet();
 
+            mockWindow.Setup(w => w.fonts).Returns(fontFaceSet);
+            mockDocument.Setup(d => d.defaultView).Returns(mockWindow.Object);
             worker.Run((canvas) =>
             {
                 var context = canvas.getContext("2d");
                 context.fillStyle = "red";
                 context.fillRect(10, 10, 100, 100);
-            }, 200, 200);
+            }, 200, 200, mockDocument.Object);
 
             manualResetEvent.WaitOne();
 

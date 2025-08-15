@@ -4,6 +4,7 @@ using SharpCanvas.Shared;
 using SkiaSharp;
 using System.IO;
 using System.Threading.Tasks;
+using Moq;
 
 namespace SharpCanvas.Tests.Skia
 {
@@ -22,10 +23,16 @@ namespace SharpCanvas.Tests.Skia
             var info = new SKImageInfo(100, 100);
             using (var surface = SKSurface.Create(info))
             {
-                var context = new CanvasRenderingContext2D(surface);
+                var mockWindow = new Mock<IWindow>();
+                var mockDocument = new Mock<IDocument>();
+                var mockFonts = new FontFaceSet();
+
+                mockWindow.Setup(w => w.fonts).Returns(mockFonts);
+                mockDocument.Setup(d => d.defaultView).Returns(mockWindow.Object);
+                var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
                 surface.Canvas.Clear(SKColors.White);
 
-                context.fonts.add(fontFace);
+                ((FontFaceSet)context.fonts).add(fontFace);
                 context.font = "20px MyTestFont";
                 context.fillText("Hello", 20, 50);
 

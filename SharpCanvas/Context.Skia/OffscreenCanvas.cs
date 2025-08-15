@@ -1,3 +1,4 @@
+using SharpCanvas.Shared;
 using SkiaSharp;
 
 namespace SharpCanvas.Context.Skia
@@ -7,11 +8,13 @@ namespace SharpCanvas.Context.Skia
         private SKSurface _surface;
         private int _width;
         private int _height;
+        public IDocument Document { get; }
 
-        public OffscreenCanvas(int width, int height)
+        public OffscreenCanvas(int width, int height, IDocument document)
         {
             _width = width;
             _height = height;
+            Document = document;
             _surface = SKSurface.Create(new SKImageInfo(width, height));
         }
 
@@ -19,7 +22,7 @@ namespace SharpCanvas.Context.Skia
         {
             if (contextId == "2d")
             {
-                return new OffscreenCanvasRenderingContext2D(_surface);
+                return new OffscreenCanvasRenderingContext2D(_surface, Document);
             }
             return null;
         }

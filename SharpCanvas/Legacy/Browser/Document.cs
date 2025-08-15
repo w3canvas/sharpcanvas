@@ -3,7 +3,6 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using SharpCanvas.Interop;
 using SharpCanvas.Shared;
 using SharpCanvas.Host.Prototype;
@@ -12,38 +11,25 @@ using SharpCanvas.Host.Browser;
 namespace SharpCanvas.Browser
 {
     [ComVisible(true)]
-    public class Document : HTMLElement, IDocument
+    public class Document : Node, IDocument
     {
         private IWindow _parentWindow;
-        public Document(IWindow parentWindow):base("document", (UserControl)parentWindow)
+        public Document(IWindow parentWindow)
         {
             _parentWindow = parentWindow;
-
-            Visible = true;
 
             //init body
             body = new HTMLElement("body", this);
             //init sizes
-            ((UserControl) body).Width = this.Width = parentWindow.innerWidth;
-            ((UserControl) body).Height = this.Height = parentWindow.innerHeight;
+            //((UserControl) body).Width = this.Width = parentWindow.innerWidth;
+            //((UserControl) body).Height = this.Height = parentWindow.innerHeight;
             appendChild(body);
-            //(body as UserControl).BackColor = Color.Yellow;
 
-            Name = "document";
-            this.ControlAdded += new ControlEventHandler(Document_ControlAdded);
-            this.Resize += new EventHandler(Document_Resize);
+            name = "document";
         }
 
-        void Document_Resize(object? sender, EventArgs e)
-        {
-            ((UserControl) body).Width = this.Width;
-            ((UserControl) body).Height = this.Height;
-        }
 
-        void Document_ControlAdded(object? sender, ControlEventArgs e)
-        {
-            ((IDocument)this).defaultView.RedrawChildren();
-        }
+        public FontFaceSet fonts { get; } = new FontFaceSet();
 
         public IWindow defaultView
         {
@@ -84,6 +70,22 @@ namespace SharpCanvas.Browser
         public object createElementNS(string ns, string tagName)
         {
             return this.createElement(tagName);
+        }
+
+        public override void appendChild(object child)
+        {
+            if (child is INode node)
+            {
+                _childNodes.Add(node);
+            }
+        }
+
+        public override void removeChild(object child)
+        {
+            if (child is INode node)
+            {
+                _childNodes.Remove(node);
+            }
         }
 
         public object createElement(string tagName)

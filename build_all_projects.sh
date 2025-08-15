@@ -15,8 +15,8 @@ export PATH="/home/jules/.dotnet:$PATH"
 /home/jules/.dotnet/dotnet build SharpCanvas/Installer/SharpCanvas.Installer.csproj >> build_log.txt
 /home/jules/.dotnet/dotnet build SharpCanvas/SharpCanvas.Common/SharpCanvas.Common.csproj >> build_log.txt
 /home/jules/.dotnet/dotnet build SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj >> build_log.txt
-/home/jules/.dotnet/dotnet build SharpCanvas/Browser/SharpCanvas.Browser.csproj >> build_log.txt
-/home/jules/.dotnet/dotnet build LegacyWindows/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj >> build_log.txt
-/home/jules/.dotnet/dotnet build LegacyWindows/Tests/SharpCanvas.Tests.csproj >> build_log.txt
-/home/jules/.dotnet/dotnet build LegacyWindows/Tests.Drawing2D/SharpCanvas.Tests.Drawing2D.csproj >> build_log.txt
-/home/jules/.dotnet/dotnet build LegacyWindows/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj >> build_log.txt
+/home/jules/.dotnet/dotnet build SharpCanvas/Legacy/Browser/SharpCanvas.Browser.csproj >> build_log.txt
+/home/jules/.dotnet/dotnet build SharpCanvas/Legacy/Drawing/Context.Drawing2D/SharpCanvas.Context.Drawing2D.csproj >> build_log.txt
+/home/jules/.dotnet/dotnet build SharpCanvas/Legacy/Drawing/Tests/SharpCanvas.Tests.csproj >> build_log.txt
+/home/jules/.dotnet/dotnet build SharpCanvas/Legacy/Drawing/Tests.Drawing2D/SharpCanvas.Tests.Drawing2D.csproj >> build_log.txt
+/home/jules/.dotnet/dotnet build SharpCanvas/Legacy/Drawing/Browser.WinForms/SharpCanvas.Browser.WinForms.csproj >> build_log.txt

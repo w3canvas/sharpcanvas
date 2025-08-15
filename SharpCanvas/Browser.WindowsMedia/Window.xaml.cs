@@ -27,6 +27,7 @@ namespace SharpCanvas.Browser.Media
     /// </summary>
     public partial class Window : Canvas, IWindow, ITimeout
     {
+        public FontFaceSet fonts { get; private set; }
         #region Private Variables
 
         private const int WM_ERASEBACKGROUND = 0x0014;
@@ -53,6 +54,7 @@ namespace SharpCanvas.Browser.Media
         public Window()
         {
             InitializeComponent();
+            fonts = new FontFaceSet();
             //
             // document
             //

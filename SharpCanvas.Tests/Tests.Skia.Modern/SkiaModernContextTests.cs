@@ -2,20 +2,28 @@ using NUnit.Framework;
 using SharpCanvas.Context.Skia;
 using SharpCanvas.Shared;
 using SkiaSharp;
-
+using Moq;
 namespace SharpCanvas.Tests.Skia.Modern
 {
     public class SkiaModernContextTests
     {
         private SKSurface _surface;
         private CanvasRenderingContext2D _context;
+        private IDocument _document;
 
         [SetUp]
         public void Setup()
         {
+            var mockWindow = new Mock<IWindow>();
+            var mockDocument = new Mock<IDocument>();
+            var fontFaceSet = new FontFaceSet();
+
+            mockWindow.Setup(w => w.fonts).Returns(fontFaceSet);
+            mockDocument.Setup(d => d.defaultView).Returns(mockWindow.Object);
+            _document = mockDocument.Object;
             var info = new SKImageInfo(100, 100);
             _surface = SKSurface.Create(info);
-            _context = new CanvasRenderingContext2D(_surface);
+            _context = new CanvasRenderingContext2D(_surface, _document);
         }
 
         [TearDown]

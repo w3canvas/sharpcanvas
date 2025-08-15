@@ -251,6 +251,11 @@ namespace SharpCanvas.Browser.Forms
         [DispId(83)]
         public void fillText([In] string text, [In] double x, [In] double y) { _target.fillText(text, x, y); }
 
+        public object fonts
+        {
+            get { return _target.fonts; }
+        }
+
         [DispId(84)]
         public void strokeText([In] string text, [In] double x, [In] double y) { _target.strokeText(text, x, y); }
 

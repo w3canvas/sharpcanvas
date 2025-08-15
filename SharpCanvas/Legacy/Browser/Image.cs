@@ -19,8 +19,8 @@ namespace SharpCanvas.Browser
 
         public Image()
         {
-            Paint += Image_Paint;
-            Name = "image";
+            //Paint += Image_Paint;
+            //Name = "image";
             onload = delegate { };
         }
 
