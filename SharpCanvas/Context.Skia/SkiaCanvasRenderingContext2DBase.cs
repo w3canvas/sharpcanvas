@@ -551,25 +551,27 @@ namespace SharpCanvas.Context.Skia
 
         public void fillText(string text, double x, double y)
         {
-            _document.defaultView.fonts.ready.Wait();
             // Re-apply font settings in case they were loaded asynchronously
-            FontUtils.ApplyFont(this, _fillPaint);
-            var yOffset = FontUtils.GetYOffset(textBaseLine, _fillPaint);
-            using (var paint = ApplyPaint(_fillPaint))
+            if (FontUtils.ApplyFont(this, _fillPaint))
             {
-                _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, paint);
+                var yOffset = FontUtils.GetYOffset(textBaseLine, _fillPaint);
+                using (var paint = ApplyPaint(_fillPaint))
+                {
+                    _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, paint);
+                }
             }
         }
 
         public void strokeText(string text, double x, double y)
         {
-            _document.defaultView.fonts.ready.Wait();
             // Re-apply font settings in case they were loaded asynchronously
-            FontUtils.ApplyFont(this, _strokePaint);
-            var yOffset = FontUtils.GetYOffset(textBaseLine, _strokePaint);
-            using (var paint = ApplyPaint(_strokePaint))
+            if (FontUtils.ApplyFont(this, _strokePaint))
             {
-                _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, paint);
+                var yOffset = FontUtils.GetYOffset(textBaseLine, _strokePaint);
+                using (var paint = ApplyPaint(_strokePaint))
+                {
+                    _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, paint);
+                }
             }
         }
 
