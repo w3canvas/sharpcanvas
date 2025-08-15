@@ -19,12 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="SimpleDrawingTests.cs" />
-    <Compile Include="SkiaContextTests.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\SharpCanvas\Context.Skia\Context.Skia.csproj" />
+    <Compile Include="ApiUsageTests.cs" />
   </ItemGroup>
 
 </Project>

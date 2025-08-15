@@ -206,5 +206,45 @@ namespace SharpCanvas.Tests.Skia
                 Assert.That(IsColored(bitmap, SKRectI.Create(10, 140, 20, 20)), Is.False);
             }
         }
+
+        [Test]
+        public void TestFontVariantCaps()
+        {
+            var info = new SKImageInfo(100, 100);
+            using (var surface = SKSurface.Create(info))
+            {
+                var mockWindow = new Mock<IWindow>();
+                var mockDocument = new Mock<IDocument>();
+                var fontFaceSet = new FontFaceSet();
+
+                mockWindow.Setup(w => w.fonts).Returns(fontFaceSet);
+                mockDocument.Setup(d => d.defaultView).Returns(mockWindow.Object);
+                var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
+                surface.Canvas.Clear(SKColors.White);
+
+                context.fillStyle = "black";
+                context.font = "20px DejaVuSans";
+                context.fontVariantCaps = "small-caps";
+                context.fillText("Hello", 20, 50);
+
+                var bitmap = new SKBitmap(info);
+                surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
+
+                bool foundPixel = false;
+                for (int x = 0; x < bitmap.Width; x++)
+                {
+                    for (int y = 0; y < bitmap.Height; y++)
+                    {
+                        if (bitmap.GetPixel(x, y) != SKColors.White)
+                        {
+                            foundPixel = true;
+                            break;
+                        }
+                    }
+                    if (foundPixel) break;
+                }
+                Assert.That(foundPixel, Is.True, "Expected to find a non-white pixel, but the canvas was empty.");
+            }
+        }
     }
 }

@@ -5,11 +5,11 @@ This is a C# project that uses .NET 8. To build the project, you will need the .
 To build the project, run the following commands from the root directory:
 
 ```bash
-dotnet restore SharpCanvas/SharpCanvas.sln
-dotnet build SharpCanvas/SharpCanvas.sln
+/home/jules/.dotnet/dotnet restore SharpCanvas/SharpCanvas.sln
+/home/jules/.dotnet/dotnet build SharpCanvas/SharpCanvas.sln
 ```
 
-**Note:** The `dotnet` executable is installed in `/home/jules/.dotnet`. If `dotnet` is not in your `PATH`, you should use the full path: `/home/jules/.dotnet/dotnet`.
+**Note:** The `dotnet` executable is installed in `/home/jules/.dotnet`. If `dotnet` is not in your `PATH`, you should use the full path.
 
 This will restore all necessary NuGet packages and then build the entire solution.
 
@@ -41,3 +41,13 @@ When working with `SkiaSharp` on Linux, be aware that it has native dependencies
 Specifically for font rendering, `SkiaSharp` relies on the **Fontconfig** library. If `fontconfig` is not installed on the system, any attempts to render text will likely fail silently (i.e., no text will be drawn, and no exceptions will be thrown).
 
 If you encounter issues with text rendering in SkiaSharp tests, ensure that the execution environment has the `fontconfig` package (or its equivalent) installed.
+
+## Project Status and Known Issues
+
+### `fontVariantCaps` Implementation
+
+The implementation of the `fontVariantCaps` property in the Skia backend is more complex than initially anticipated. It requires the use of the `HarfBuzzSharp` library for text shaping to correctly handle OpenType features. The `SKShaper` class in `SkiaSharp.HarfBuzz` is the entry point for this, but a deeper integration is required to correctly apply the features and draw the resulting glyphs. This task has been deferred and is documented in `UNDONE.md`.
+
+### Legacy Code (`System.Drawing`)
+
+The legacy `System.Drawing` codebase has several `FIXME` comments listed in `UNDONE.md`. These comments are related to interop with JScript and the use of `IExpando`. After investigation, it has been determined that attempting to address these `FIXME`s without the original legacy host environment for testing is high-risk. A comment from the original author in the code suggests that the current implementation was left in place for compatibility. Therefore, these `FIXME`s should be considered deprecated unless a specific, reproducible bug is identified.
