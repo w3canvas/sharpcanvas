@@ -236,24 +236,6 @@ namespace SharpCanvas.Browser
             return null;
         }
 
-        public string GetElementId(ICanvasProxy canvasProxy)
-        {
-            if(canvasProxy is IReflect)
-            {
-                MemberInfo[] memberInfos = ((IReflect) canvasProxy).GetMember("id",
-                                                                              BindingFlags.Public | BindingFlags.GetProperty |
-                                                                              BindingFlags.GetField);
-                if(memberInfos.Length > 0)
-                {
-                    MemberInfo idInfo = memberInfos[0];
-                    if(idInfo is PropertyInfo)
-                    {
-                        return ((PropertyInfo)idInfo).GetValue(canvasProxy, BindingFlags.Instance, null, null, null) as string ?? string.Empty;
-                    }
-                }
-            }
-            return string.Empty;
-        }
 
         public bool hasOwnProperty(string propName)
         {

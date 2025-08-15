@@ -447,7 +447,7 @@ namespace SharpCanvas.Context.Skia
         }
 
         public string textBaseLine { get; set; }
-        public object fonts => _document.fonts;
+        public object fonts => _document.defaultView.fonts;
 
         public object canvas => throw new System.NotImplementedException();
         public bool IsVisible => true;
@@ -551,7 +551,7 @@ namespace SharpCanvas.Context.Skia
 
         public void fillText(string text, double x, double y)
         {
-            _document.fonts.ready.Wait();
+            _document.defaultView.fonts.ready.Wait();
             // Re-apply font settings in case they were loaded asynchronously
             FontUtils.ApplyFont(this, _fillPaint);
             var yOffset = FontUtils.GetYOffset(textBaseLine, _fillPaint);
@@ -563,7 +563,7 @@ namespace SharpCanvas.Context.Skia
 
         public void strokeText(string text, double x, double y)
         {
-            _document.fonts.ready.Wait();
+            _document.defaultView.fonts.ready.Wait();
             // Re-apply font settings in case they were loaded asynchronously
             FontUtils.ApplyFont(this, _strokePaint);
             var yOffset = FontUtils.GetYOffset(textBaseLine, _strokePaint);

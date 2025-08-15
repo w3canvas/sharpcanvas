@@ -45,9 +45,5 @@ namespace SharpCanvas.Shared
         /// </summary>
         IWindow defaultView { get; }
 
-        /// <summary>
-        /// The fonts attribute must return the FontFaceSet object for this document.
-        /// </summary>
-        FontFaceSet fonts { get; }
     }
 }

@@ -14,8 +14,12 @@ namespace SharpCanvas.Tests.Skia
             var info = new SKImageInfo(100, 100);
             using (var surface = SKSurface.Create(info))
             {
+                var mockWindow = new Mock<IWindow>();
                 var mockDocument = new Mock<IDocument>();
-                mockDocument.Setup(d => d.fonts).Returns(new FontFaceSet());
+                var fontFaceSet = new FontFaceSet();
+
+                mockWindow.Setup(w => w.fonts).Returns(fontFaceSet);
+                mockDocument.Setup(d => d.defaultView).Returns(mockWindow.Object);
                 var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
                 surface.Canvas.Clear(SKColors.White);
 
@@ -42,8 +46,12 @@ namespace SharpCanvas.Tests.Skia
             var info = new SKImageInfo(100, 100);
             using (var surface = SKSurface.Create(info))
             {
+                var mockWindow = new Mock<IWindow>();
                 var mockDocument = new Mock<IDocument>();
-                mockDocument.Setup(d => d.fonts).Returns(new FontFaceSet());
+                var fontFaceSet = new FontFaceSet();
+
+                mockWindow.Setup(w => w.fonts).Returns(fontFaceSet);
+                mockDocument.Setup(d => d.defaultView).Returns(mockWindow.Object);
                 var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
                 surface.Canvas.Clear(SKColors.White);
 
@@ -68,8 +76,12 @@ namespace SharpCanvas.Tests.Skia
             var info = new SKImageInfo(100, 100);
             using (var surface = SKSurface.Create(info))
             {
+                var mockWindow = new Mock<IWindow>();
                 var mockDocument = new Mock<IDocument>();
-                mockDocument.Setup(d => d.fonts).Returns(new FontFaceSet());
+                var fontFaceSet = new FontFaceSet();
+
+                mockWindow.Setup(w => w.fonts).Returns(fontFaceSet);
+                mockDocument.Setup(d => d.defaultView).Returns(mockWindow.Object);
                 var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
                 surface.Canvas.Clear(SKColors.White);
 

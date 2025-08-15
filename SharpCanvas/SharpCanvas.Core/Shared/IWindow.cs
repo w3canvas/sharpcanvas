@@ -7,7 +7,7 @@ namespace SharpCanvas.Shared
 {
     [ComVisible(true)]
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
-    public interface IWindow
+    public interface IWindow : IGlobalScope
     {
         object? parentNode { get; }
         object childNodes { get; }

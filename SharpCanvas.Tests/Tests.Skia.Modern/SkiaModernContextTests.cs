@@ -3,8 +3,6 @@ using SharpCanvas.Context.Skia;
 using SharpCanvas.Shared;
 using SkiaSharp;
 using Moq;
-using SharpCanvas.Browser;
-
 namespace SharpCanvas.Tests.Skia.Modern
 {
     public class SkiaModernContextTests
@@ -17,7 +15,12 @@ namespace SharpCanvas.Tests.Skia.Modern
         public void Setup()
         {
             var mockWindow = new Mock<IWindow>();
-            _document = new Document(mockWindow.Object);
+            var mockDocument = new Mock<IDocument>();
+            var fontFaceSet = new FontFaceSet();
+
+            mockWindow.Setup(w => w.fonts).Returns(fontFaceSet);
+            mockDocument.Setup(d => d.defaultView).Returns(mockWindow.Object);
+            _document = mockDocument.Object;
             var info = new SKImageInfo(100, 100);
             _surface = SKSurface.Create(info);
             _context = new CanvasRenderingContext2D(_surface, _document);
