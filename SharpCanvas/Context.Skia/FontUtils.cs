@@ -24,10 +24,9 @@ namespace SharpCanvas.Context.Skia
                     paint.TextSize = sizeValue;
                 }
 
-                var fontFace = context.fonts.values().FirstOrDefault(f => f.family == family);
+                var fontFace = ((FontFaceSet)context.fonts).values().FirstOrDefault(f => f.family == family);
                 if (fontFace != null)
                 {
-                    context.SetFontLoadingTask(fontFace.load());
                     if (fontFace.status == "loaded")
                     {
                         var fontData = fontFace.GetDataAsync().Result;

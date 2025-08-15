@@ -2,6 +2,8 @@ using NUnit.Framework;
 using SharpCanvas.Context.Skia;
 using SharpCanvas.Shared;
 using SkiaSharp;
+using Moq;
+using SharpCanvas.Browser;
 
 namespace SharpCanvas.Tests.Skia.Modern
 {
@@ -9,13 +11,16 @@ namespace SharpCanvas.Tests.Skia.Modern
     {
         private SKSurface _surface;
         private CanvasRenderingContext2D _context;
+        private IDocument _document;
 
         [SetUp]
         public void Setup()
         {
+            var mockWindow = new Mock<IWindow>();
+            _document = new Document(mockWindow.Object);
             var info = new SKImageInfo(100, 100);
             _surface = SKSurface.Create(info);
-            _context = new CanvasRenderingContext2D(_surface);
+            _context = new CanvasRenderingContext2D(_surface, _document);
         }
 
         [TearDown]

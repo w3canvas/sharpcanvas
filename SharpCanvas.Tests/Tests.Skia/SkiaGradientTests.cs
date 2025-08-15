@@ -3,6 +3,7 @@ using SharpCanvas.Shared;
 using System.IO;
 using SharpCanvas.Context.Skia;
 using SkiaSharp;
+using Moq;
 
 namespace SharpCanvas.Tests.Skia
 {
@@ -14,7 +15,9 @@ namespace SharpCanvas.Tests.Skia
         {
             var info = new SKImageInfo(150, 150);
             using var surface = SKSurface.Create(info);
-            var context = new CanvasRenderingContext2D(surface);
+            var mockDocument = new Mock<IDocument>();
+            mockDocument.Setup(d => d.fonts).Returns(new FontFaceSet());
+            var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
             var lingrad = (ILinearCanvasGradient)context.createLinearGradient(0, 0, 0, 150);
             lingrad.addColorStop(0, "#00ABEB");
             lingrad.addColorStop(0.5, "#fff");

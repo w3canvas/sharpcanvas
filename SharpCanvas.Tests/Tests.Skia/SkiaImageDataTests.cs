@@ -1,6 +1,8 @@
 using NUnit.Framework;
 using SharpCanvas.Context.Skia;
 using SkiaSharp;
+using Moq;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Tests.Skia
 {
@@ -12,7 +14,9 @@ namespace SharpCanvas.Tests.Skia
             var info = new SKImageInfo(100, 100);
             using (var surface = SKSurface.Create(info))
             {
-                var context = new CanvasRenderingContext2D(surface);
+                var mockDocument = new Mock<IDocument>();
+                mockDocument.Setup(d => d.fonts).Returns(new FontFaceSet());
+                var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
 
                 // 1. Draw a red rectangle on a white background
                 surface.Canvas.Clear(SKColors.White);

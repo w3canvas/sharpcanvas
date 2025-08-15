@@ -54,3 +54,9 @@ project.nuget.cache
 # Ignore dll files
 *.dll
 *.pdb
+
+# Ignore dotnet installation
+.dotnet/
+
+# Ignore archives
+*.tar.gz

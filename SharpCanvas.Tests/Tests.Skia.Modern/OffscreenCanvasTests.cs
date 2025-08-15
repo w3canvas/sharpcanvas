@@ -2,6 +2,9 @@ using NUnit.Framework;
 using SharpCanvas.Context.Skia;
 using SkiaSharp;
 using System.Threading;
+using Moq;
+using SharpCanvas.Shared;
+using SharpCanvas.Browser;
 
 namespace SharpCanvas.Tests.Skia.Modern
 {
@@ -19,13 +22,14 @@ namespace SharpCanvas.Tests.Skia.Modern
                 resultBitmap = bitmap;
                 manualResetEvent.Set();
             };
-
+            var mockWindow = new Mock<IWindow>();
+            var document = new Document(mockWindow.Object);
             worker.Run((canvas) =>
             {
                 var context = canvas.getContext("2d");
                 context.fillStyle = "red";
                 context.fillRect(10, 10, 100, 100);
-            }, 200, 200);
+            }, 200, 200, document);
 
             manualResetEvent.WaitOne();
 

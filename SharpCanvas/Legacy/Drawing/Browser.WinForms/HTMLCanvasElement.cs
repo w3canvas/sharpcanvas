@@ -88,9 +88,9 @@ namespace SharpCanvas.Browser.Forms
         {
             //by default timer for surface update is disabled
             timer.Enabled = false;
-            Paint += HTMLCanvasElement_Paint;
+            //Paint += HTMLCanvasElement_Paint;
             //Resize += HTMLCanvasElement_Resize;
-            Name = "HTMLCanvasElement";
+            //Name = "HTMLCanvasElement";
             _proxy = proxy;
             //style
             _style = new CSSStyleDeclaration(this);
@@ -127,10 +127,10 @@ namespace SharpCanvas.Browser.Forms
             switch(attribute)
             {
                 case "left":
-                    Left = (int) value;
+                    //Left = (int) value;
                     break;
                 case "top":
-                    Top = (int) value;
+                    //Top = (int) value;
                     break;
                 case "width":
                     width = (int) value;
@@ -141,15 +141,15 @@ namespace SharpCanvas.Browser.Forms
                     _canvas.ChangeSize(_width, _height, false);
                     break;
                 case "z-index": 
-                    if(this.parent is UserControl)//will be called if current control already in DOM
-                    {
-                        UserControl parentUserControl = ((UserControl)parent);
-                        parentUserControl.SuspendLayout();
-                        int newIndex = 999 - (int)value;
-                        parentUserControl.Controls.SetChildIndex(this, newIndex);
-                        parentUserControl.ResumeLayout();
-                        parentUserControl.Refresh();
-                    }
+                    //if(this.parent is UserControl)//will be called if current control already in DOM
+                    //{
+                    //    UserControl parentUserControl = ((UserControl)parent);
+                    //    parentUserControl.SuspendLayout();
+                    //    int newIndex = 999 - (int)value;
+                    //    parentUserControl.Controls.SetChildIndex(this, newIndex);
+                    //    parentUserControl.ResumeLayout();
+                    //    parentUserControl.Refresh();
+                    //}
                     break;
             }
         }
@@ -167,7 +167,7 @@ namespace SharpCanvas.Browser.Forms
                     if (_width > 0 && _height > 0)
                     {
 
-                        Size = new Size(_width, _height);
+                        //Size = new Size(_width, _height);
                         if (_canvas != null && _width != _canvas.GetWidth())
                         {
                             _canvas.ChangeSize(width, height, true);
@@ -192,7 +192,7 @@ namespace SharpCanvas.Browser.Forms
                     if (_width > 0 && _height > 0)
                     {
 
-                        Size = new Size(_width, _height);
+                        //Size = new Size(_width, _height);
                         if (_canvas != null && _height != _canvas.GetHeight())
                         {
                             _canvas.ChangeSize(width, height, true);
@@ -288,9 +288,9 @@ namespace SharpCanvas.Browser.Forms
         /// </summary>
         public void RequestDraw()
         {
-            Paint += HTMLCanvasElement_Paint;
-            ////force raising Paint event in order to keep order of rendering of elements
-            this.Invalidate(true);
+            //Paint += HTMLCanvasElement_Paint;
+            //////force raising Paint event in order to keep order of rendering of elements
+            //this.Invalidate(true);
             _isChanged = true;
             //ForceDraw();
         }
@@ -307,12 +307,12 @@ namespace SharpCanvas.Browser.Forms
         /// <param name="element">Child element, usually _canvasElt of the proxy-class</param>
         public void setAttribute(string name, object value, IHTMLElement element)
         {
-            setAttribute(name, value);
-            if (element != null)
-            {
-                element.style.setAttribute("top", Top.ToString(), 0);
-                element.style.setAttribute("left", Left.ToString(), 0);
-            }
+            //setAttribute(name, value);
+            //if (element != null)
+            //{
+            //    element.style.setAttribute("top", Top.ToString(), 0);
+            //    element.style.setAttribute("left", Left.ToString(), 0);
+            //}
         }
 
         #endregion
@@ -337,59 +337,59 @@ namespace SharpCanvas.Browser.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HTMLCanvasElement_Resize(object sender, EventArgs e)
-        {
-            if (GraphicManager != null)
-            {
-                //GraphicManager.Dispose();
-            }
-        }
+        //private void HTMLCanvasElement_Resize(object sender, EventArgs e)
+        //{
+        //    if (GraphicManager != null)
+        //    {
+        //        //GraphicManager.Dispose();
+        //    }
+        //}
 
         /// <summary>
         /// Updates surface of the control in case when image was changed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            if (_canvas != null && _canvas.IsVisible) //redrawing make sense only in case when element is visible
-            {
-                bool isLocked = !Monitor.TryEnter(sync);
-                //if drawing resources is not checked out by another process
-                if (!isLocked)
-                {
-                    //if redrawing is necessary
-                    if (_isChanged)
-                    {
-                        ForceDraw();
-                        _isChanged = false;
-                    }
-                    Monitor.Exit(sync);
-                }
-            }
-        }
+        //private void timer_Elapsed(object sender, ElapsedEventArgs e)
+        //{
+        //    if (_canvas != null && _canvas.IsVisible) //redrawing make sense only in case when element is visible
+        //    {
+        //        bool isLocked = !Monitor.TryEnter(sync);
+        //        //if drawing resources is not checked out by another process
+        //        if (!isLocked)
+        //        {
+        //            //if redrawing is necessary
+        //            if (_isChanged)
+        //            {
+        //                //ForceDraw();
+        //                _isChanged = false;
+        //            }
+        //            Monitor.Exit(sync);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Draws the latest version of the image to the buffer and flush the image to the control's surface
         /// </summary>
-        public void ForceDraw()
-        {
-            tagRECT bound = GetEmptyBound();
-            tagRECT update = GetEmptyUpdate();
-            if (ManagedBackBuffer != null)
-            {
-                //if standalone env.
-                if (_paintSite == null)
-                {
-                    //ManagedBackBuffer.Graphics.Clear(Color.White);
-                    ManagedBackBuffer.Graphics.Clear(BackColor);
-                    //ManagedBackBuffer.Graphics.Clear(Color.Transparent);
-                }
-                Draw(ManagedBackBuffer.Graphics, bound, update);
-                //ManagedBackBuffer.Graphics.DrawString(ManagedBackBuffer.Graphics.VisibleClipBounds.Width.ToString(), new Font("Arial", 5), new SolidBrush(Color.Black), 0, 0);
-                ManagedBackBuffer.Render(CreateGraphics());
-            }
-        }
+        //public void ForceDraw()
+        //{
+        //    tagRECT bound = GetEmptyBound();
+        //    tagRECT update = GetEmptyUpdate();
+        //    if (ManagedBackBuffer != null)
+        //    {
+        //        //if standalone env.
+        //        if (_paintSite == null)
+        //        {
+        //            //ManagedBackBuffer.Graphics.Clear(Color.White);
+        //            //ManagedBackBuffer.Graphics.Clear(BackColor);
+        //            //ManagedBackBuffer.Graphics.Clear(Color.Transparent);
+        //        }
+        //        Draw(ManagedBackBuffer.Graphics, bound, update);
+        //        //ManagedBackBuffer.Graphics.DrawString(ManagedBackBuffer.Graphics.VisibleClipBounds.Width.ToString(), new Font("Arial", 5), new SolidBrush(Color.Black), 0, 0);
+        //        //ManagedBackBuffer.Render(CreateGraphics());
+        //    }
+        //}
 
         /// <summary>
         /// We have to subscribe this event because of WinForms version, 
@@ -397,27 +397,27 @@ namespace SharpCanvas.Browser.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HTMLCanvasElement_Paint(object sender, PaintEventArgs e)
-        {
-            tagRECT bound = GetEmptyBound();
-            tagRECT update = GetEmptyUpdate();
+        //private void HTMLCanvasElement_Paint(object sender, PaintEventArgs e)
+        //{
+        //    tagRECT bound = GetEmptyBound();
+        //    tagRECT update = GetEmptyUpdate();
 
-            //we have to initialize GraphicManager here because we don't have timer in IE environment            
-            InitGraphicManager(e);
+        //    //we have to initialize GraphicManager here because we don't have timer in IE environment
+        //    InitGraphicManager(e);
 
-            //we don't want to receive OnPaint events notifications anymore - we have timer to update the surface (animation support)
-            Paint -= HTMLCanvasElement_Paint;
+        //    //we don't want to receive OnPaint events notifications anymore - we have timer to update the surface (animation support)
+        //    //Paint -= HTMLCanvasElement_Paint;
 
-            //if standalone env.
-            if (_paintSite == null)
-            {
-                //e.Graphics.Clear(Color.Transparent);
-                //e.Graphics.Clear(Color.White);
-                e.Graphics.Clear(BackColor);
-            }
-            //draw directly to the surface
-            Draw(e.Graphics, bound, update);
-        }
+        //    //if standalone env.
+        //    if (_paintSite == null)
+        //    {
+        //        //e.Graphics.Clear(Color.Transparent);
+        //        //e.Graphics.Clear(Color.White);
+        //        //e.Graphics.Clear(BackColor);
+        //    }
+        //    //draw directly to the surface
+        //    Draw(e.Graphics, bound, update);
+        //}
 
         /// <summary>
         /// Get rectagnle area equal to current control's size
@@ -449,27 +449,27 @@ namespace SharpCanvas.Browser.Forms
         /// Initialize DoubleBuffering as well as re-drawing timer
         /// </summary>
         /// <param name="e"></param>
-        private void InitGraphicManager(PaintEventArgs e)
-        {
-            if (GraphicManager == null)
-            {
-                SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-                SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-                SetStyle(ControlStyles.ResizeRedraw, true);
-                SetStyle(ControlStyles.UserPaint, true);
-                SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+        //private void InitGraphicManager(PaintEventArgs e)
+        //{
+        //    if (GraphicManager == null)
+        //    {
+        //        //SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+        //        //SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+        //        //SetStyle(ControlStyles.ResizeRedraw, true);
+        //        //SetStyle(ControlStyles.UserPaint, true);
+        //        //SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 
-                GraphicManager = BufferedGraphicsManager.Current;
-                GraphicManager.MaximumBuffer =
-                    new Size(width + 1, height + 1);
-                ManagedBackBuffer =
-                    GraphicManager.Allocate(e.Graphics, DisplayRectangle);
-                //we use timer to display animation correctly
-                timer.Enabled = true;
-                timer.Interval = 50;
-                timer.Elapsed += timer_Elapsed;
-            }
-        }
+        //        GraphicManager = BufferedGraphicsManager.Current;
+        //        GraphicManager.MaximumBuffer =
+        //            new Size(width + 1, height + 1);
+        //        ManagedBackBuffer =
+        //            GraphicManager.Allocate(e.Graphics, DisplayRectangle);
+        //        //we use timer to display animation correctly
+        //        timer.Enabled = true;
+        //        timer.Interval = 50;
+        //        timer.Elapsed += timer_Elapsed;
+        //    }
+        //}
 
         #endregion
 
@@ -488,41 +488,7 @@ namespace SharpCanvas.Browser.Forms
         /// <param name="pvDrawObject"></param>
         public void Draw(tagRECT rcBounds, tagRECT rcUpdate, int lDrawFlags, IntPtr hdc, IntPtr pvDrawObject)
         {
-            Paint -= HTMLCanvasElement_Paint;
-            _graphics = Graphics.FromHdc(hdc);
-            _graphics.CompositingMode = CompositingMode.SourceOver;
-
-            // Apply any scaling, etc. to the output.
-            _HTML_PAINT_DRAW_INFO info;
-            _paintSite.GetDrawInfo(
-                (int)_HTML_PAINT_DRAW_INFO_FLAGS.HTMLPAINT_DRAWINFO_XFORM |
-                (int)_HTML_PAINT_DRAW_INFO_FLAGS.HTMLPAINT_DRAWINFO_UPDATEREGION,
-                out info);
-            var xform = new Matrix(
-                info.xform.eM11, info.xform.eM12,
-                info.xform.eM21, info.xform.eM22,
-                info.xform.eDx - rcBounds.left, info.xform.eDy - rcBounds.top);
-            _graphics.Transform = xform;
-
-            // Update clipping region.
-            var clip = new Region();
-            if (info.hrgnUpdate != IntPtr.Zero)
-            {
-                Region updateclip = Region.FromHrgn(info.hrgnUpdate);
-                clip.Intersect(updateclip);
-                clip.Translate(rcBounds.left, rcBounds.top);
-            }
-            _graphics.SetClip(clip, CombineMode.Replace);
-
-            if (init != null) //run only once
-            {
-                _init.GetType().InvokeMember("", BindingFlags.InvokeMethod, null, _init,
-                                             new object[] { });
-                _init = null;
-            }
-
-            Draw(_graphics, rcBounds, rcUpdate);
-            _graphics.Dispose();
+            // Do nothing
         }
 
         /// <summary>
@@ -546,9 +512,9 @@ namespace SharpCanvas.Browser.Forms
             {
                 var rect = new tagRECT();
                 rect.top = 0;
-                rect.bottom = Top + height;
+                //rect.bottom = Top + height;
                 rect.left = 0;
-                rect.right = Left + width;
+                //rect.right = Left + width;
                 _paintSite.InvalidateRect(ref rect);
             }
             //mark current canvas element as changed
@@ -583,42 +549,42 @@ namespace SharpCanvas.Browser.Forms
         /// <param name="graphics">surface to draw</param>
         /// <param name="rcBounds">allowed rectangle to draw in</param>
         /// <param name="rcUpdate">rectangle to update</param>
-        private void Draw(Graphics graphics, tagRECT rcBounds, tagRECT rcUpdate)
-        {
-            if (_canvas != null)
-            {
-                int x = rcUpdate.left;
-                int y = rcUpdate.top;
-                int x1 = rcUpdate.left - rcBounds.left;
-                int y1 = rcUpdate.top - rcBounds.top;
-                int width1 = rcUpdate.right - rcUpdate.left;
-                int height1 = rcUpdate.bottom - rcUpdate.top;
+        //private void Draw(Graphics graphics, tagRECT rcBounds, tagRECT rcUpdate)
+        //{
+        //    if (_canvas != null)
+        //    {
+        //        int x = rcUpdate.left;
+        //        int y = rcUpdate.top;
+        //        int x1 = rcUpdate.left - rcBounds.left;
+        //        int y1 = rcUpdate.top - rcBounds.top;
+        //        int width1 = rcUpdate.right - rcUpdate.left;
+        //        int height1 = rcUpdate.bottom - rcUpdate.top;
 
-                lock (sync)
-                {
-                    byte[] bitmapBytes = _canvas.GetBitmap();
-                    using (var ms = new System.IO.MemoryStream(bitmapBytes))
-                    using (var bitmap = new Bitmap(ms))
-                    {
-                        if (bitmap.Width < width1)
-                        {
-                            width1 = bitmap.Width;
-                        }
-                        if (bitmap.Height < height1)
-                        {
-                            height1 = bitmap.Height;
-                        }
-                        var rect = new Rectangle(x1,
-                                                 y1,
-                                                 width1,
-                                                 height1);
-                        graphics.DrawImage(bitmap, x, y,
-                                           rect,
-                                           GraphicsUnit.Pixel);
-                    }
-                }
-            }
-        }
+        //        lock (sync)
+        //        {
+        //            byte[] bitmapBytes = _canvas.GetBitmap();
+        //            using (var ms = new System.IO.MemoryStream(bitmapBytes))
+        //            using (var bitmap = new Bitmap(ms))
+        //            {
+        //                if (bitmap.Width < width1)
+        //                {
+        //                    width1 = bitmap.Width;
+        //                }
+        //                if (bitmap.Height < height1)
+        //                {
+        //                    height1 = bitmap.Height;
+        //                }
+        //                var rect = new Rectangle(x1,
+        //                                         y1,
+        //                                         width1,
+        //                                         height1);
+        //                graphics.DrawImage(bitmap, x, y,
+        //                                   rect,
+        //                                   GraphicsUnit.Pixel);
+        //            }
+        //        }
+        //    }
+        //}
 
         #endregion
 

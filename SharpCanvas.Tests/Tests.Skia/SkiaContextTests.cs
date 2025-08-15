@@ -2,6 +2,8 @@ using NUnit.Framework;
 using SharpCanvas.Context.Skia;
 using SkiaSharp;
 using System;
+using Moq;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Tests.Skia
 {
@@ -30,7 +32,9 @@ namespace SharpCanvas.Tests.Skia
             using (var surface = SKSurface.Create(info))
             {
                 surface.Canvas.Clear(SKColors.Transparent);
-                var context = new CanvasRenderingContext2D(surface);
+                var mockDocument = new Mock<IDocument>();
+                mockDocument.Setup(d => d.fonts).Returns(new FontFaceSet());
+                var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
                 context.fillRect(10, 10, 50, 50);
 
                 var bitmap = new SKBitmap(info);
@@ -54,7 +58,9 @@ namespace SharpCanvas.Tests.Skia
             using (var surface = SKSurface.Create(info))
             {
                 surface.Canvas.Clear(SKColors.Transparent);
-                var context = new CanvasRenderingContext2D(surface);
+                var mockDocument = new Mock<IDocument>();
+                mockDocument.Setup(d => d.fonts).Returns(new FontFaceSet());
+                var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
                 var bitmap = new SKBitmap(info);
 
                 // Initial color is black
@@ -88,7 +94,9 @@ namespace SharpCanvas.Tests.Skia
             var info = new SKImageInfo(100, 100);
             using (var surface = SKSurface.Create(info))
             {
-                var context = new CanvasRenderingContext2D(surface);
+                var mockDocument = new Mock<IDocument>();
+                mockDocument.Setup(d => d.fonts).Returns(new FontFaceSet());
+                var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
                 context.fillStyle = "#FF0000";
                 context.globalAlpha = 0.5;
                 context.fillRect(0, 0, 100, 100);
@@ -107,7 +115,9 @@ namespace SharpCanvas.Tests.Skia
             var info = new SKImageInfo(100, 100);
             using (var surface = SKSurface.Create(info))
             {
-                var context = new CanvasRenderingContext2D(surface);
+                var mockDocument = new Mock<IDocument>();
+                mockDocument.Setup(d => d.fonts).Returns(new FontFaceSet());
+                var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
                 context.fillStyle = "#FF0000";
                 context.fillRect(0, 0, 50, 50);
 
@@ -129,7 +139,9 @@ namespace SharpCanvas.Tests.Skia
             var info = new SKImageInfo(100, 100);
             using (var surface = SKSurface.Create(info))
             {
-                var context = new CanvasRenderingContext2D(surface);
+                var mockDocument = new Mock<IDocument>();
+                mockDocument.Setup(d => d.fonts).Returns(new FontFaceSet());
+                var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
 
                 // Fill the canvas with blue
                 context.fillStyle = "blue";

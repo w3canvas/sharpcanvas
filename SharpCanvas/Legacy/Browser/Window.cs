@@ -72,22 +72,22 @@ namespace SharpCanvas.Browser
             // document
             //
             _document = new Document(this);
-            _document.Width = _innerWidth;
-            _document.Height = _innerHeight;
-            Controls.Add(_document);
+            //_document.Width = _innerWidth;
+            //_document.Height = _innerHeight;
+            //Controls.Add(_document);
             _childNodes = new List<INode>();
             _childNodes.Add(_document);
             //
             // Events
             //);
-            this.Resize += new EventHandler(Window_Resize);
+            //this.Resize += new EventHandler(Window_Resize);
         }
 
-        void Window_Resize(object? sender, EventArgs e)
-        {
-            _document.Width = this.Width;
-            _document.Height = this.Height;
-        }
+        //void Window_Resize(object? sender, EventArgs e)
+        //{
+        //    _document.Width = this.Width;
+        //    _document.Height = this.Height;
+        //}
 
         #region IWindow members
 

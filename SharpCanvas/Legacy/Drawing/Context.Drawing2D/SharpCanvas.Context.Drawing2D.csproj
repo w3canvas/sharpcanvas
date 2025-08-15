@@ -11,11 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../SharpCanvas/Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj" />
-    <ProjectReference Include="../../SharpCanvas/Interop/SharpCanvas.Interop.csproj" />
-    <ProjectReference Include="../../SharpCanvas/Prototype/SharpCanvas.Prototype.csproj" />
-    <ProjectReference Include="../../SharpCanvas/SharpCanvas.Core/SharpCanvas.Core.csproj" />
-    <ProjectReference Include="../../SharpCanvas/SharpCanvas.Common/SharpCanvas.Common.csproj" />
+    <ProjectReference Include="../../../Bitmap.Filter/SharpCanvas.Bitmap.Filter.csproj" />
+    <ProjectReference Include="../../../Interop/SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="../../../Prototype/SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="../../../SharpCanvas.Core/SharpCanvas.Core.csproj" />
+    <ProjectReference Include="../../../SharpCanvas.Common/SharpCanvas.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -15,16 +15,12 @@ namespace SharpCanvas.Context.Skia
         protected Stack<SKPaint> _fillPaintStack = new Stack<SKPaint>();
         protected Stack<SKPaint> _strokePaintStack = new Stack<SKPaint>();
         protected Stack<double> _globalAlphaStack = new Stack<double>();
-        protected System.Threading.Tasks.Task _fontLoadingTask = System.Threading.Tasks.Task.CompletedTask;
+        protected IDocument _document;
 
-        public void SetFontLoadingTask(System.Threading.Tasks.Task task)
-        {
-            _fontLoadingTask = task;
-        }
-
-        public SkiaCanvasRenderingContext2DBase(SKSurface surface)
+        public SkiaCanvasRenderingContext2DBase(SKSurface surface, IDocument document)
         {
             _surface = surface;
+            _document = document;
             _path = new SKPath();
             _fillPaint = new SKPaint { Style = SKPaintStyle.Fill, Color = SKColors.Black };
             _strokePaint = new SKPaint { Style = SKPaintStyle.Stroke, Color = SKColors.Black, StrokeWidth = 1 };
@@ -451,8 +447,7 @@ namespace SharpCanvas.Context.Skia
         }
 
         public string textBaseLine { get; set; }
-        public FontFaceSet fonts { get; } = new FontFaceSet();
-        object ICanvasRenderingContext2D.fonts => fonts;
+        public object fonts => _document.fonts;
 
         public object canvas => throw new System.NotImplementedException();
         public bool IsVisible => true;
@@ -556,7 +551,7 @@ namespace SharpCanvas.Context.Skia
 
         public void fillText(string text, double x, double y)
         {
-            _fontLoadingTask.Wait();
+            _document.fonts.ready.Wait();
             // Re-apply font settings in case they were loaded asynchronously
             FontUtils.ApplyFont(this, _fillPaint);
             var yOffset = FontUtils.GetYOffset(textBaseLine, _fillPaint);
@@ -568,7 +563,7 @@ namespace SharpCanvas.Context.Skia
 
         public void strokeText(string text, double x, double y)
         {
-            _fontLoadingTask.Wait();
+            _document.fonts.ready.Wait();
             // Re-apply font settings in case they were loaded asynchronously
             FontUtils.ApplyFont(this, _strokePaint);
             var yOffset = FontUtils.GetYOffset(textBaseLine, _strokePaint);
