@@ -9,6 +9,8 @@ dotnet restore SharpCanvas/SharpCanvas.sln
 dotnet build SharpCanvas/SharpCanvas.sln
 ```
 
+**Note:** The `dotnet` executable is installed in `/home/jules/.dotnet`. If `dotnet` is not in your `PATH`, you should use the full path: `/home/jules/.dotnet/dotnet`.
+
 This will restore all necessary NuGet packages and then build the entire solution.
 
 ## Guiding Principles

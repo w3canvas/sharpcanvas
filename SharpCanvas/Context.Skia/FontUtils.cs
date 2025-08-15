@@ -9,7 +9,7 @@ namespace SharpCanvas.Context.Skia
 {
     public static class FontUtils
     {
-        public static void ApplyFont(SkiaCanvasRenderingContext2DBase context, SKPaint paint)
+        internal static bool ApplyFont(SkiaCanvasRenderingContext2DBase context, SKPaint paint)
         {
             var font = context.font;
             var regex = new Regex(@"(?<size>\d+)(?<metric>\w+)\W+(?<font>[\w\s]+.*)");
@@ -32,6 +32,11 @@ namespace SharpCanvas.Context.Skia
                         var fontData = fontFace.GetDataAsync().Result;
                         var data = SKData.Create(new MemoryStream(fontData));
                         paint.Typeface = SKTypeface.FromData(data);
+                    }
+                    else
+                    {
+                        // font-display: block behavior - don't draw if font is not loaded
+                        return false;
                     }
                 }
                 else
@@ -65,6 +70,7 @@ namespace SharpCanvas.Context.Skia
                 "ultra-expanded" => 2.0f,
                 _ => 1.0f,
             };
+            return true;
         }
 
         public static float GetYOffset(string textBaseline, SKPaint paint)
