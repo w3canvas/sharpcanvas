@@ -469,10 +469,9 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        private void UpdateTextAlign()
+        private SKTextAlign GetTextAlign()
         {
-            var align = _textAlign.ToLower() switch
+            return _textAlign.ToLower() switch
             {
                 "left" => SKTextAlign.Left,
                 "right" => SKTextAlign.Right,
@@ -481,6 +480,12 @@ namespace SharpCanvas.Context.Skia
                 "end" => direction == "rtl" ? SKTextAlign.Left : SKTextAlign.Right,
                 _ => SKTextAlign.Left,
             };
+        }
+
+#pragma warning disable CS0618 // Type or member is obsolete
+        private void UpdateTextAlign()
+        {
+            var align = GetTextAlign();
             _fillPaint.TextAlign = align;
             _strokePaint.TextAlign = align;
         }
@@ -591,7 +596,9 @@ namespace SharpCanvas.Context.Skia
                 {
                     using (var shaper = new SKShaper(_fillFont.Typeface))
                     {
-                        _surface.Canvas.DrawShapedText(shaper, text, (float)x, (float)y + yOffset, paint);
+                        var align = GetTextAlign();
+                        // The new DrawShapedText method requires the font and text alignment directly.
+                        _surface.Canvas.DrawShapedText(shaper, text, (float)x, (float)y + yOffset, align, _fillFont, paint);
                     }
                 }
             }
@@ -607,7 +614,9 @@ namespace SharpCanvas.Context.Skia
                 {
                     using (var shaper = new SKShaper(_strokeFont.Typeface))
                     {
-                        _surface.Canvas.DrawShapedText(shaper, text, (float)x, (float)y + yOffset, paint);
+                        var align = GetTextAlign();
+                        // The new DrawShapedText method requires the font and text alignment directly.
+                        _surface.Canvas.DrawShapedText(shaper, text, (float)x, (float)y + yOffset, align, _strokeFont, paint);
                     }
                 }
             }
