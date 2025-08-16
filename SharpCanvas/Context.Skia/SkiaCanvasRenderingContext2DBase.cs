@@ -3,11 +3,14 @@ using SharpCanvas.Shared;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Linq;
+using HarfBuzzSharp;
+using SkiaSharp.HarfBuzz;
 
 namespace SharpCanvas.Context.Skia
 {
     public abstract class SkiaCanvasRenderingContext2DBase : ICanvasRenderingContext2D
     {
+        internal Feature[]? _fontFeatures;
         protected SKSurface _surface;
         protected SKPath _path;
         protected SKPaint _fillPaint;
@@ -586,7 +589,10 @@ namespace SharpCanvas.Context.Skia
                 var yOffset = FontUtils.GetYOffset(textBaseLine, _fillFont);
                 using (var paint = ApplyPaint(_fillPaint))
                 {
-                    _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, _fillFont, paint);
+                    using (var shaper = new SKShaper(_fillFont.Typeface))
+                    {
+                        _surface.Canvas.DrawShapedText(shaper, text, (float)x, (float)y + yOffset, paint);
+                    }
                 }
             }
         }
@@ -599,7 +605,10 @@ namespace SharpCanvas.Context.Skia
                 var yOffset = FontUtils.GetYOffset(textBaseLine, _strokeFont);
                 using (var paint = ApplyPaint(_strokePaint))
                 {
-                    _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, _strokeFont, paint);
+                    using (var shaper = new SKShaper(_strokeFont.Typeface))
+                    {
+                        _surface.Canvas.DrawShapedText(shaper, text, (float)x, (float)y + yOffset, paint);
+                    }
                 }
             }
         }
