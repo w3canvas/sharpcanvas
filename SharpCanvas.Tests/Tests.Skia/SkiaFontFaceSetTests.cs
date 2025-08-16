@@ -17,7 +17,7 @@ namespace SharpCanvas.Tests.Skia
         }
 
         [Test]
-        public async Task TestFontFaceSet_IsInitiallyLoadedAndReady()
+        public void TestFontFaceSet_IsInitiallyLoadedAndReady()
         {
             var fontFaceSet = new FontFaceSet();
             Assert.That(fontFaceSet.status, Is.EqualTo("loaded"));

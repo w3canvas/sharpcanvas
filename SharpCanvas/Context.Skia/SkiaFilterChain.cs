@@ -2,7 +2,8 @@
 using SharpCanvas.Shared;
 using SkiaSharp;
 using System.Collections.Generic;
-using SkiaSharp.Views.Desktop;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace SharpCanvas.Context.Skia
 {
@@ -20,9 +21,25 @@ namespace SharpCanvas.Context.Skia
 #if WINDOWS
             foreach (var filter in _filters)
             {
-                var bitmap = source?.ToBitmap();
+                if (source == null)
+                {
+                    return null;
+                }
+                var sourceInfo = source.Info;
+                var bitmap = new Bitmap(sourceInfo.Width, sourceInfo.Height, sourceInfo.RowBytes, PixelFormat.Format32bppPArgb, source.GetPixels());
+
                 var filteredBitmap = filter.ApplyFilter(bitmap);
-                source = filteredBitmap?.ToSKBitmap();
+
+                if (filteredBitmap == null)
+                {
+                    return null;
+                }
+                var data = filteredBitmap.LockBits(new Rectangle(0, 0, filteredBitmap.Width, filteredBitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppPArgb);
+                var info = new SKImageInfo(filteredBitmap.Width, filteredBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+                var skBitmap = new SKBitmap(info);
+                skBitmap.InstallPixels(info, data.Scan0, data.Stride, null, null);
+                filteredBitmap.UnlockBits(data);
+                source = skBitmap;
             }
 #endif
             return source;
