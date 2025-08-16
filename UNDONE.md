@@ -6,7 +6,68 @@ This document lists features that are currently unimplemented, incomplete, or ha
 The following features are not yet implemented in the Skia backend. The goal is to achieve feature parity with the legacy `System.Drawing` context.
 
 ### Partially Implemented Features
-- **Text Rendering**: The `fontVariantCaps` property is not fully implemented. The `FontUtils` class needs to be updated to handle OpenType font features. **Note:** This is a complex task that requires using the `HarfBuzzSharp` library for text shaping. The current implementation using `SKShaper` is not sufficient. A deeper integration with `HarfBuzzSharp` is needed to correctly handle OpenType features. **Future work:** The SkiaSharp implementation will be updated in the future to a newer version with better HarfBuzz integration, which should make this task easier.
+- **Text Rendering**: The `fontVariantCaps` property is not fully implemented. The `FontUtils` class needs to be updated to handle OpenType font features. This is a complex task that requires using the `HarfBuzzSharp` library for text shaping. The `SKShaper` class in `SkiaSharp.HarfBuzz` is the entry point for this, but a deeper integration is required to correctly apply the features and draw the resulting glyphs.
+
+    **Progress so far:**
+    - Logic to parse the `font-variant-caps` CSS property and map its values to the corresponding `HarfBuzzSharp.Feature` tags has been implemented. The mapping is as follows:
+        - `small-caps`: `smcp`
+        - `all-small-caps`: `c2sc`, `smcp`
+        - `petite-caps`: `pcap`
+        - `all-petite-caps`: `c2pc`, `pcap`
+        - `unicase`: `unic`
+        - `titling-caps`: `titl`
+    - It has been determined that the correct approach is to use the HarfBuzz API to shape the text into a set of glyphs and positions, and then draw these glyphs using the Skia API.
+
+    **Remaining work:**
+    - The primary challenge is finding the correct SkiaSharp v3 API calls to perform the text shaping and drawing. The online documentation for the version of SkiaSharp used in this project is sparse, and attempts to use the API based on older versions have resulted in compilation errors.
+    - The following code snippet represents the latest attempt to implement the `fillText` method and can serve as a starting point for future work:
+    ```csharp
+    public void fillText(string text, double x, double y)
+    {
+        // Re-apply font settings in case they were loaded asynchronously
+        if (FontUtils.ApplyFont(this, _fillFont))
+        {
+            var yOffset = FontUtils.GetYOffset(textBaseLine, _fillFont);
+            using (var paint = ApplyPaint(_fillPaint))
+            {
+                using (var buffer = new HarfBuzzSharp.Buffer())
+                {
+                    buffer.AddUtf8(text);
+                    buffer.GuessSegmentProperties();
+
+                    using (var hbFont = new HarfBuzzSharp.Font(new HarfBuzzSharp.Face(_fillFont.Typeface.OpenStream().ToHarfBuzzBlob())))
+                    {
+                        hbFont.Shape(buffer, _fontFeatures);
+                    }
+
+                    var len = buffer.Length;
+                    var info = buffer.GetGlyphInfoSpan();
+                    var pos = buffer.GetGlyphPositionSpan();
+
+                    var clusters = new uint[len];
+                    var points = new SKPoint[len];
+                    var glyphs = new ushort[len];
+
+                    float currentX = (float)x;
+                    float currentY = (float)y + yOffset;
+
+                    for (var i = 0; i < len; i++)
+                    {
+                        glyphs[i] = (ushort)info[i].Codepoint;
+                        points[i] = new SKPoint(currentX + pos[i].XOffset, currentY - pos[i].YOffset);
+                        currentX += pos[i].XAdvance;
+                        currentY += pos[i].YAdvance;
+                    }
+
+                    using (var textBlob = SKTextBlob.CreatePositioned(glyphs, _fillFont, points))
+                    {
+                        _surface.Canvas.DrawText(textBlob, 0, 0, paint);
+                    }
+                }
+            }
+        }
+    }
+    ```
 
 ### SkiaSharp v3 Upgrade Complete
 The project's `SkiaSharp` dependencies have been successfully upgraded from version `2.88.8` to `3.119.0`. All resulting compilation errors and warnings caused by breaking changes in the new version have been resolved. The project now builds cleanly.

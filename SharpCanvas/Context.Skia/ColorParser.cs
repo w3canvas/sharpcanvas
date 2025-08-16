@@ -1,16 +1,33 @@
 using SkiaSharp;
 using System.Drawing;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System;
 
 namespace SharpCanvas.Context.Skia
 {
     public static class ColorParser
     {
+        private static readonly Dictionary<string, SKColor> NamedColors = new Dictionary<string, SKColor>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "black", SKColors.Black },
+            { "white", SKColors.White },
+            { "red", SKColors.Red },
+            { "green", SKColors.Green },
+            { "blue", SKColors.Blue },
+            { "transparent", SKColors.Transparent },
+        };
+
         public static SKColor Parse(string colorString)
         {
             if (string.IsNullOrEmpty(colorString))
             {
                 return SKColors.Black;
+            }
+
+            if (NamedColors.TryGetValue(colorString, out var namedColor))
+            {
+                return namedColor;
             }
 
             if (colorString.StartsWith("rgba"))
@@ -30,12 +47,6 @@ namespace SharpCanvas.Context.Skia
             if (SKColor.TryParse(colorString, out var color))
             {
                 return color;
-            }
-
-            var drawingColor = Color.FromName(colorString);
-            if (drawingColor.A > 0 || drawingColor.R > 0 || drawingColor.G > 0 || drawingColor.B > 0)
-            {
-                return new SKColor(drawingColor.R, drawingColor.G, drawingColor.B, drawingColor.A);
             }
 
             return SKColors.Black; // Default color if parsing fails
