@@ -9,19 +9,19 @@ namespace SharpCanvas.Context.Skia
 {
     public static class FontUtils
     {
-        internal static bool ApplyFont(SkiaCanvasRenderingContext2DBase context, SKPaint paint)
+        internal static bool ApplyFont(SkiaCanvasRenderingContext2DBase context, SKFont font)
         {
-            var font = context.font;
+            var fontString = context.font;
             var regex = new Regex(@"(?<size>\d+)(?<metric>\w+)\W+(?<font>[\w\s]+.*)");
-            if (regex.IsMatch(font))
+            if (regex.IsMatch(fontString))
             {
-                Match match = regex.Match(font);
+                Match match = regex.Match(fontString);
                 string size = match.Groups["size"].Value;
                 string family = match.Groups["font"].Value;
 
                 if (float.TryParse(size, out float sizeValue))
                 {
-                    paint.TextSize = sizeValue;
+                    font.Size = sizeValue;
                 }
 
                 var fontFace = ((FontFaceSet)context.fonts).values().FirstOrDefault(f => f.family == family);
@@ -31,7 +31,7 @@ namespace SharpCanvas.Context.Skia
                     {
                         var fontData = fontFace.GetDataAsync().Result;
                         var data = SKData.Create(new MemoryStream(fontData));
-                        paint.Typeface = SKTypeface.FromData(data);
+                        font.Typeface = SKTypeface.FromData(data);
                     }
                     else
                     {
@@ -44,20 +44,19 @@ namespace SharpCanvas.Context.Skia
                     var fontPath = System.IO.Path.Combine("Fonts", family.Trim() + ".ttf");
                     if (System.IO.File.Exists(fontPath))
                     {
-                        paint.Typeface = SKTypeface.FromFile(fontPath);
+                        font.Typeface = SKTypeface.FromFile(fontPath);
                     }
                     else
                     {
                         // Fallback to system fonts if the file doesn't exist
-                        paint.Typeface = SKTypeface.FromFamilyName(family.Trim());
+                        font.Typeface = SKTypeface.FromFamilyName(family.Trim());
                     }
                 }
             }
 
-            paint.IsAntialias = context.textRendering != "optimizeSpeed";
-            paint.SubpixelText = context.textRendering == "optimizeLegibility";
+            font.Subpixel = context.textRendering == "optimizeLegibility";
 
-            paint.TextScaleX = context.fontStretch switch
+            font.ScaleX = context.fontStretch switch
             {
                 "ultra-condensed" => 0.5f,
                 "extra-condensed" => 0.625f,
@@ -73,9 +72,9 @@ namespace SharpCanvas.Context.Skia
             return true;
         }
 
-        public static float GetYOffset(string textBaseline, SKPaint paint)
+        public static float GetYOffset(string textBaseline, SKFont font)
         {
-            var metrics = paint.FontMetrics;
+            var metrics = font.Metrics;
             switch (textBaseline)
             {
                 case "top":

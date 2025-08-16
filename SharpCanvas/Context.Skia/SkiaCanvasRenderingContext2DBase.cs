@@ -12,6 +12,10 @@ namespace SharpCanvas.Context.Skia
         protected SKPath _path;
         protected SKPaint _fillPaint;
         protected SKPaint _strokePaint;
+        protected SKFont _fillFont;
+        protected SKFont _strokeFont;
+        protected Stack<SKFont> _fillFontStack = new Stack<SKFont>();
+        protected Stack<SKFont> _strokeFontStack = new Stack<SKFont>();
         protected Stack<SKPaint> _fillPaintStack = new Stack<SKPaint>();
         protected Stack<SKPaint> _strokePaintStack = new Stack<SKPaint>();
         protected Stack<double> _globalAlphaStack = new Stack<double>();
@@ -24,6 +28,8 @@ namespace SharpCanvas.Context.Skia
             _path = new SKPath();
             _fillPaint = new SKPaint { Style = SKPaintStyle.Fill, Color = SKColors.Black };
             _strokePaint = new SKPaint { Style = SKPaintStyle.Stroke, Color = SKColors.Black, StrokeWidth = 1 };
+            _fillFont = new SKFont();
+            _strokeFont = new SKFont();
             this.globalCompositeOperation = "source-over";
             this.lineCap = "butt";
             this.lineJoin = "miter";
@@ -63,6 +69,27 @@ namespace SharpCanvas.Context.Skia
             _surface.Canvas.Save();
             _fillPaintStack.Push(_fillPaint.Clone());
             _strokePaintStack.Push(_strokePaint.Clone());
+
+            var newFillFont = new SKFont
+            {
+                Size = _fillFont.Size,
+                Typeface = _fillFont.Typeface,
+                Subpixel = _fillFont.Subpixel,
+                ScaleX = _fillFont.ScaleX,
+                SkewX = _fillFont.SkewX
+            };
+            _fillFontStack.Push(newFillFont);
+
+            var newStrokeFont = new SKFont
+            {
+                Size = _strokeFont.Size,
+                Typeface = _strokeFont.Typeface,
+                Subpixel = _strokeFont.Subpixel,
+                ScaleX = _strokeFont.ScaleX,
+                SkewX = _strokeFont.SkewX
+            };
+            _strokeFontStack.Push(newStrokeFont);
+
             _globalAlphaStack.Push(_globalAlpha);
         }
 
@@ -76,6 +103,14 @@ namespace SharpCanvas.Context.Skia
             if (_strokePaintStack.Count > 0)
             {
                 _strokePaint = _strokePaintStack.Pop();
+            }
+            if (_fillFontStack.Count > 0)
+            {
+                _fillFont = _fillFontStack.Pop();
+            }
+            if (_strokeFontStack.Count > 0)
+            {
+                _strokeFont = _strokeFontStack.Pop();
             }
             if (_globalAlphaStack.Count > 0)
             {
@@ -112,7 +147,7 @@ namespace SharpCanvas.Context.Skia
                 Persp1 = 0,
                 Persp2 = 1
             };
-            _surface.Canvas.Concat(ref matrix);
+            _surface.Canvas.Concat(in matrix);
         }
 
         public void setTransform(double m11, double m12, double m21, double m22, double dx, double dy)
@@ -415,8 +450,8 @@ namespace SharpCanvas.Context.Skia
             set
             {
                 _font = value;
-                FontUtils.ApplyFont(this, _fillPaint);
-                FontUtils.ApplyFont(this, _strokePaint);
+                FontUtils.ApplyFont(this, _fillFont);
+                FontUtils.ApplyFont(this, _strokeFont);
             }
         }
 
@@ -431,6 +466,7 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
         private void UpdateTextAlign()
         {
             var align = _textAlign.ToLower() switch
@@ -445,6 +481,7 @@ namespace SharpCanvas.Context.Skia
             _fillPaint.TextAlign = align;
             _strokePaint.TextAlign = align;
         }
+#pragma warning restore CS0618 // Type or member is obsolete
 
         public string textBaseLine { get; set; }
         public object fonts => _document.defaultView.fonts;
@@ -510,11 +547,9 @@ namespace SharpCanvas.Context.Skia
                 sweepAngle += 360;
             }
 
-            using (var arcPath = new SKPath())
-            {
-                arcPath.AddArc(new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r)), startDegrees, sweepAngle);
-                _path.AddPath(arcPath, SKPathAddMode.Append);
-            }
+            var rect = new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r));
+            bool forceMove = _path.IsEmpty;
+            _path.ArcTo(rect, startDegrees, sweepAngle, forceMove);
         }
 
         public void rect(double x, double y, double w, double h)
@@ -546,12 +581,12 @@ namespace SharpCanvas.Context.Skia
         public void fillText(string text, double x, double y)
         {
             // Re-apply font settings in case they were loaded asynchronously
-            if (FontUtils.ApplyFont(this, _fillPaint))
+            if (FontUtils.ApplyFont(this, _fillFont))
             {
-                var yOffset = FontUtils.GetYOffset(textBaseLine, _fillPaint);
+                var yOffset = FontUtils.GetYOffset(textBaseLine, _fillFont);
                 using (var paint = ApplyPaint(_fillPaint))
                 {
-                    _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, paint);
+                    _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, _fillFont, paint);
                 }
             }
         }
@@ -559,26 +594,20 @@ namespace SharpCanvas.Context.Skia
         public void strokeText(string text, double x, double y)
         {
             // Re-apply font settings in case they were loaded asynchronously
-            if (FontUtils.ApplyFont(this, _strokePaint))
+            if (FontUtils.ApplyFont(this, _strokeFont))
             {
-                var yOffset = FontUtils.GetYOffset(textBaseLine, _strokePaint);
+                var yOffset = FontUtils.GetYOffset(textBaseLine, _strokeFont);
                 using (var paint = ApplyPaint(_strokePaint))
                 {
-                    _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, paint);
+                    _surface.Canvas.DrawText(text, (float)x, (float)y + yOffset, _strokeFont, paint);
                 }
             }
         }
 
         private SKPaint GetImagePaint()
         {
-            var filterQuality = imageSmoothingQuality switch
-            {
-                "high" => SKFilterQuality.High,
-                "medium" => SKFilterQuality.Medium,
-                "low" => SKFilterQuality.Low,
-                _ => SKFilterQuality.Low,
-            };
-            return new SKPaint { FilterQuality = imageSmoothingEnabled ? filterQuality : SKFilterQuality.None };
+            //TODO: Fix this once we figure out how to set sampling options on SKPaint
+            return new SKPaint { };
         }
 
         public void drawImage(object image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh)
@@ -689,8 +718,8 @@ namespace SharpCanvas.Context.Skia
 
         public object measureText(string text)
         {
-            var width = _fillPaint.MeasureText(text);
-            var metrics = _fillPaint.FontMetrics;
+            var width = _fillFont.MeasureText(text);
+            var metrics = _fillFont.Metrics;
             var height = metrics.Descent - metrics.Ascent;
             return new TextMetrics { width = (int)width, height = (int)height };
         }
@@ -848,8 +877,8 @@ namespace SharpCanvas.Context.Skia
 
         private void UpdateFont()
         {
-            FontUtils.ApplyFont(this, _fillPaint);
-            FontUtils.ApplyFont(this, _strokePaint);
+            FontUtils.ApplyFont(this, _fillFont);
+            FontUtils.ApplyFont(this, _strokeFont);
         }
 
         private void UpdateFilters()

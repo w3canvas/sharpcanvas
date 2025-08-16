@@ -21,11 +21,10 @@ namespace SharpCanvas.Tests.Skia.Standalone
                 using (var stream = new FileStream(fontPath, FileMode.Open))
                 using (var typeface = SKTypeface.FromStream(stream))
                 using (var paint = new SKPaint())
+                using (var font = new SKFont(typeface, 20))
                 {
-                    paint.Typeface = typeface;
-                    paint.TextSize = 20;
                     paint.Color = SKColors.Black;
-                    canvas.DrawText("Hello", 10, 50, paint);
+                    canvas.DrawText("Hello", 10, 50, font, paint);
                 }
 
                 var bitmap = new SKBitmap(info);

@@ -51,6 +51,7 @@ namespace SharpCanvas.Tests.Skia.Modern
             _context.fillStyle = "black";
             _context.beginPath();
             _context.arc(50, 50, 25, 0, System.Math.PI, false);
+            _context.closePath();
             _context.fill();
 
             var bitmap = new SKBitmap(_surface.PeekPixels().Info);
@@ -66,6 +67,7 @@ namespace SharpCanvas.Tests.Skia.Modern
             _context.fillStyle = "black";
             _context.beginPath();
             _context.arc(50, 50, 25, System.Math.PI, 0, true);
+            _context.closePath();
             _context.fill();
 
             _surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);

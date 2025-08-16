@@ -33,7 +33,7 @@ namespace SharpCanvas.Shared
         {
             _fontFaces.Add(fontFace);
             UpdateReadyTask();
-            fontFace.load();
+            _ = fontFace.load();
         }
 
         public bool delete(FontFace fontFace)
