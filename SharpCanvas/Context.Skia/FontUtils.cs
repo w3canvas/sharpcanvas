@@ -4,11 +4,46 @@ using SharpCanvas.Shared;
 using SkiaSharp;
 using System.Text.RegularExpressions;
 using System.Reflection;
+using HarfBuzzSharp;
+using System.Collections.Generic;
 
 namespace SharpCanvas.Context.Skia
 {
     public static class FontUtils
     {
+        private static Feature[] GetFontFeatures(string fontVariantCaps)
+        {
+            var features = new List<Feature>();
+            var values = fontVariantCaps.Split(' ');
+            foreach (var value in values)
+            {
+                switch (value)
+                {
+                    case "small-caps":
+                        features.Add(new Feature(new Tag('s', 'm', 'c', 'p'), 1, 0, uint.MaxValue));
+                        break;
+                    case "all-small-caps":
+                        features.Add(new Feature(new Tag('c', '2', 's', 'c'), 1, 0, uint.MaxValue));
+                        features.Add(new Feature(new Tag('s', 'm', 'c', 'p'), 1, 0, uint.MaxValue));
+                        break;
+                    case "petite-caps":
+                        features.Add(new Feature(new Tag('p', 'c', 'a', 'p'), 1, 0, uint.MaxValue));
+                        break;
+                    case "all-petite-caps":
+                        features.Add(new Feature(new Tag('c', '2', 'p', 'c'), 1, 0, uint.MaxValue));
+                        features.Add(new Feature(new Tag('p', 'c', 'a', 'p'), 1, 0, uint.MaxValue));
+                        break;
+                    case "unicase":
+                        features.Add(new Feature(new Tag('u', 'n', 'i', 'c'), 1, 0, uint.MaxValue));
+                        break;
+                    case "titling-caps":
+                        features.Add(new Feature(new Tag('t', 'i', 't', 'l'), 1, 0, uint.MaxValue));
+                        break;
+                }
+            }
+            return features.ToArray();
+        }
+
         internal static bool ApplyFont(SkiaCanvasRenderingContext2DBase context, SKFont font)
         {
             var fontString = context.font;
@@ -69,6 +104,7 @@ namespace SharpCanvas.Context.Skia
                 "ultra-expanded" => 2.0f,
                 _ => 1.0f,
             };
+            context._fontFeatures = GetFontFeatures(context.fontVariantCaps);
             return true;
         }
 
