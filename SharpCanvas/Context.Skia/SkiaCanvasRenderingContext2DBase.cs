@@ -557,7 +557,6 @@ namespace SharpCanvas.Context.Skia
             }
 
             var rect = new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r));
-            _path.FillType = SKPathFillType.Winding;
             _path.ArcTo(rect, startDegrees, sweepAngle, _path.IsEmpty);
         }
 
