@@ -48,7 +48,7 @@ namespace SharpCanvas.Tests.Skia.Modern
         {
             // Part 1: Clockwise arc (bottom semi-circle)
             _context.reset();
-            _context.fillStyle = "black";
+            _context.fillStyle = "red";
             _context.beginPath();
             _context.arc(50, 50, 25, 0, System.Math.PI, false);
             _context.closePath();
@@ -57,28 +57,14 @@ namespace SharpCanvas.Tests.Skia.Modern
             var bitmap = new SKBitmap(_surface.PeekPixels().Info);
             _surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
 
-            bool blackPixelFound = false;
-            for (int x = 0; x < bitmap.Width; x++)
-            {
-                for (int y = 0; y < bitmap.Height; y++)
-                {
-                    if (bitmap.GetPixel(x, y) == SKColors.Black)
-                    {
-                        blackPixelFound = true;
-                        break;
-                    }
-                }
-                if (blackPixelFound)
-                {
-                    break;
-                }
-            }
-            Assert.That(blackPixelFound, Is.True, "Expected to find at least one black pixel in the clockwise arc.");
+            // Check a pixel in the middle of the filled semi-circle
+            var pixel = bitmap.GetPixel(50, 62);
+            Assert.That(pixel, Is.EqualTo(SKColors.Red), "Expected a red pixel in the clockwise arc.");
 
             // Part 2: Anticlockwise arc (top semi-circle)
             _context.reset();
             _surface.Canvas.Clear(SKColors.Transparent);
-            _context.fillStyle = "black";
+            _context.fillStyle = "red";
             _context.beginPath();
             _context.arc(50, 50, 25, System.Math.PI, 0, true);
             _context.closePath();
@@ -86,23 +72,9 @@ namespace SharpCanvas.Tests.Skia.Modern
 
             _surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
 
-            blackPixelFound = false;
-            for (int x = 0; x < bitmap.Width; x++)
-            {
-                for (int y = 0; y < bitmap.Height; y++)
-                {
-                    if (bitmap.GetPixel(x, y) == SKColors.Black)
-                    {
-                        blackPixelFound = true;
-                        break;
-                    }
-                }
-                if (blackPixelFound)
-                {
-                    break;
-                }
-            }
-            Assert.That(blackPixelFound, Is.True, "Expected to find at least one black pixel in the anticlockwise arc.");
+            // Check a pixel in the middle of the filled semi-circle
+            pixel = bitmap.GetPixel(50, 38);
+            Assert.That(pixel, Is.EqualTo(SKColors.Red), "Expected a red pixel in the anticlockwise arc.");
         }
 
         [Test]

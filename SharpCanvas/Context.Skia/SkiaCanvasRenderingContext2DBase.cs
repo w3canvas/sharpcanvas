@@ -507,7 +507,8 @@ namespace SharpCanvas.Context.Skia
 
         public void beginPath()
         {
-            _path.Reset();
+            _path?.Dispose();
+            _path = new SKPath();
         }
 
         public void closePath()
@@ -542,22 +543,7 @@ namespace SharpCanvas.Context.Skia
 
         public void arc(double x, double y, double r, double startAngle, double endAngle, bool anticlockwise)
         {
-            var startDegrees = (float)(startAngle * 180 / System.Math.PI);
-            var endDegrees = (float)(endAngle * 180 / System.Math.PI);
-            var sweepAngle = endDegrees - startDegrees;
-
-            if (anticlockwise && sweepAngle > 0)
-            {
-                sweepAngle -= 360;
-            }
-            else if (!anticlockwise && sweepAngle < 0)
-            {
-                sweepAngle += 360;
-            }
-
-            var rect = new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r));
-            bool forceMove = _path.IsEmpty;
-            _path.ArcTo(rect, startDegrees, sweepAngle, forceMove);
+            ellipse(x, y, r, r, 0, startAngle, endAngle, anticlockwise);
         }
 
         public void rect(double x, double y, double w, double h)
@@ -1011,6 +997,20 @@ namespace SharpCanvas.Context.Skia
                 throw new System.NotSupportedException("Radius values for ellipse must be non-negative.");
             }
 
+            var startPoint = new SKPoint(
+                (float)(x + radiusX * System.Math.Cos(startAngle)),
+                (float)(y + radiusY * System.Math.Sin(startAngle))
+            );
+
+            if (_path.IsEmpty)
+            {
+                _path.MoveTo(startPoint);
+            }
+            else
+            {
+                _path.LineTo(startPoint);
+            }
+
             var rect = new SKRect((float)(x - radiusX), (float)(y - radiusY), (float)(x + radiusX), (float)(y + radiusY));
             var startDegrees = (float)(startAngle * 180 / System.Math.PI);
             var endDegrees = (float)(endAngle * 180 / System.Math.PI);
@@ -1018,29 +1018,26 @@ namespace SharpCanvas.Context.Skia
             var sweepAngle = endDegrees - startDegrees;
             if (anticlockwise)
             {
-                if (sweepAngle > 0)
+                if (sweepAngle > 0) sweepAngle -= 360;
+            }
+            else
+            {
+                if (sweepAngle < 0) sweepAngle += 360;
+            }
+
+            if (rotation != 0)
+            {
+                using (var tempPath = new SKPath())
                 {
-                    sweepAngle -= 360;
+                    tempPath.AddArc(rect, startDegrees, sweepAngle);
+                    var matrix = SKMatrix.CreateRotation((float)rotation, (float)x, (float)y);
+                    tempPath.Transform(matrix);
+                    _path.AddPath(tempPath);
                 }
             }
             else
             {
-                if (sweepAngle < 0)
-                {
-                    sweepAngle += 360;
-                }
-            }
-
-            using (var ellipsePath = new SKPath())
-            {
-                if (rotation != 0)
-                {
-                    var matrix = SKMatrix.CreateRotation((float)rotation, (float)x, (float)y);
-                    ellipsePath.Transform(matrix);
-                }
-
-                ellipsePath.AddArc(rect, startDegrees, sweepAngle);
-                _path.AddPath(ellipsePath);
+                _path.AddArc(rect, startDegrees, sweepAngle);
             }
         }
 
