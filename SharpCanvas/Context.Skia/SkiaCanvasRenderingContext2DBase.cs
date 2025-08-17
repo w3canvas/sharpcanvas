@@ -507,7 +507,8 @@ namespace SharpCanvas.Context.Skia
 
         public void beginPath()
         {
-            _path.Reset();
+            _path?.Dispose();
+            _path = new SKPath();
         }
 
         public void closePath()
@@ -556,8 +557,7 @@ namespace SharpCanvas.Context.Skia
             }
 
             var rect = new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r));
-            bool forceMove = _path.IsEmpty;
-            _path.ArcTo(rect, startDegrees, sweepAngle, forceMove);
+            _path.ArcTo(rect, startDegrees, sweepAngle, _path.IsEmpty);
         }
 
         public void rect(double x, double y, double w, double h)
