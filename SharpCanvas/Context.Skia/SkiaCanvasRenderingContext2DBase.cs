@@ -23,11 +23,13 @@ namespace SharpCanvas.Context.Skia
         protected Stack<SKPaint> _strokePaintStack = new Stack<SKPaint>();
         protected Stack<double> _globalAlphaStack = new Stack<double>();
         protected IDocument _document;
+        protected object? _canvas;
 
-        public SkiaCanvasRenderingContext2DBase(SKSurface surface, IDocument document)
+        public SkiaCanvasRenderingContext2DBase(SKSurface surface, IDocument document, object? canvas = null)
         {
             _surface = surface;
             _document = document;
+            _canvas = canvas;
             _path = new SKPath();
             _fillPaint = new SKPaint { Style = SKPaintStyle.Fill, Color = SKColors.Black };
             _strokePaint = new SKPaint { Style = SKPaintStyle.Stroke, Color = SKColors.Black, StrokeWidth = 1 };
@@ -494,7 +496,7 @@ namespace SharpCanvas.Context.Skia
         public string textBaseLine { get; set; }
         public object fonts => _document.defaultView.fonts;
 
-        public object canvas => throw new System.NotImplementedException();
+        public object canvas => _canvas;
         public bool IsVisible => true;
 
         public void clearRect(double x, double y, double w, double h)
