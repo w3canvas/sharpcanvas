@@ -557,7 +557,28 @@ namespace SharpCanvas.Context.Skia
             }
 
             var rect = new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r));
-            _path.ArcTo(rect, startDegrees, sweepAngle, _path.IsEmpty);
+
+            // According to the HTML5 Canvas spec, if the path is empty, we need to
+            // implicitly moveTo the start point of the arc. If not empty, we should
+            // lineTo from the current point to the start of the arc.
+            //
+            // Calculate the start point of the arc
+            var startX = (float)(x + r * System.Math.Cos(startAngle));
+            var startY = (float)(y + r * System.Math.Sin(startAngle));
+
+            if (_path.IsEmpty)
+            {
+                // Path is empty - moveTo the start point
+                _path.MoveTo(startX, startY);
+            }
+            else
+            {
+                // Path is not empty - lineTo the start point
+                _path.LineTo(startX, startY);
+            }
+
+            // Now add the arc using AddArc, which adds the arc as part of the current contour
+            _path.AddArc(rect, startDegrees, sweepAngle);
         }
 
         public void rect(double x, double y, double w, double h)
