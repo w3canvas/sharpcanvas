@@ -596,6 +596,17 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
+        public void fill(object path)
+        {
+            if (path is Path2D path2D)
+            {
+                using (var paint = ApplyPaint(_fillPaint))
+                {
+                    _surface.Canvas.DrawPath(path2D._path, paint);
+                }
+            }
+        }
+
         public void stroke()
         {
             using (var paint = ApplyPaint(_strokePaint))
@@ -604,9 +615,28 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
+        public void stroke(object path)
+        {
+            if (path is Path2D path2D)
+            {
+                using (var paint = ApplyPaint(_strokePaint))
+                {
+                    _surface.Canvas.DrawPath(path2D._path, paint);
+                }
+            }
+        }
+
         public void clip()
         {
             _surface.Canvas.ClipPath(_path);
+        }
+
+        public void clip(object path)
+        {
+            if (path is Path2D path2D)
+            {
+                _surface.Canvas.ClipPath(path2D._path);
+            }
         }
 
         public void fillText(string text, double x, double y)
