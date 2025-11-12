@@ -23,11 +23,13 @@ namespace SharpCanvas.Context.Skia
         protected Stack<SKPaint> _strokePaintStack = new Stack<SKPaint>();
         protected Stack<double> _globalAlphaStack = new Stack<double>();
         protected IDocument _document;
+        protected object? _canvas;
 
-        public SkiaCanvasRenderingContext2DBase(SKSurface surface, IDocument document)
+        public SkiaCanvasRenderingContext2DBase(SKSurface surface, IDocument document, object? canvas = null)
         {
             _surface = surface;
             _document = document;
+            _canvas = canvas;
             _path = new SKPath();
             _fillPaint = new SKPaint { Style = SKPaintStyle.Fill, Color = SKColors.Black };
             _strokePaint = new SKPaint { Style = SKPaintStyle.Stroke, Color = SKColors.Black, StrokeWidth = 1 };
@@ -494,7 +496,7 @@ namespace SharpCanvas.Context.Skia
         public string textBaseLine { get; set; }
         public object fonts => _document.defaultView.fonts;
 
-        public object canvas => throw new System.NotImplementedException();
+        public object canvas => _canvas;
         public bool IsVisible => true;
 
         public void clearRect(double x, double y, double w, double h)
@@ -557,7 +559,28 @@ namespace SharpCanvas.Context.Skia
             }
 
             var rect = new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r));
-            _path.ArcTo(rect, startDegrees, sweepAngle, _path.IsEmpty);
+
+            // According to the HTML5 Canvas spec, if the path is empty, we need to
+            // implicitly moveTo the start point of the arc. If not empty, we should
+            // lineTo from the current point to the start of the arc.
+            //
+            // Calculate the start point of the arc
+            var startX = (float)(x + r * System.Math.Cos(startAngle));
+            var startY = (float)(y + r * System.Math.Sin(startAngle));
+
+            if (_path.IsEmpty)
+            {
+                // Path is empty - moveTo the start point
+                _path.MoveTo(startX, startY);
+            }
+            else
+            {
+                // Path is not empty - lineTo the start point
+                _path.LineTo(startX, startY);
+            }
+
+            // Now add the arc using AddArc, which adds the arc as part of the current contour
+            _path.AddArc(rect, startDegrees, sweepAngle);
         }
 
         public void rect(double x, double y, double w, double h)
@@ -573,6 +596,17 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
+        public void fill(object path)
+        {
+            if (path is Path2D path2D)
+            {
+                using (var paint = ApplyPaint(_fillPaint))
+                {
+                    _surface.Canvas.DrawPath(path2D._path, paint);
+                }
+            }
+        }
+
         public void stroke()
         {
             using (var paint = ApplyPaint(_strokePaint))
@@ -581,9 +615,28 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
+        public void stroke(object path)
+        {
+            if (path is Path2D path2D)
+            {
+                using (var paint = ApplyPaint(_strokePaint))
+                {
+                    _surface.Canvas.DrawPath(path2D._path, paint);
+                }
+            }
+        }
+
         public void clip()
         {
             _surface.Canvas.ClipPath(_path);
+        }
+
+        public void clip(object path)
+        {
+            if (path is Path2D path2D)
+            {
+                _surface.Canvas.ClipPath(path2D._path);
+            }
         }
 
         public void fillText(string text, double x, double y)

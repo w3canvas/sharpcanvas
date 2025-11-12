@@ -22,7 +22,7 @@ namespace SharpCanvas.Context.Skia
         {
             if (contextId == "2d")
             {
-                return new OffscreenCanvasRenderingContext2D(_surface, Document);
+                return new OffscreenCanvasRenderingContext2D(_surface, Document, this);
             }
             return null;
         }

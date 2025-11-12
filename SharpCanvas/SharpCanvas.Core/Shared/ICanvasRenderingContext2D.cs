@@ -134,6 +134,11 @@ namespace SharpCanvas
         [DispId(72)]
         void clip();
 
+        // Path2D overloads
+        void fill([In] object path);
+        void stroke([In] object path);
+        void clip([In] object path);
+
         // text API
         [DispId(80)]
         string font { get; set; }
