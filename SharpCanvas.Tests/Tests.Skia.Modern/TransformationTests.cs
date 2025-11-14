@@ -221,12 +221,14 @@ namespace SharpCanvas.Tests.Skia.Modern
             _context.translate(20, 20);
 
             var matrix1 = _context.getTransform() as DOMMatrix;
-            Assert.That(matrix1.e, Is.EqualTo(30).Within(0.001), "Combined translation should be 30");
+            Assert.That(matrix1, Is.Not.Null);
+            Assert.That(matrix1!.e, Is.EqualTo(30).Within(0.001), "Combined translation should be 30");
 
             _context.restore();
 
             var matrix2 = _context.getTransform() as DOMMatrix;
-            Assert.That(matrix2.e, Is.EqualTo(10).Within(0.001), "Should restore to original translation");
+            Assert.That(matrix2, Is.Not.Null);
+            Assert.That(matrix2!.e, Is.EqualTo(10).Within(0.001), "Should restore to original translation");
         }
 
         [Test]

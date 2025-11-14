@@ -45,6 +45,6 @@ namespace SharpCanvas.Shared
         void closePath();
 
         [DispId(11)]
-        void addPath([In] object path, [In] object transform = null);
+        void addPath([In] object path, [In] object? transform = null);
     }
 }
