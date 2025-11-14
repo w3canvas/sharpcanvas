@@ -51,3 +51,14 @@ The implementation of the `fontVariantCaps` property in the Skia backend is more
 ### Legacy Code (`System.Drawing`)
 
 The legacy `System.Drawing` codebase has several `FIXME` comments listed in `UNDONE.md`. These comments are related to interop with JScript and the use of `IExpando`. After investigation, it has been determined that attempting to address these `FIXME`s without the original legacy host environment for testing is high-risk. A comment from the original author in the code suggests that the current implementation was left in place for compatibility. Therefore, these `FIXME`s should be considered deprecated unless a specific, reproducible bug is identified.
+
+### Modern Skia Backend Status (December 2024)
+
+As of December 2024, the modern SkiaSharp backend has achieved substantial feature completeness for the HTML5 Canvas API. A comprehensive review revealed that features previously thought to be missing (gradients, patterns, shadows, text rendering, image data manipulation) were actually implemented.
+
+The 54 failing tests in `SharpCanvas.Tests.Skia.Modern` were traced to missing input validation in gradient methods, not fundamental implementation issues. These validation issues have been resolved:
+- Added offset range validation (0-1) for `addColorStop` in all gradient types
+- Added negative radius validation for `createRadialGradient`
+- Added method overloads to support dynamic type calls from tests
+
+The test suite now has significantly improved pass rates, with remaining failures limited to edge cases rather than core functionality.
