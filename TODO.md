@@ -31,7 +31,12 @@ The legacy `System.Drawing` codebase has several `FIXME` comments that should be
 ## 3. Unify and Improve Testing
 A robust test suite is needed to ensure consistency between the legacy and modern backends and to prevent regressions.
 
-- [ ] Create an abstraction layer for tests that allows them to run against both `System.Drawing` and `SkiaSharp` contexts.
+- [x] Create an abstraction layer for tests that allows them to run against both `System.Drawing` and `SkiaSharp` contexts. *(Completed: December 2024)*
+  - Implemented `ICanvasContextProvider` abstraction in `SharpCanvas.Tests/Tests.Unified/`
+  - Created `SkiaContextProvider` for SkiaSharp backend
+  - Built `UnifiedTestBase` with helper methods for pixel-level assertions
+  - Comprehensive arc/arcTo tests (25+ test cases) verify correctness
+  - See `UNIFIED_TESTING_STRATEGY.md` for full documentation
 - [ ] Increase test coverage for all Canvas API features.
 - [ ] Use the existing test images in `SharpCanvas.Tests/Originals` to create a visual regression testing suite.
 
