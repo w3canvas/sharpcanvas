@@ -4,6 +4,7 @@ using SharpCanvas.Shared;
 using SkiaSharp;
 using System;
 using System.IO;
+using Moq;
 
 namespace SharpCanvas.Tests.Unified
 {
@@ -12,23 +13,23 @@ namespace SharpCanvas.Tests.Unified
     /// </summary>
     public class SkiaContextProvider : ICanvasContextProvider
     {
-        private class SimpleDocument : IDocument
-        {
-            public string GetLocation() => "";
-            public object CreateElement(string tagName) => null!;
-            public object QuerySelector(string selector) => null!;
-            public void LoadFont(string url, Action<bool> callback) => callback(true);
-        }
-
         private readonly Dictionary<ICanvasRenderingContext2D, SKSurface> _surfaces = new();
 
         public string Name => "SkiaSharp";
 
         public ICanvasRenderingContext2D CreateContext(int width, int height)
         {
+            // Create mock window and document following the pattern from SimpleContextTests.cs
+            var mockWindow = new Mock<IWindow>();
+            var mockDocument = new Mock<IDocument>();
+            var fontFaceSet = new FontFaceSet();
+
+            mockWindow.Setup(w => w.fonts).Returns(fontFaceSet);
+            mockDocument.Setup(d => d.defaultView).Returns(mockWindow.Object);
+
             var info = new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
             var surface = SKSurface.Create(info);
-            var context = new CanvasRenderingContext2D(surface, new SimpleDocument());
+            var context = new CanvasRenderingContext2D(surface, mockDocument.Object);
             _surfaces[context] = surface;
             return context;
         }
@@ -42,7 +43,13 @@ namespace SharpCanvas.Tests.Unified
             using var pixmap = image.PeekPixels();
 
             var bytes = new byte[pixmap.BytesSize];
-            pixmap.ReadPixels(pixmap.Info, bytes, pixmap.RowBytes, 0, 0);
+            unsafe
+            {
+                fixed (byte* ptr = bytes)
+                {
+                    pixmap.ReadPixels(pixmap.Info, (IntPtr)ptr, pixmap.RowBytes, 0, 0);
+                }
+            }
             return bytes;
         }
 

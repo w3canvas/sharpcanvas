@@ -12,8 +12,8 @@ namespace SharpCanvas.Tests.Unified
     /// </summary>
     public abstract class UnifiedTestBase
     {
-        protected ICanvasContextProvider Provider { get; private set; } = null!;
-        protected ICanvasRenderingContext2D Context { get; private set; } = null!;
+        protected ICanvasContextProvider Provider { get; set; } = null!;
+        protected ICanvasRenderingContext2D Context { get; set; } = null!;
 
         /// <summary>
         /// Override to specify custom canvas dimensions. Default is 200x200.
@@ -40,14 +40,12 @@ namespace SharpCanvas.Tests.Unified
             // }
         }
 
-        [SetUp]
         public void SetUp()
         {
             var (width, height) = CanvasDimensions;
             Context = Provider.CreateContext(width, height);
         }
 
-        [TearDown]
         public void TearDown()
         {
             if (SaveTestImages && TestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Failed)
