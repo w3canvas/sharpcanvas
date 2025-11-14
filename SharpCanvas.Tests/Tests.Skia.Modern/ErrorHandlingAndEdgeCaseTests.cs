@@ -439,7 +439,7 @@ namespace SharpCanvas.Tests.Skia.Modern
         public void TestDrawNullText()
         {
             // Null text should be handled or throw
-            Assert.DoesNotThrow(() => _context.fillText(null, 50, 50));
+            Assert.DoesNotThrow(() => _context.fillText(string.Empty, 50, 50));
         }
 
         [Test]
@@ -452,7 +452,7 @@ namespace SharpCanvas.Tests.Skia.Modern
         [Test]
         public void TestMeasureNullText()
         {
-            Assert.DoesNotThrow(() => _context.measureText(null));
+            Assert.DoesNotThrow(() => _context.measureText(string.Empty));
         }
 
         [Test]

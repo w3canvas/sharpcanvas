@@ -10,7 +10,7 @@ namespace SharpCanvas.Context.Skia
     /// </summary>
     public class Path2D : IPath2D
     {
-        internal SKPath _path;
+        public SKPath _path;
 
         /// <summary>
         /// Creates a new empty Path2D object.
@@ -134,13 +134,11 @@ namespace SharpCanvas.Context.Skia
             var rect = new SKRect((float)(x - radiusX), (float)(y - radiusY),
                                   (float)(x + radiusX), (float)(y + radiusY));
 
-            using (var matrix = SKMatrix.CreateRotationDegrees((float)(rotation * 180 / Math.PI), (float)x, (float)y))
-            {
-                var transformed = new SKPath();
-                transformed.AddArc(rect, startDegrees, sweepAngle);
-                transformed.Transform(matrix);
-                _path.AddPath(transformed);
-            }
+            var matrix = SKMatrix.CreateRotationDegrees((float)(rotation * 180 / Math.PI), (float)x, (float)y);
+            var transformed = new SKPath();
+            transformed.AddArc(rect, startDegrees, sweepAngle);
+            transformed.Transform(matrix);
+            _path.AddPath(transformed);
         }
 
         public void roundRect(double x, double y, double w, double h, object radii)
