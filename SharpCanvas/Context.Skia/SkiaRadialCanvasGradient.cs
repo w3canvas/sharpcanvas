@@ -24,8 +24,17 @@ namespace SharpCanvas.Context.Skia
 
         public void addColorStop(float offset, string color)
         {
+            if (offset < 0 || offset > 1)
+            {
+                throw new System.ArgumentOutOfRangeException(nameof(offset), "Offset must be between 0 and 1.");
+            }
             _colorStops.Add((offset, ColorParser.Parse(color)));
             _colorStops.Sort((a, b) => a.offset.CompareTo(b.offset));
+        }
+
+        public void addColorStop(double offset, string color)
+        {
+            addColorStop((float)offset, color);
         }
 
         public void addColorStop(uint offset, string color)

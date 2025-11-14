@@ -782,6 +782,10 @@ namespace SharpCanvas.Context.Skia
 
         public object createRadialGradient(double x0, double y0, double r0, double x1, double y1, double r1)
         {
+            if (r0 < 0 || r1 < 0)
+            {
+                throw new System.ArgumentOutOfRangeException("Radius values must be non-negative.");
+            }
             var start = new SKPoint((float)x0, (float)y0);
             var end = new SKPoint((float)x1, (float)y1);
             return new SkiaRadialCanvasGradient(start, (float)r0, end, (float)r1);
