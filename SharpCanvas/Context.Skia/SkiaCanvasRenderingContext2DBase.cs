@@ -583,15 +583,28 @@ namespace SharpCanvas.Context.Skia
 
             var startDegrees = (float)(startAngle * 180 / System.Math.PI);
             var endDegrees = (float)(endAngle * 180 / System.Math.PI);
-            var sweepAngle = endDegrees - startDegrees;
 
-            if (anticlockwise && sweepAngle > 0)
+            // For anticlockwise arcs, SkiaSharp uses positive sweep angles to go counterclockwise
+            // For clockwise arcs, SkiaSharp uses positive sweep angles to go clockwise
+            // The key insight: we need to reverse the sweep calculation for anticlockwise
+            float sweepAngle;
+            if (anticlockwise)
             {
-                sweepAngle -= 360;
+                // Anticlockwise: calculate from start to end going backwards (positive sweep in SkiaSharp)
+                sweepAngle = startDegrees - endDegrees;
+                if (sweepAngle <= 0)
+                {
+                    sweepAngle += 360;
+                }
             }
-            else if (!anticlockwise && sweepAngle < 0)
+            else
             {
-                sweepAngle += 360;
+                // Clockwise: calculate from start to end going forwards (positive sweep in SkiaSharp)
+                sweepAngle = endDegrees - startDegrees;
+                if (sweepAngle <= 0)
+                {
+                    sweepAngle += 360;
+                }
             }
 
             var rect = new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r));
