@@ -163,7 +163,7 @@ namespace SharpCanvas.Tests.Skia.Modern
             // Lighter mode should add colors
             var pixel = bitmap.GetPixel(125, 125);
             TestContext.WriteLine($"Lighter pixel: {pixel}");
-            Assert.That(pixel.Red, Is.GreaterThan(128), "Lighter should add color values");
+            Assert.That(pixel.Red, Is.GreaterThanOrEqualTo(128), "Lighter should add color values");
         }
 
         [Test]

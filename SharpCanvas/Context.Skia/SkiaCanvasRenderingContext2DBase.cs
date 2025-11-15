@@ -24,6 +24,7 @@ namespace SharpCanvas.Context.Skia
         protected Stack<double> _globalAlphaStack = new Stack<double>();
         protected IDocument _document;
         protected object? _canvas;
+        private SKMatrix _currentMatrix;
 
         public SkiaCanvasRenderingContext2DBase(SKSurface surface, IDocument document, object? canvas = null)
         {
@@ -42,6 +43,7 @@ namespace SharpCanvas.Context.Skia
             this.font = "10px sans-serif";
             this.textAlign = "start";
             this.textBaseLine = "alphabetic";
+            _currentMatrix = SKMatrix.CreateIdentity();
         }
 
         public void fillRect(double x, double y, double w, double h)
@@ -69,6 +71,10 @@ namespace SharpCanvas.Context.Skia
 
         public object __proto__ => this;
 
+        protected Stack<string> _filterStack = new Stack<string>();
+        protected Stack<string> _globalCompositeOperationStack = new Stack<string>();
+        protected Stack<SKMatrix> _matrixStack = new Stack<SKMatrix>();
+
         public void save()
         {
             _surface.Canvas.Save();
@@ -94,8 +100,10 @@ namespace SharpCanvas.Context.Skia
                 SkewX = _strokeFont.SkewX
             };
             _strokeFontStack.Push(newStrokeFont);
-
+            _filterStack.Push(filter);
             _globalAlphaStack.Push(_globalAlpha);
+            _globalCompositeOperationStack.Push(globalCompositeOperation);
+            _matrixStack.Push(_currentMatrix);
         }
 
         public void restore()
@@ -121,21 +129,36 @@ namespace SharpCanvas.Context.Skia
             {
                 globalAlpha = _globalAlphaStack.Pop();
             }
+             if (_filterStack.Count > 0)
+            {
+                filter = _filterStack.Pop();
+            }
+            if (_globalCompositeOperationStack.Count > 0)
+            {
+                globalCompositeOperation = _globalCompositeOperationStack.Pop();
+            }
+            if (_matrixStack.Count > 0)
+            {
+                _currentMatrix = _matrixStack.Pop();
+            }
         }
 
         public void scale(double x, double y)
         {
             _surface.Canvas.Scale((float)x, (float)y);
+            _currentMatrix = SKMatrix.Concat(SKMatrix.CreateScale((float)x, (float)y), _currentMatrix);
         }
 
         public void rotate(double angle)
         {
             _surface.Canvas.RotateDegrees((float)(angle * 180 / System.Math.PI));
+            _currentMatrix = SKMatrix.Concat(SKMatrix.CreateRotation((float)angle), _currentMatrix);
         }
 
         public void translate(double x, double y)
         {
             _surface.Canvas.Translate((float)x, (float)y);
+            _currentMatrix = SKMatrix.Concat(SKMatrix.CreateTranslation((float)x, (float)y), _currentMatrix);
         }
 
         public void transform(double m11, double m12, double m21, double m22, double dx, double dy)
@@ -153,6 +176,7 @@ namespace SharpCanvas.Context.Skia
                 Persp2 = 1
             };
             _surface.Canvas.Concat(in matrix);
+            _currentMatrix = SKMatrix.Concat(matrix, _currentMatrix);
         }
 
         public void setTransform(double m11, double m12, double m21, double m22, double dx, double dy)
@@ -170,6 +194,7 @@ namespace SharpCanvas.Context.Skia
                 Persp2 = 1
             };
             _surface.Canvas.SetMatrix(matrix);
+            _currentMatrix = matrix;
         }
 
         private double _globalAlpha = 1.0;
@@ -734,6 +759,7 @@ namespace SharpCanvas.Context.Skia
         private SKBitmap? GetBitmapFromImageSource(object imageSource)
         {
             if (imageSource is SKBitmap bitmap) return bitmap;
+            if (imageSource is SKImage skImage) return SKBitmap.FromImage(skImage);
             if (imageSource is IImage image) return image.getImage() as SKBitmap;
             if (imageSource is IHTMLCanvasElement canvas)
             {
@@ -759,6 +785,12 @@ namespace SharpCanvas.Context.Skia
 
         public bool isPointInPath(double x, double y)
         {
+            var matrix = _surface.Canvas.TotalMatrix;
+            if (matrix.TryInvert(out var inverse))
+            {
+                var transformedPoint = inverse.MapPoint(new SKPoint((float)x, (float)y));
+                return _path.Contains(transformedPoint.X, transformedPoint.Y);
+            }
             return _path.Contains((float)x, (float)y);
         }
 
@@ -801,6 +833,14 @@ namespace SharpCanvas.Context.Skia
 
         public object getImageData(double sx, double sy, double sw, double sh)
         {
+            if (sw < 0 || sh < 0)
+            {
+                throw new System.ArgumentException("The width or height is negative.");
+            }
+            if (sw == 0 || sh == 0)
+            {
+                throw new System.ArgumentException("The width or height is zero.");
+            }
             var x = (int)sx;
             var y = (int)sy;
             var width = (int)sw;
@@ -1007,12 +1047,12 @@ namespace SharpCanvas.Context.Skia
         public void resetTransform()
         {
             _surface.Canvas.ResetMatrix();
+            _currentMatrix = SKMatrix.CreateIdentity();
         }
 
         public object getTransform()
         {
-            var matrix = _surface.Canvas.TotalMatrix;
-            return new DOMMatrix(matrix.ScaleX, matrix.SkewY, matrix.SkewX, matrix.ScaleY, matrix.TransX, matrix.TransY);
+            return new DOMMatrix(_currentMatrix.ScaleX, _currentMatrix.SkewY, _currentMatrix.SkewX, _currentMatrix.ScaleY, _currentMatrix.TransX, _currentMatrix.TransY);
         }
 
         public void reset()
@@ -1090,13 +1130,13 @@ namespace SharpCanvas.Context.Skia
 
             using (var ellipsePath = new SKPath())
             {
+                ellipsePath.AddArc(rect, startDegrees, sweepAngle);
+
                 if (rotation != 0)
                 {
                     var matrix = SKMatrix.CreateRotation((float)rotation, (float)x, (float)y);
                     ellipsePath.Transform(matrix);
                 }
-
-                ellipsePath.AddArc(rect, startDegrees, sweepAngle);
                 _path.AddPath(ellipsePath);
             }
         }
@@ -1218,6 +1258,11 @@ namespace SharpCanvas.Context.Skia
             using (var strokePath = new SKPath())
             {
                 _strokePaint.GetFillPath(_path, strokePath);
+                if (_currentMatrix.TryInvert(out var inverse))
+                {
+                    var transformedPoint = inverse.MapPoint(new SKPoint((float)x, (float)y));
+                    return strokePath.Contains(transformedPoint.X, transformedPoint.Y);
+                }
                 return strokePath.Contains((float)x, (float)y);
             }
         }

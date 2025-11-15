@@ -1,6 +1,7 @@
 using SharpCanvas.Shared;
 using SkiaSharp;
 using System;
+using System.Linq;
 
 namespace SharpCanvas.Context.Skia
 {
@@ -89,25 +90,34 @@ namespace SharpCanvas.Context.Skia
 
             var rect = new SKRect((float)(x - r), (float)(y - r), (float)(x + r), (float)(y + r));
 
+            // According to the HTML5 Canvas spec, if the path is empty, we need to
+            // implicitly moveTo the start point of the arc. If not empty, we should
+            // lineTo from the current point to the start of the arc.
+            //
             // Calculate the start point of the arc
-            var startX = (float)(x + r * Math.Cos(startAngle));
-            var startY = (float)(y + r * Math.Sin(startAngle));
+            var startX = (float)(x + r * System.Math.Cos(startAngle));
+            var startY = (float)(y + r * System.Math.Sin(startAngle));
 
             if (_path.IsEmpty)
             {
+                // Path is empty - moveTo the start point
                 _path.MoveTo(startX, startY);
             }
             else
             {
+                // Path is not empty - lineTo the start point
                 _path.LineTo(startX, startY);
             }
-
             _path.AddArc(rect, startDegrees, sweepAngle);
         }
 
         public void rect(double x, double y, double w, double h)
         {
-            _path.AddRect(new SKRect((float)x, (float)y, (float)(x + w), (float)(y + h)));
+            _path.MoveTo((float)x, (float)y);
+            _path.LineTo((float)x + (float)w, (float)y);
+            _path.LineTo((float)x + (float)w, (float)y + (float)h);
+            _path.LineTo((float)x, (float)y + (float)h);
+            _path.Close();
         }
 
         public void ellipse(double x, double y, double radiusX, double radiusY, double rotation,
@@ -135,49 +145,73 @@ namespace SharpCanvas.Context.Skia
                                   (float)(x + radiusX), (float)(y + radiusY));
 
             var matrix = SKMatrix.CreateRotationDegrees((float)(rotation * 180 / Math.PI), (float)x, (float)y);
-            var transformed = new SKPath();
-            transformed.AddArc(rect, startDegrees, sweepAngle);
-            transformed.Transform(matrix);
-            _path.AddPath(transformed);
+            var ellipsePath = new SKPath();
+            ellipsePath.AddArc(rect, startDegrees, sweepAngle);
+            ellipsePath.Transform(matrix);
+            _path.AddPath(ellipsePath);
         }
 
         public void roundRect(double x, double y, double w, double h, object radii)
         {
             var rect = new SKRect((float)x, (float)y, (float)(x + w), (float)(y + h));
+            var radiiList = new System.Collections.Generic.List<float>();
 
-            if (radii == null)
+            if (radii is System.Collections.IEnumerable enumerable)
+            {
+                foreach (var item in enumerable)
+                {
+                    radiiList.Add(System.Convert.ToSingle(item));
+                }
+            }
+            else if (radii is double || radii is int || radii is float)
+            {
+                radiiList.Add(System.Convert.ToSingle(radii));
+            }
+
+            if (radiiList.Count == 0)
             {
                 _path.AddRect(rect);
                 return;
             }
 
-            // Handle different radii formats
-            if (radii is double radius)
+            float topLeft, topRight, bottomRight, bottomLeft;
+            switch (radiiList.Count)
             {
-                _path.AddRoundRect(rect, (float)radius, (float)radius);
+                case 1:
+                    topLeft = topRight = bottomRight = bottomLeft = radiiList[0];
+                    break;
+                case 2:
+                    topLeft = bottomRight = radiiList[0];
+                    topRight = bottomLeft = radiiList[1];
+                    break;
+                case 3:
+                    topLeft = radiiList[0];
+                    topRight = bottomLeft = radiiList[1];
+                    bottomRight = radiiList[2];
+                    break;
+                case 4:
+                    topLeft = radiiList[0];
+                    topRight = radiiList[1];
+                    bottomRight = radiiList[2];
+                    bottomLeft = radiiList[3];
+                    break;
+                default:
+                    // Spec says to use the first 4 values if more are provided.
+                    topLeft = radiiList[0];
+                    topRight = radiiList[1];
+                    bottomRight = radiiList[2];
+                    bottomLeft = radiiList[3];
+                    break;
             }
-            else if (radii is double[] radiiArray)
+            var roundRect = new SKRoundRect(rect);
+            roundRect.SetRectRadii(rect, new[]
             {
-                if (radiiArray.Length == 1)
-                {
-                    _path.AddRoundRect(rect, (float)radiiArray[0], (float)radiiArray[0]);
-                }
-                else if (radiiArray.Length >= 4)
-                {
-                    // Top-left, top-right, bottom-right, bottom-left
-                    var radiiValues = new float[8];
-                    for (int i = 0; i < 4 && i < radiiArray.Length; i++)
-                    {
-                        radiiValues[i * 2] = (float)radiiArray[i];
-                        radiiValues[i * 2 + 1] = (float)radiiArray[i];
-                    }
-                    _path.AddRoundRect(rect, radiiValues[0], radiiValues[1]);
-                }
-            }
-            else
-            {
-                _path.AddRect(rect);
-            }
+                new SKPoint(topLeft, topLeft),
+                new SKPoint(topRight, topRight),
+                new SKPoint(bottomRight, bottomRight),
+                new SKPoint(bottomLeft, bottomLeft),
+            });
+            _path.AddRoundRect(roundRect);
         }
 
         public void closePath()
@@ -189,11 +223,8 @@ namespace SharpCanvas.Context.Skia
         {
             if (path is Path2D path2D)
             {
-                if (transform == null)
-                {
-                    _path.AddPath(path2D._path);
-                }
-                else if (transform is DOMMatrix matrix)
+                var path_to_add = new SKPath(path2D._path);
+                if (transform is DOMMatrix matrix)
                 {
                     var skMatrix = new SKMatrix
                     {
@@ -205,8 +236,9 @@ namespace SharpCanvas.Context.Skia
                         TransY = (float)matrix.f,
                         Persp2 = 1
                     };
-                    _path.AddPath(path2D._path, skMatrix);
+                    path_to_add.Transform(skMatrix);
                 }
+                _path.AddPath(path_to_add, SKPathAddMode.Extend);
             }
         }
 

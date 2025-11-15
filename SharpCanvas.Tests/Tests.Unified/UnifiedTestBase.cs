@@ -10,10 +10,16 @@ namespace SharpCanvas.Tests.Unified
     /// Base class for unified tests that run against multiple canvas backends.
     /// Tests derived from this class will automatically run against all registered context providers.
     /// </summary>
+    [TestFixtureSource(nameof(GetContextProviders))]
     public abstract class UnifiedTestBase
     {
-        protected ICanvasContextProvider Provider { get; private set; } = null!;
+        protected ICanvasContextProvider Provider { get; set; } = null!;
         protected ICanvasRenderingContext2D Context { get; private set; } = null!;
+
+        public UnifiedTestBase(ICanvasContextProvider provider)
+        {
+            Provider = provider;
+        }
 
         /// <summary>
         /// Override to specify custom canvas dimensions. Default is 200x200.

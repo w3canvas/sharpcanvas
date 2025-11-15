@@ -223,7 +223,7 @@ namespace SharpCanvas.Tests.Skia.Modern
         {
             // Negative radius might throw or be handled - test for consistent behavior
             // According to spec, negative radius should throw
-            Assert.Throws<System.NotSupportedException>(() => _context.arc(100, 100, -50, 0, Math.PI, false));
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => _context.arc(100, 100, -50, 0, Math.PI, false));
         }
 
         [Test]
