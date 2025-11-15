@@ -45,7 +45,17 @@ Fixed radial gradients with different centers for inner/outer circles:
 1. **Bezier curve strokes** (6 tests) - stroke() rendering for specific geometries
 2. **Path2D bezier curves** (3 tests) - bezier curves in Path2D objects
 3. **isPointInStroke** (1 test) - stroke hit detection edge case
-4. **Arc anticlockwise** (1 test) - specific anticlockwise arc rendering
+4. **Arc anticlockwise** (1 test) - anticlockwise arc rendering (extensively investigated)
+
+### Arc Anticlockwise Investigation
+
+Extensive investigation was conducted using 4 parallel subagents. Multiple approaches were attempted:
+- Using `ArcTo` instead of `AddArc` (to maintain path continuity)
+- Angle swapping (converting anticlockwise to clockwise)
+- Temporary path construction (matching ellipse() pattern)
+- Manual arc construction with 64 line segments (bypassing SkiaSharp arc methods entirely)
+
+**Finding:** Even manual line segment construction failed to render anticlockwise arcs correctly, suggesting the issue is not with arc path construction but with deeper SkiaSharp behavior related to path winding direction, coordinate systems (y-down), or how `closePath()` and `fill()` interact with specific winding patterns.
 
 **Note:** These are edge cases representing SkiaSharp-specific rendering behaviors rather than fundamental implementation issues. All core Canvas API features work correctly.
 
