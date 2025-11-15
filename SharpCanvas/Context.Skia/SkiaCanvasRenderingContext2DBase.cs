@@ -339,6 +339,11 @@ namespace SharpCanvas.Context.Skia
             get => _lineWidth;
             set
             {
+                // Ignore NaN, infinity, zero, and negative values per HTML5 Canvas spec
+                if (double.IsNaN(value) || double.IsInfinity(value) || value <= 0)
+                {
+                    return;
+                }
                 _lineWidth = value;
                 _strokePaint.StrokeWidth = (float)value;
             }
@@ -570,6 +575,12 @@ namespace SharpCanvas.Context.Skia
 
         public void arc(double x, double y, double r, double startAngle, double endAngle, bool anticlockwise)
         {
+            // Negative radius throws IndexSizeError per HTML5 Canvas spec
+            if (r < 0)
+            {
+                throw new System.ArgumentOutOfRangeException(nameof(r), "Radius cannot be negative");
+            }
+
             var startDegrees = (float)(startAngle * 180 / System.Math.PI);
             var endDegrees = (float)(endAngle * 180 / System.Math.PI);
             var sweepAngle = endDegrees - startDegrees;
