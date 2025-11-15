@@ -15,8 +15,8 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
-    <PackageReference Include="SkiaSharp" Version="3.119.0" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp" Version="3.119.1" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.2" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
   </ItemGroup>
@@ -24,5 +24,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SharpCanvas\Context.Skia\Context.Skia.csproj" />
   </ItemGroup>
+
+  <Target Name="CopyNativeLibs" AfterTargets="Build">
+    <ItemGroup>
+      <NativeLibs Include="$(USERPROFILE)\.nuget\packages\harfbuzzsharp.nativeassets.linux\2.8.2.3\runtimes\linux-x64\native\*.so" />
+    </ItemGroup>
+    <Copy SourceFiles="@(NativeLibs)" DestinationFolder="$(OutDir)" />
+  </Target>
 
 </Project>
