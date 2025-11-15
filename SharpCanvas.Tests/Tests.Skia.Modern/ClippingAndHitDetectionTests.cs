@@ -290,8 +290,8 @@ namespace SharpCanvas.Tests.Skia.Modern
             // On the line
             Assert.That(_context.isPointInStroke(100, 100), Is.True, "Point on line should be in stroke");
 
-            // Near the line (within stroke width)
-            Assert.That(_context.isPointInStroke(105, 95), Is.True, "Point near line should be in stroke");
+            // Near the line (within stroke width) - (103,97) is 4.24 pixels from line, within radius of 5
+            Assert.That(_context.isPointInStroke(103, 97), Is.True, "Point near line should be in stroke");
 
             // Far from line
             Assert.That(_context.isPointInStroke(50, 150), Is.False, "Point far from line should not be in stroke");

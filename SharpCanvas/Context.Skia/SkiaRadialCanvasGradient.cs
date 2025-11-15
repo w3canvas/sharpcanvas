@@ -58,6 +58,25 @@ namespace SharpCanvas.Context.Skia
             var colors = _colorStops.Select(cs => cs.color).ToArray();
             var positions = _colorStops.Select(cs => cs.offset).ToArray();
 
+            // Check if this is an off-center radial gradient (different centers for inner and outer circles)
+            var dx = _end.X - _start.X;
+            var dy = _end.Y - _start.Y;
+            var centerDistance = (float)System.Math.Sqrt(dx * dx + dy * dy);
+
+            // For off-center gradients, the Canvas API behavior differs from Skia's CreateTwoPointConicalGradient.
+            // We need to swap the circles and reverse the colors to get the correct gradient direction.
+            // This is because Skia's algorithm may calculate the offset differently for non-concentric circles.
+            if (centerDistance > 0.0001f && System.Math.Abs(_startRadius - _endRadius) > 0.0001f)
+            {
+                // Swap the circles and reverse the colors to correct the gradient direction
+                return SKShader.CreateTwoPointConicalGradient(
+                    _end, _endRadius,
+                    _start, _startRadius,
+                    colors.Reverse().ToArray(),
+                    positions.Reverse().ToArray(),
+                    SKShaderTileMode.Clamp);
+            }
+
             return SKShader.CreateTwoPointConicalGradient(_start, _startRadius, _end, _endRadius, colors, positions, SKShaderTileMode.Clamp);
         }
     }

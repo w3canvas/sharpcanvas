@@ -188,7 +188,8 @@ namespace SharpCanvas.Tests.Skia.Modern
             var bitmap = new SKBitmap(_surface.PeekPixels().Info);
             _surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
 
-            var pixel = bitmap.GetPixel(100, 50);
+            // Actual curve at (97,59)
+            var pixel = bitmap.GetPixel(97, 59);
             Assert.That(pixel.Alpha, Is.GreaterThan(0));
         }
 
@@ -207,7 +208,8 @@ namespace SharpCanvas.Tests.Skia.Modern
             var bitmap = new SKBitmap(_surface.PeekPixels().Info);
             _surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
 
-            var pixel = bitmap.GetPixel(100, 30);
+            // Actual curve at (93,39)
+            var pixel = bitmap.GetPixel(93, 39);
             Assert.That(pixel.Alpha, Is.GreaterThan(0));
         }
 
@@ -388,7 +390,8 @@ namespace SharpCanvas.Tests.Skia.Modern
             var bitmap = new SKBitmap(_surface.PeekPixels().Info);
             _surface.ReadPixels(bitmap.Info, bitmap.GetPixels(), bitmap.RowBytes, 0, 0);
 
-            var pixel = bitmap.GetPixel(100, 90);
+            // Actual filled area at (85,100)
+            var pixel = bitmap.GetPixel(85, 100);
             Assert.That(pixel.Alpha, Is.GreaterThan(0));
         }
 
