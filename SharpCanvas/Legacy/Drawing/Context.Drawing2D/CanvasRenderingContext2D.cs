@@ -319,8 +319,20 @@ namespace SharpCanvas.Context.Drawing2D
         }
 
         /// <summary>
-        /// Support only two types of composition mode
-        /// When the context is created, the globalCompositeOperation  attribute must initially have the value source-over.
+        /// Gets or sets the global composite operation mode for drawing operations.
+        ///
+        /// Supported modes in System.Drawing implementation:
+        /// - source-over, source-in, source-out, source-atop
+        /// - destination-over, destination-in, destination-out, destination-atop
+        /// - lighter, darker, copy, xor
+        ///
+        /// Note: The following modes from the HTML5 Canvas spec are NOT supported in the System.Drawing backend
+        /// (use SkiaSharp backend for full support):
+        /// - multiply, screen, overlay, darken, lighten
+        /// - color-dodge, color-burn, hard-light, soft-light
+        /// - difference, exclusion, hue, saturation, color, luminosity
+        ///
+        /// When the context is created, the globalCompositeOperation attribute must initially have the value "source-over".
         /// </summary>
         public string globalCompositeOperation
         {
@@ -467,8 +479,6 @@ namespace SharpCanvas.Context.Drawing2D
             {
                 if (value > 0)
                 {
-                    if (value == 1.0)
-                        value = 1.6;
                     _lineWidth = value;
                     _stroke.Width = (float) _lineWidth;
                 }
@@ -625,7 +635,7 @@ namespace SharpCanvas.Context.Drawing2D
             if (w == 0 || h == 0)
                 return;
             //var brush = new SolidBrush(Color.FromArgb(0, 255, 255, 255));
-            Color transparent = Color.White;
+            Color transparent = Color.FromArgb(0, 0, 0, 0);
             var brush = new SolidBrush(transparent);
             PointF[] points = new []{new PointF((float) x, (float) y),
                                                new PointF((float) (x + w), (float) y),
@@ -1125,31 +1135,38 @@ namespace SharpCanvas.Context.Drawing2D
         {
             if (radius < 0)
                 throw new Exception(ErrorMessages.INDEX_SIZE_ERR);
-            //transform passed coordinates accoring to internal transformation matrix
+
+            // Transform passed coordinates according to internal transformation matrix
             PointF[] points = InternalTransform(x, y);
             x = points[0].X;
             y = points[0].Y;
-            bool isStartAfterEnd = startAngle > endAngle;
-            double radians = 0;
-            if (isStartAfterEnd && anticlockwise)
+
+            var startDegrees = (float)GeometryUtils.ConvertRadiansToDegrees(startAngle);
+            var endDegrees = (float)GeometryUtils.ConvertRadiansToDegrees(endAngle);
+
+            // For anticlockwise arcs, calculate sweep from start to end going backwards
+            // For clockwise arcs, calculate sweep from start to end going forwards
+            float sweepAngle;
+            if (anticlockwise)
             {
-                radians = startAngle - endAngle;
-            }
-            else if(!isStartAfterEnd && !anticlockwise)
-            {
-                radians = endAngle - startAngle;
+                sweepAngle = startDegrees - endDegrees;
+                if (sweepAngle <= 0)
+                {
+                    sweepAngle += 360;
+                }
             }
             else
             {
-                radians = 2*Math.PI - (Math.Abs(endAngle) + Math.Abs(startAngle));
+                sweepAngle = endDegrees - startDegrees;
+                if (sweepAngle <= 0)
+                {
+                    sweepAngle += 360;
+                }
             }
-            if (radians == 0)
-                radians = 2*Math.PI;
+
             int direction = anticlockwise ? -1 : 1;
-            path.AddArc((float) (x - radius), (float) (y - radius), (float) radius*2,
-                        (float) radius*2, (float) GeometryUtils.ConvertRadiansToDegrees(startAngle),
-                        (float)
-                        GeometryUtils.ConvertRadiansToDegrees(direction * radians));
+            path.AddArc((float)(x - radius), (float)(y - radius), (float)radius * 2,
+                        (float)radius * 2, startDegrees, direction * sweepAngle);
         }
 
         /// <summary>

@@ -80,22 +80,6 @@ namespace SharpCanvas.Context.Drawing2D
             if (offset < 0 || offset > 1)
                 throw new Exception(INDEX_SIZE_ERR);
             Color parsedColor = ColorUtils.ParseColor(color);
-            if (parsedColor.A == 0)
-            {
-                //extract true color
-                var alpha = (int) Math.Floor(0.4*255);
-                Color mediumColor = Color.FromArgb(alpha, parsedColor.R, parsedColor.G, parsedColor.B);
-                float prevPosition = 0;
-                if (_positions.Count > 0)
-                {
-                    prevPosition = _positions[_positions.Count - 1];
-                }
-                //calculate the position to place color to
-                float mediumPosition = prevPosition + ((float) offset - prevPosition)*0.6f;
-                //add medium color for absolute transparent color
-                _colors.Add(mediumColor);
-                _positions.Add(mediumPosition);
-            }
             _colors.Add(parsedColor);
             _positions.Add((float) offset);
         }
