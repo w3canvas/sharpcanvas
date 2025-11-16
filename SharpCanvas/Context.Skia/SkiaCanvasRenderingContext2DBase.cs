@@ -726,8 +726,24 @@ namespace SharpCanvas.Context.Skia
 
         private SKPaint GetImagePaint()
         {
-            //TODO: Fix this once we figure out how to set sampling options on SKPaint
-            return new SKPaint { };
+            var paint = new SKPaint();
+
+            if (!imageSmoothingEnabled)
+            {
+                paint.FilterQuality = SKFilterQuality.None;
+            }
+            else
+            {
+                paint.FilterQuality = imageSmoothingQuality switch
+                {
+                    "high" => SKFilterQuality.High,
+                    "medium" => SKFilterQuality.Medium,
+                    "low" => SKFilterQuality.Low,
+                    _ => SKFilterQuality.Low
+                };
+            }
+
+            return paint;
         }
 
         public void drawImage(object image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh)

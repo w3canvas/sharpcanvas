@@ -6,7 +6,15 @@ using SharpCanvas.Common;
 
 namespace SharpCanvas.Context.Drawing2D
 {
-    public class LinearCanvasGradient : ILinearCanvasGradient
+    /// <summary>
+    /// Represents a linear gradient that can be used as a fill or stroke style in a 2D canvas context.
+    /// Linear gradients are defined by a start point and an end point, with colors interpolated along the line between them.
+    /// </summary>
+    /// <remarks>
+    /// This is the System.Drawing implementation of linear gradients. For SkiaSharp-based implementation, see SkiaLinearCanvasGradient.
+    /// Use addColorStop() to add color stops to define the gradient appearance.
+    /// </remarks>
+        public class LinearCanvasGradient : ILinearCanvasGradient
     {
         private const string INDEX_SIZE_ERR =
             "The specified offset is negative or greater than the number of characters in data, or if the specified count is negative";
@@ -24,7 +32,13 @@ namespace SharpCanvas.Context.Drawing2D
             this._end = _end;
         }
 
-        public LinearCanvasGradient(PointF _start, PointF _end, GraphicsPath path)
+        /// <summary>
+        /// Initializes a new instance of the LinearCanvasGradient class with specified start and end points and a graphics path.
+        /// </summary>
+        /// <param name="_start">The starting point of the gradient</param>
+        /// <param name="_end">The ending point of the gradient</param>
+        /// <param name="path">The graphics path to apply the gradient to</param>
+                public LinearCanvasGradient(PointF _start, PointF _end, GraphicsPath path)
         {
             this._start = _start;
             this._end = _end;
@@ -80,27 +94,21 @@ namespace SharpCanvas.Context.Drawing2D
             if (offset < 0 || offset > 1)
                 throw new Exception(INDEX_SIZE_ERR);
             Color parsedColor = ColorUtils.ParseColor(color);
-            if (parsedColor.A == 0)
-            {
-                //extract true color
-                var alpha = (int) Math.Floor(0.4*255);
-                Color mediumColor = Color.FromArgb(alpha, parsedColor.R, parsedColor.G, parsedColor.B);
-                float prevPosition = 0;
-                if (_positions.Count > 0)
-                {
-                    prevPosition = _positions[_positions.Count - 1];
-                }
-                //calculate the position to place color to
-                float mediumPosition = prevPosition + ((float) offset - prevPosition)*0.6f;
-                //add medium color for absolute transparent color
-                _colors.Add(mediumColor);
-                _positions.Add(mediumPosition);
-            }
             _colors.Add(parsedColor);
             _positions.Add((float) offset);
         }
 
-        public object GetBrush()
+        /// <summary>
+        /// Creates and returns a LinearGradientBrush based on the gradient's color stops, start, and end points.
+        /// This method is called internally when the gradient is used as a fill or stroke style.
+        /// </summary>
+        /// <returns>A LinearGradientBrush object configured with the gradient's color stops</returns>
+        /// <remarks>
+        /// If the first color stop is not at position 0.0, a stop at 0.0 is automatically added with the first stop's color.
+        /// If the last color stop is not at position 1.0, a stop at 1.0 is automatically added with the last stop's color.
+        /// This ensures the gradient covers the full range from start to end.
+        /// </remarks>
+                public object GetBrush()
         {
             //if last point is not equal to 1.0 then add such point
             if (_positions[_positions.Count - 1] != 1.0)
