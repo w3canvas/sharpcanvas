@@ -114,7 +114,7 @@ namespace SharpCanvas.Context.Drawing2D
         /// <param name="s">Graphics object to get resolution and size data from</param>
         /// <param name="stroke">initial Pen configuration</param>
         /// <param name="fill">initial Brush configuration</param>
-        /// <param name="visible">determing is this object be visible inside container</param>
+        /// <param name="visible">determining is this object be visible inside container</param>
         public CanvasRenderingContext2D(Graphics s, Bitmap bitmap, Pen stroke, IFill fill, bool visible)
             : base(Guid.NewGuid())
         {
@@ -148,15 +148,6 @@ namespace SharpCanvas.Context.Drawing2D
             ApplyGlobalComposition();
             //there is no need to call RequestDraw on the container because container already subscribed to OnPartialDraw event
             //and will execute Redraw method once OnPartialDraw occurs
-            if (_visible && _canvasElement != null)
-            {
-                ////if (_container is UserControl)//we have winforms environment
-                ////    ((UserControl)_container).Invalidate();
-                //if (_container is IECanvasHost.Interop.IHTMLPainter)//we have IE environment
-                //    ((IECanvasHost.Interop.IHTMLPainter)_container).ReDraw();
-                
-                //_canvasElement.RealObject.RequestDraw();
-            }
         }
 
         /// <summary>
@@ -181,7 +172,6 @@ namespace SharpCanvas.Context.Drawing2D
             path = new GraphicsPath();
             path.FillMode = FillMode.Winding;
             stack = new Stack<CanvasState> {};
-            //_fillStyle = "rgba(0,0,0,0)";
             _transformation = new Matrix();
             _globalAlpha = 1.0;
             _globalCompositeOperation = "source-over";
@@ -199,8 +189,6 @@ namespace SharpCanvas.Context.Drawing2D
             surface.InterpolationMode = InterpolationMode.HighQualityBicubic;
             surface.PixelOffsetMode = PixelOffsetMode.HighQuality;
             surface.PageUnit = GraphicsUnit.Pixel;
-            //scale(surface.DpiX/96, surface.DpiY/96);
-            //surface.PageScale = surface.DpiX * 2/96;
             _compositier = new Compositer();
         }
 
@@ -259,17 +247,45 @@ namespace SharpCanvas.Context.Drawing2D
 
         #region transformations (default transform is the identity matrix)
 
-        public void translate(double x, double y)
+        /// <summary>
+        /// Adds a translation transformation to the current matrix by moving the canvas origin by x horizontally and y vertically.
+        /// </summary>
+        /// <param name="x">Distance to move in the horizontal direction. Positive values move right, negative values move left</param>
+        /// <param name="y">Distance to move in the vertical direction. Positive values move down, negative values move up</param>
+        /// <remarks>
+        /// This method modifies the transformation matrix. Subsequently drawn shapes will be affected by this translation.
+        /// To reset the transformation, use resetTransform() or setTransform().
+        /// </remarks>
+                public void translate(double x, double y)
         {
             _transformation.Translate((float) x, (float) y);
         }
 
-        public void rotate(double angle)
+        /// <summary>
+        /// Adds a rotation to the transformation matrix. The rotation angle is in radians.
+        /// The rotation center point is always the canvas origin. To change the center point, use translate() before calling rotate().
+        /// </summary>
+        /// <param name="angle">The rotation angle, in radians, clockwise. To convert degrees to radians: radians = (Math.PI/180)*degrees</param>
+        /// <remarks>
+        /// The rotation is applied around the current origin (0, 0). To rotate around a different point,
+        /// translate to that point, rotate, then translate back.
+        /// </remarks>
+                public void rotate(double angle)
         {
             _transformation.Rotate((float) GeometryUtils.ConvertRadiansToDegrees(angle), MatrixOrder.Prepend);
         }
 
-        public void scale(double x, double y)
+        /// <summary>
+        /// Adds a scaling transformation to the canvas units horizontally and/or vertically.
+        /// </summary>
+        /// <param name="x">Scaling factor in the horizontal direction. A value of 1.0 means no scaling. Negative values flip horizontally</param>
+        /// <param name="y">Scaling factor in the vertical direction. A value of 1.0 means no scaling. Negative values flip vertically</param>
+        /// <remarks>
+        /// By default, one unit on the canvas is one pixel. A scaling transformation modifies this behavior.
+        /// For instance, a scaling factor of 0.5 results in a unit size of 0.5 pixels; shapes are thus drawn at half the normal size.
+        /// A scaling factor of 2.0 increases the unit size to 2 pixels; shapes are thus drawn at twice the normal size.
+        /// </remarks>
+                public void scale(double x, double y)
         {
             _transformation.Scale((float) x, (float) y);
         }
@@ -308,7 +324,7 @@ namespace SharpCanvas.Context.Drawing2D
             get { return _globalAlpha; }
             set
             {
-                if (value >= 0.0 && value <= 1.0)
+                if (!double.IsNaN(value) && !double.IsInfinity(value) && value >= 0.0 && value <= 1.0)
                 {
                     _globalAlpha = value;
                     var argb = (int) Math.Floor(_globalAlpha*255);
@@ -342,7 +358,6 @@ namespace SharpCanvas.Context.Drawing2D
                 _globalCompositeOperation = value;
                 surface.Flush();
                 _source = (Bitmap) _surfaceBitmap.Clone();
-                //_source.save(@"c:\Work\Kiia\trunk\WinFormContext2D\WinFormContext2D\bin\Debug\source.bmp");
                 switch (_globalCompositeOperation)
                 {
                     case "source-over":
@@ -383,7 +398,6 @@ namespace SharpCanvas.Context.Drawing2D
                         break;
                 }
                 surface.Clear(Color.FromArgb(0, 0, 0, 0));
-                //surface.Clear(Color.Transparent);
                 surface.Flush();
             }
         }
@@ -438,13 +452,42 @@ namespace SharpCanvas.Context.Drawing2D
             }
         }
 
-        public object createLinearGradient(double x0, double y0, double x1, double y1)
+        /// <summary>
+        /// Creates a linear gradient object with a starting point of (x0, y0) and an end point of (x1, y1).
+        /// The gradient is created in the coordinate space of the canvas and is affected by the current transformation matrix.
+        /// </summary>
+        /// <param name="x0">The x-axis coordinate of the start point</param>
+        /// <param name="y0">The y-axis coordinate of the start point</param>
+        /// <param name="x1">The x-axis coordinate of the end point</param>
+        /// <param name="y1">The y-axis coordinate of the end point</param>
+        /// <returns>A LinearCanvasGradient object that can be used as a fillStyle or strokeStyle</returns>
+        /// <remarks>
+        /// Use addColorStop() on the returned gradient object to define the colors and stops.
+        /// The gradient will be painted relative to the current transformation matrix at the time the gradient is created.
+        /// </remarks>
+                public object createLinearGradient(double x0, double y0, double x1, double y1)
         {
             PointF[] points = InternalTransform(x0, y0, x1, y1);
             return new LinearCanvasGradient(points[0], points[1]);
         }
 
-        public object createRadialGradient(double x0, double y0, double r0, double x1, double y1, double r1)
+        /// <summary>
+        /// Creates a radial gradient object with two circles defined by their center points and radii.
+        /// The gradient begins at the first circle (x0, y0, r0) and extends to the second circle (x1, y1, r1).
+        /// </summary>
+        /// <param name="x0">The x-axis coordinate of the start circle's center</param>
+        /// <param name="y0">The y-axis coordinate of the start circle's center</param>
+        /// <param name="r0">The radius of the start circle (must be non-negative)</param>
+        /// <param name="x1">The x-axis coordinate of the end circle's center</param>
+        /// <param name="y1">The y-axis coordinate of the end circle's center</param>
+        /// <param name="r1">The radius of the end circle (must be non-negative)</param>
+        /// <returns>A PathCanvasGradient object that can be used as a fillStyle or strokeStyle</returns>
+        /// <exception cref="Exception">Thrown if r0 or r1 is negative (INDEX_SIZE_ERR)</exception>
+        /// <remarks>
+        /// Use addColorStop() on the returned gradient object to define the colors and stops.
+        /// The gradient is created in the coordinate space of the canvas and is affected by the current transformation matrix.
+        /// </remarks>
+                public object createRadialGradient(double x0, double y0, double r0, double x1, double y1, double r1)
         {
             if (r0 < 0 || r1 < 0)
                 throw new Exception(ErrorMessages.INDEX_SIZE_ERR);
@@ -454,7 +497,18 @@ namespace SharpCanvas.Context.Drawing2D
                                           points[1], (float) r1, path);
         }
 
-        public object createPattern(object imageData, string repetition)
+        /// <summary>
+        /// Creates a pattern using the specified image and repetition mode.
+        /// The pattern can be used as a fillStyle or strokeStyle.
+        /// </summary>
+        /// <param name="imageData">The image to use as the pattern. Can be an ImageData object or ICanvasProxy</param>
+        /// <param name="repetition">How to repeat the pattern. Valid values: "repeat", "repeat-x", "repeat-y", "no-repeat"</param>
+        /// <returns>A CanvasPattern object that can be used as a fillStyle or strokeStyle</returns>
+        /// <remarks>
+        /// The pattern is created in the coordinate space of the canvas and will be affected by the transformation matrix
+        /// when it is applied as a style.
+        /// </remarks>
+                public object createPattern(object imageData, string repetition)
         {
             if (imageData is ICanvasProxy)
             {
@@ -477,7 +531,7 @@ namespace SharpCanvas.Context.Drawing2D
             get { return _lineWidth; }
             set
             {
-                if (value > 0)
+                if (!double.IsNaN(value) && !double.IsInfinity(value) && value > 0)
                 {
                     _lineWidth = value;
                     _stroke.Width = (float) _lineWidth;
@@ -524,7 +578,7 @@ namespace SharpCanvas.Context.Drawing2D
             get { return _miterLimit; }
             set
             {
-                if (value > 0)
+                if (!double.IsNaN(value) && !double.IsInfinity(value) && value > 0)
                 {
                     _miterLimit = value;
                     _stroke.MiterLimit = (float) _miterLimit;
@@ -600,7 +654,7 @@ namespace SharpCanvas.Context.Drawing2D
             get { return _shadowBlur; }
             set
             {
-                if (value >= 0)
+                if (!double.IsNaN(value) && !double.IsInfinity(value) && value >= 0)
                 {
                     _shadowBlur = value;
                 }
@@ -899,24 +953,26 @@ namespace SharpCanvas.Context.Drawing2D
                 var blur = new GaussianBlur((int) _shadowBlur);
                 var clone = (Bitmap) _surfaceBitmap.Clone();
                 clone.MakeTransparent(Color.Transparent);
-                Graphics image = Graphics.FromImage(clone);
-                image.Clear(Color.Transparent);
-                image.DrawImage(_surfaceBitmap, (float) _shadowOffsetX, (float) _shadowOffsetY);
-                Bitmap shadow = blur.ProcessImage(clone, ColorUtils.ParseColor(_shadowColor));
-                shadow.MakeTransparent(Color.Transparent);
-
-                image.Flush();
-                if (shadow != null)
+                using (Graphics image = Graphics.FromImage(clone))
                 {
-                    surface.Flush();
-                    var dest = (Bitmap) _surfaceBitmap.Clone();
+                    image.Clear(Color.Transparent);
+                    image.DrawImage(_surfaceBitmap, (float) _shadowOffsetX, (float) _shadowOffsetY);
+                    Bitmap shadow = blur.ProcessImage(clone, ColorUtils.ParseColor(_shadowColor));
                     shadow.MakeTransparent(Color.Transparent);
-                    dest.MakeTransparent(Color.Transparent);
-                    var cmp = new Compositer();
-                    cmp.setCompositeMode(CompositeMode.SourceOver);
-                    cmp.blendImages(shadow, dest);
-                    surface.Clear(Color.Transparent);
-                    surface.DrawImage(shadow, 0, 0);
+
+                    image.Flush();
+                    if (shadow != null)
+                    {
+                        surface.Flush();
+                        var dest = (Bitmap) _surfaceBitmap.Clone();
+                        shadow.MakeTransparent(Color.Transparent);
+                        dest.MakeTransparent(Color.Transparent);
+                        var cmp = new Compositer();
+                        cmp.setCompositeMode(CompositeMode.SourceOver);
+                        cmp.blendImages(shadow, dest);
+                        surface.Clear(Color.Transparent);
+                        surface.DrawImage(shadow, 0, 0);
+                    }
                 }
             }
         }
@@ -977,7 +1033,7 @@ namespace SharpCanvas.Context.Drawing2D
         public void moveTo(double x, double y)
         {
             path.StartFigure();
-            //transform passed coordinates accoring to internal transformation matrix
+            //transform passed coordinates according to internal transformation matrix
             PointF[] points = InternalTransform(x, y);
             path.AddLine(points[0], points[0]);
         }
@@ -992,7 +1048,7 @@ namespace SharpCanvas.Context.Drawing2D
         public void lineTo(double x, double y)
         {
             //we've initialized path already, so no check is required
-            //transform passed coordinates accoring to internal transformation matrix
+            //transform passed coordinates according to internal transformation matrix
             PointF[] points = InternalTransform(x, y);
             if (path.PointCount > 0)
                 path.AddLine(path.GetLastPoint(), points[0]);
@@ -1019,7 +1075,7 @@ namespace SharpCanvas.Context.Drawing2D
             {
                 moveTo(cpx, cpy);
             }
-            //declare three initial points in single array for convinience
+            //declare three initial points in single array for convenience
             var qp = new[]
                          {
                              path.GetLastPoint(), transformedPoints[0],
@@ -1176,12 +1232,14 @@ namespace SharpCanvas.Context.Drawing2D
         public void fill()
         {
             //TODO:Thus, if two overlapping but otherwise independent subpaths have opposite windings, they cancel out and result in no fill. If they have the same winding, that area just gets painted once.
-            GraphicsPath p = (GraphicsPath)path.Clone();
-            p.CloseAllFigures();
-            //in case with LinearCanvasGradient we have to stretch gradient in order to avoid it's repeating while drawing the shape
-            if (_fillStyle is LinearCanvasGradient)
-                _fill.brush = transformStrokePoints(_fillStyle as LinearCanvasGradient, p.PathPoints);
-            surface.FillPath(_fill.brush, p);
+            using (GraphicsPath p = (GraphicsPath)path.Clone())
+            {
+                p.CloseAllFigures();
+                //in case with LinearCanvasGradient we have to stretch gradient in order to avoid it's repeating while drawing the shape
+                if (_fillStyle is LinearCanvasGradient)
+                    _fill.brush = transformStrokePoints(_fillStyle as LinearCanvasGradient, p.PathPoints);
+                surface.FillPath(_fill.brush, p);
+            }
             if (OnPartialDraw != null)
             {
                 OnPartialDraw();
@@ -1189,8 +1247,30 @@ namespace SharpCanvas.Context.Drawing2D
         }
 
         /// <summary>
-        /// The stroke() method must calculate the strokes of all the subpaths of the current path, using the lineWidth, lineCap, 
-        /// lineJoin, and (if appropriate) miterLimit attributes, and then fill the combined stroke area using the strokeStyle  
+        /// Fills the specified Path2D object using the current fillStyle.
+        /// </summary>
+        /// <param name="path">The Path2D object to fill</param>
+        public void fill(object path)
+        {
+            if (path is Path2D path2D)
+            {
+                using (GraphicsPath p = (GraphicsPath)path2D._path.Clone())
+                {
+                    p.CloseAllFigures();
+                    if (_fillStyle is LinearCanvasGradient)
+                        _fill.brush = transformStrokePoints(_fillStyle as LinearCanvasGradient, p.PathPoints);
+                    surface.FillPath(_fill.brush, p);
+                    if (OnPartialDraw != null)
+                    {
+                        OnPartialDraw();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The stroke() method must calculate the strokes of all the subpaths of the current path, using the lineWidth, lineCap,
+        /// lineJoin, and (if appropriate) miterLimit attributes, and then fill the combined stroke area using the strokeStyle
         /// attribute.
         /// </summary>
         public void stroke()
@@ -1202,7 +1282,10 @@ namespace SharpCanvas.Context.Drawing2D
                 _stroke.Width = (float) _lineWidth;
                 _stroke.MiterLimit = (float) _miterLimit;
             }
-            surface.DrawPath(_stroke, (GraphicsPath)path.Clone());
+            using (GraphicsPath clonedPath = (GraphicsPath)path.Clone())
+            {
+                surface.DrawPath(_stroke, clonedPath);
+            }
             if (OnPartialDraw != null)
             {
                 OnPartialDraw();
@@ -1210,7 +1293,32 @@ namespace SharpCanvas.Context.Drawing2D
         }
 
         /// <summary>
-        /// The clip()  method must create a new clipping region by calculating the intersection of the current clipping region and the area described by the current path, using the non-zero winding number rule. 
+        /// Strokes the specified Path2D object using the current strokeStyle.
+        /// </summary>
+        /// <param name="path">The Path2D object to stroke</param>
+        public void stroke(object path)
+        {
+            if (path is Path2D path2D)
+            {
+                using (GraphicsPath p = (GraphicsPath)path2D._path.Clone())
+                {
+                    if (_strokeStyle is LinearCanvasGradient)
+                    {
+                        _stroke = new Pen(transformStrokePoints(_strokeStyle as LinearCanvasGradient, p.PathPoints));
+                        _stroke.Width = (float)_lineWidth;
+                        _stroke.MiterLimit = (float)_miterLimit;
+                    }
+                    surface.DrawPath(_stroke, p);
+                    if (OnPartialDraw != null)
+                    {
+                        OnPartialDraw();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The clip()  method must create a new clipping region by calculating the intersection of the current clipping region and the area described by the current path, using the non-zero winding number rule.
         /// Open subpaths must be implicitly closed when computing the clipping region, without affecting the actual subpaths. The new clipping region replaces the current clipping region.
         /// When the context is initialized, the clipping region must be set to the rectangle with the top left corner at (0,0) and the width and height of the coordinate space.
         /// </summary>
@@ -1218,6 +1326,22 @@ namespace SharpCanvas.Context.Drawing2D
         {
             path.CloseAllFigures();
             surface.Clip = new Region(path);
+        }
+
+        /// <summary>
+        /// Sets the clipping region to the specified Path2D object.
+        /// </summary>
+        /// <param name="path">The Path2D object to use for clipping</param>
+        public void clip(object path)
+        {
+            if (path is Path2D path2D)
+            {
+                using (GraphicsPath p = (GraphicsPath)path2D._path.Clone())
+                {
+                    p.CloseAllFigures();
+                    surface.Clip = new Region(p);
+                }
+            }
         }
 
         private void DrawArcBetweenTwoPoints(double x1, double y1, double x2, double y2, double radius,
@@ -1287,7 +1411,7 @@ namespace SharpCanvas.Context.Drawing2D
             float dy = d*Math.Abs(y0 - y1)/(GeometryUtils.Distance(new PointF(x0, y0), new PointF(x1, y1)));
             if (y0 < y1)
             {
-                //means y0 uppper y1
+                //means y0 upper y1
                 y = y1 - dy;
             }
             else
@@ -1446,13 +1570,14 @@ namespace SharpCanvas.Context.Drawing2D
             PointF[] points = InternalTransform(x, y);
             PointF startPoint = FontUtils.ApplyTextAlign(points[0], _textAlign, text, surface, _parsedFont);
             startPoint = FontUtils.ApplyBaseLine(startPoint, _parsedFont, _textBaseLine, surface.DpiX);
-            //new PointF(points[0].X - 50, points[0].Y);
-            var textPath = new GraphicsPath();
-            textPath.AddString(
-                text, _parsedFont.FontFamily,
-                (int) FontStyle.Regular, _parsedFont.Size, startPoint,
-                StringFormat.GenericTypographic);
-            surface.FillPath(_fill.brush, textPath);
+            using (var textPath = new GraphicsPath())
+            {
+                textPath.AddString(
+                    text, _parsedFont.FontFamily,
+                    (int) FontStyle.Regular, _parsedFont.Size, startPoint,
+                    StringFormat.GenericTypographic);
+                surface.FillPath(_fill.brush, textPath);
+            }
             if (OnPartialDraw != null)
             {
                 OnPartialDraw();
@@ -1469,12 +1594,14 @@ namespace SharpCanvas.Context.Drawing2D
             PointF[] points = InternalTransform(x, y);
             PointF startPoint = FontUtils.ApplyTextAlign(points[0], _textAlign, text, surface, _parsedFont);
             startPoint = FontUtils.ApplyBaseLine(startPoint, _parsedFont, _textBaseLine, surface.DpiX);
-            var textPath = new GraphicsPath();
-            textPath.AddString(
-                text, _parsedFont.FontFamily,
-                (int) FontStyle.Regular, _parsedFont.Size, startPoint,
-                StringFormat.GenericTypographic);
-            surface.DrawPath(new Pen(_stroke.Brush), textPath);
+            using (var textPath = new GraphicsPath())
+            {
+                textPath.AddString(
+                    text, _parsedFont.FontFamily,
+                    (int) FontStyle.Regular, _parsedFont.Size, startPoint,
+                    StringFormat.GenericTypographic);
+                surface.DrawPath(new Pen(_stroke.Brush), textPath);
+            }
             if (OnPartialDraw != null)
             {
                 OnPartialDraw();
@@ -1513,14 +1640,36 @@ namespace SharpCanvas.Context.Drawing2D
 
         #region drawing images
 
+        /// <summary>
+        /// Draws an image onto the canvas at the specified position using float coordinates.
+        /// </summary>
+        /// <param name="imageData">The image to draw</param>
+        /// <param name="dx">The x-coordinate of the destination position</param>
+        /// <param name="dy">The y-coordinate of the destination position</param>
         public void drawImage(object imageData, float dx, float dy)
         {
-            throw new NotImplementedException();
+            drawImage(imageData, (double)dx, (double)dy);
         }
 
         /// <summary>
-        /// Can accept Image class instance, HTMLCanvasElement class instance or url as a source (imageData)
+        /// Draws an image, canvas, or video onto the canvas with advanced clipping and scaling.
+        /// This method allows drawing a portion of the source image (defined by sx, sy, sw, sh)
+        /// into a destination rectangle on the canvas (defined by dx, dy, dw, dh).
+        ///
+        /// The current transformation matrix is applied to the destination coordinates.
         /// </summary>
+        /// <param name="imageData">The source image. Can accept Image class instance, HTMLCanvasElement class instance, or URL as a source</param>
+        /// <param name="sx">The x-axis coordinate of the top-left corner of the sub-rectangle of the source image to draw</param>
+        /// <param name="sy">The y-axis coordinate of the top-left corner of the sub-rectangle of the source image to draw</param>
+        /// <param name="sw">The width of the sub-rectangle of the source image to draw</param>
+        /// <param name="sh">The height of the sub-rectangle of the source image to draw</param>
+        /// <param name="dx">The x-axis coordinate in the destination canvas at which to place the top-left corner of the source image</param>
+        /// <param name="dy">The y-axis coordinate in the destination canvas at which to place the top-left corner of the source image</param>
+        /// <param name="dw">The width to draw the image in the destination canvas (allows scaling)</param>
+        /// <param name="dh">The height to draw the image in the destination canvas (allows scaling)</param>
+        /// <remarks>
+        /// This method uses the current imageSmoothingEnabled and imageSmoothingQuality settings for interpolation.
+        /// </remarks>
         public void drawImage(object imageData, double sx, double sy, double sw, double sh, double dx, double dy,
                               double dw, double dh)
         {
@@ -1570,11 +1719,16 @@ namespace SharpCanvas.Context.Drawing2D
         }
 
         /// <summary>
-        /// Can accept Image class instance, HTMLCanvasElement class instance or url as a source (imageData)
+        /// Draws an image onto the canvas at the specified position with its natural dimensions.
+        /// The current transformation matrix is applied to the destination coordinates.
         /// </summary>
-        /// <param name="imageData">Source to get data from</param>
-        /// <param name="dx">x-coordinate</param>
-        /// <param name="dy">y-cordinate</param>
+        /// <param name="imageData">The source image. Can accept Image class instance, HTMLCanvasElement class instance, or URL as a string</param>
+        /// <param name="dx">The x-axis coordinate in the destination canvas at which to place the top-left corner of the source image</param>
+        /// <param name="dy">The y-axis coordinate in the destination canvas at which to place the top-left corner of the source image</param>
+        /// <remarks>
+        /// This method uses the current imageSmoothingEnabled and imageSmoothingQuality settings for interpolation.
+        /// The image is drawn at its natural width and height.
+        /// </remarks>
         public void drawImage(object imageData, double dx, double dy)
         {
             PointF[] points = InternalTransform(dx, dy);
@@ -1624,8 +1778,18 @@ namespace SharpCanvas.Context.Drawing2D
         }
 
         /// <summary>
-        /// Can accept Image class instance, HTMLCanvasElement class instance or url as a source (imageData)
+        /// Draws an image onto the canvas at the specified position and scales it to the specified dimensions.
+        /// The current transformation matrix is applied to the destination coordinates.
         /// </summary>
+        /// <param name="imageData">The source image. Can accept Image class instance, HTMLCanvasElement class instance, or URL as a string</param>
+        /// <param name="dx">The x-axis coordinate in the destination canvas at which to place the top-left corner of the source image</param>
+        /// <param name="dy">The y-axis coordinate in the destination canvas at which to place the top-left corner of the source image</param>
+        /// <param name="dw">The width to draw the image in the destination canvas (0 uses natural width)</param>
+        /// <param name="dh">The height to draw the image in the destination canvas (0 uses natural height)</param>
+        /// <remarks>
+        /// This method uses the current imageSmoothingEnabled and imageSmoothingQuality settings for interpolation.
+        /// If dw or dh is 0, the natural dimensions of the image are used instead.
+        /// </remarks>
         public void drawImage(object imageData, double dx, double dy, double dw, double dh)
         {
             PointF[] points = InternalTransform(dx, dy);
@@ -1700,6 +1864,18 @@ namespace SharpCanvas.Context.Drawing2D
 
         #region pixel manipulation
 
+        /// <summary>
+        /// Creates a new, blank ImageData object with the specified dimensions.
+        /// All pixels are preset to transparent black (rgba(0, 0, 0, 0)).
+        /// </summary>
+        /// <param name="sw">The width of the new ImageData object</param>
+        /// <param name="sh">The height of the new ImageData object</param>
+        /// <returns>A new ImageData object with the specified width and height, initialized to transparent black</returns>
+        /// <exception cref="NotSupportedException">Thrown if sw or sh are NaN or Infinity</exception>
+        /// <remarks>
+        /// The returned ImageData object's data property is a one-dimensional array containing the image data
+        /// in RGBA order, with integer values between 0 and 255 (inclusive).
+        /// </remarks>
         public object createImageData(double sw, double sh)
         {
             if (double.IsNaN(sw) || double.IsInfinity(sw) || double.IsInfinity(sh) || double.IsNaN(sh))
@@ -1784,8 +1960,23 @@ namespace SharpCanvas.Context.Drawing2D
         }
 
         /// <summary>
-        /// Writes data from ImageData structures back to the canvas.
+        /// Paints data from the given ImageData object onto the canvas.
+        /// If a dirty rectangle is provided, only the pixels from that rectangle are painted.
+        /// The globalAlpha and globalCompositeOperation values are ignored when using putImageData.
         /// </summary>
+        /// <param name="imagedata">An ImageData object containing the array of pixel values</param>
+        /// <param name="dx">The x-axis coordinate of the top-left corner of the rectangle to paint</param>
+        /// <param name="dy">The y-axis coordinate of the top-left corner of the rectangle to paint</param>
+        /// <param name="dirtyX">The x-axis coordinate of the top-left corner of the rectangle from imagedata to paint (default: 0)</param>
+        /// <param name="dirtyY">The y-axis coordinate of the top-left corner of the rectangle from imagedata to paint (default: 0)</param>
+        /// <param name="dirtyWidth">The width of the rectangle from imagedata to paint (default: imagedata width)</param>
+        /// <param name="dirtyHeight">The height of the rectangle from imagedata to paint (default: imagedata height)</param>
+        /// <exception cref="NotSupportedException">Thrown if any parameter is NaN or Infinity</exception>
+        /// <exception cref="Exception">Thrown if imagedata is not an ImageData object</exception>
+        /// <remarks>
+        /// This method is not affected by the canvas transformation matrix.
+        /// The dirty rectangle allows you to specify a subset of the imagedata to be painted for performance optimization.
+        /// </remarks>
         public void putImageData(object imagedata, double dx, double dy, double dirtyX, double dirtyY,
                                  double dirtyWidth, double dirtyHeight)
         {
@@ -1849,7 +2040,20 @@ namespace SharpCanvas.Context.Drawing2D
             }
         }
 
-        public void putImageData(object imagedata, double dx, double dy)
+        /// <summary>
+        /// Paints data from the given ImageData object onto the canvas at the specified position.
+        /// The entire ImageData is painted. The globalAlpha and globalCompositeOperation values are ignored.
+        /// </summary>
+        /// <param name="imagedata">An ImageData object containing the array of pixel values</param>
+        /// <param name="dx">The x-axis coordinate of the top-left corner where to paint the imagedata</param>
+        /// <param name="dy">The y-axis coordinate of the top-left corner where to paint the imagedata</param>
+        /// <exception cref="NotSupportedException">Thrown if dx or dy are NaN or Infinity</exception>
+        /// <exception cref="Exception">Thrown if imagedata is not an ImageData object</exception>
+        /// <remarks>
+        /// This method is not affected by the canvas transformation matrix.
+        /// The pixels are copied directly to the canvas without any compositing or alpha blending.
+        /// </remarks>
+                public void putImageData(object imagedata, double dx, double dy)
         {
             if (double.IsNaN(dx) || double.IsInfinity(dx) || double.IsInfinity(dy) || double.IsNaN(dy))
             {
@@ -1861,19 +2065,8 @@ namespace SharpCanvas.Context.Drawing2D
             }
             var img = imagedata as ImageData;
 
-
             var bmp = new Bitmap((int) img.width, (int) img.height);
             byte[] data = Utils.ConvertJSArrayToByteArray(img.data);
-            //for (int y = 0; y < img.height; y++)
-            //{
-            //    for (int x = 0; x < img.width; x++)
-            //    {
-            //        int index = y * (int)img.width * 4 + x * 4;
-            //        bmp.SetPixel(x, y,
-            //                         Color.FromArgb(data[index + 3], data[index + 0], data[index + 1],
-            //                                        data[index + 2]));
-            //    }
-            //}
             Utils.CopyBytesToBitmap(data, (int) img.width, (int) img.height, ref bmp);
             surface.DrawImage(bmp, (int) Math.Truncate(dx), (int) Math.Truncate(dy));
             if (OnPartialDraw != null)
@@ -1939,7 +2132,6 @@ namespace SharpCanvas.Context.Drawing2D
                 _surfaceBitmap.Dispose();
                 _surfaceBitmap = new Bitmap(width, height);
                 surface = Graphics.FromImage(_surfaceBitmap);
-                //TODO: or Color.White??
                 surface.Clear(Color.Transparent);
                 if (!reset)
                 {
@@ -1994,7 +2186,15 @@ namespace SharpCanvas.Context.Drawing2D
             setTransform(1, 0, 0, 1, 0, 0);
         }
 
-        public object getTransform()
+        /// <summary>
+        /// Returns a copy of the current transformation matrix as a DOMMatrix object.
+        /// </summary>
+        /// <returns>A DOMMatrix object representing the current transformation matrix</returns>
+        /// <remarks>
+        /// The returned matrix can be used to save the current transformation state
+        /// and restore it later using setTransform().
+        /// </remarks>
+                public object getTransform()
         {
             var elements = _transformation.Elements;
             return new Shared.DOMMatrix(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5]);
