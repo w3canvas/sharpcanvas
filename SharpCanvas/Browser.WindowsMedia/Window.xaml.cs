@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -35,6 +35,8 @@ namespace SharpCanvas.Browser.Media
         private Document _document;
         private int _innerHeight;
         private int _innerWidth;
+        // DEPRECATED: This is part of the legacy standalone hosting model and will not be refactored.
+        // The ITimeout implementation is tightly coupled to the standalone bootstrapper.
         // FIXME: Abstract to Host.
         private ITimeout _timeout;
         //private SaveFileDialog _dlgSaveFile;

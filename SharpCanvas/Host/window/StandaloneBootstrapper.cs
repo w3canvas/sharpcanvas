@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using SharpCanvas.Interop;
 using SharpCanvas;
@@ -9,6 +9,8 @@ namespace SharpCanvas.Host
     public interface IStandaloneFactory
     {
         IHTMLCanvasElement CreateCanvasElement(ICanvasProxy proxy);
+        // DEPRECATED: This is part of the legacy standalone hosting model. The Window-specific
+        // instances in the Browser libraries are the correct implementation.
         // FIXME: Event loop should be CreateWindowElement();
         ITimeout CreateTimeout();
     }

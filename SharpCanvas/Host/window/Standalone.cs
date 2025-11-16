@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using SharpCanvas.Interop;
@@ -169,6 +169,8 @@ namespace SharpCanvas.Host
             return null;
         }
 
+        // DEPRECATED: This is part of the legacy standalone hosting model. The Window-specific
+        // instances in the Browser libraries are the correct implementation.
         // FIXME: Handled by Window-specific instance in Browser; load browser via GetWindow().
         /// <summary>
         /// Facotry method returns appropriate Timeout instance, dependent on loaded framework version

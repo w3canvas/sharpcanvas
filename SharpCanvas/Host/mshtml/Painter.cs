@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using SharpCanvas.Interop;
 using IHTMLPainter = SharpCanvas.Interop.IHTMLPainter;
@@ -46,6 +46,7 @@ namespace SharpCanvas.Host.mshtml
 
         protected int _height;
         protected int _width;
+//      DEPRECATED: This field is part of the legacy IE hosting model and is no longer in use.
 //      FIXME: Belongs in HTMLCanvasElement?
 //      private bool _isChanged;
         public int width
@@ -78,6 +79,8 @@ namespace SharpCanvas.Host.mshtml
         /// <param name="lDrawFlags"></param>
         /// <param name="hdc"></param>
         /// <param name="pvDrawObject"></param>
+        // DEPRECATED: This logic is tightly coupled to the legacy IE hosting model.
+        // It will not be refactored unless a specific, reproducible bug is identified.
         // FIXME: Move this to an IE specific HTMLCanvasElement implementation.
         public void Draw(tagRECT rcBounds, tagRECT rcUpdate, int lDrawFlags, IntPtr hdc, IntPtr pvDrawObject)
         {
@@ -158,6 +161,8 @@ namespace SharpCanvas.Host.mshtml
  */
         }
 
+        // DEPRECATED: This is a duplicate of the OnResize method. The legacy IE hosting model
+        // would call one or the other, but the distinction is no longer relevant.
         // FIXME: Why are there two of these?
         public void onresize(tagSIZE size)
         {

@@ -1,6 +1,9 @@
 #!/bin/bash
-./dotnet-install.sh
-export DOTNET_ROOT=/home/jules/.dotnet
-export PATH=$PATH:$DOTNET_ROOT
-dotnet restore SharpCanvas/SharpCanvas.sln
-dotnet build SharpCanvas/SharpCanvas.sln --no-restore
+# This script builds the entire SharpCanvas solution.
+# It restores dependencies and then builds the solution.
+
+echo "Restoring dependencies..."
+/home/jules/.dotnet/dotnet restore SharpCanvas/SharpCanvas.sln
+
+echo "Building solution..."
+/home/jules/.dotnet/dotnet build SharpCanvas/SharpCanvas.sln

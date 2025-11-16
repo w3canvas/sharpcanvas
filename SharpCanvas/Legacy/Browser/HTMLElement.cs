@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+// DEPRECATED: This using is part of the legacy implementation and is no longer required.
 // FIXME: Is System.ComponentModel used?
 using System.ComponentModel;
 using System.Drawing;

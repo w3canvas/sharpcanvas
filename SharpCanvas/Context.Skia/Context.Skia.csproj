@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="3.119.0" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.0" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.0" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.1" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.1" />
   </ItemGroup>
 
   <ItemGroup>

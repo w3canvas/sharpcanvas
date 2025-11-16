@@ -1,4 +1,4 @@
-﻿#pragma warning disable SYSLIB0014
+#pragma warning disable SYSLIB0014
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -12,12 +12,16 @@ using System.Windows.Media.Imaging;
 // Canvas surface
 using System.Windows.Controls;
 
+// DEPRECATED: This using is part of the legacy implementation and will not be refactored.
 // FIXME: Used only for ImageFormat
 using System.Drawing.Imaging;
+// DEPRECATED: This using is part of the legacy implementation and will not be refactored.
 // FIXME: Used only for FrameworkElement conversion.
 using System.Windows;
+// DEPRECATED: This using is part of the legacy implementation and will not be refactored.
 // FIXME: Abuse of drawImage to load http url. Abstract to Host if necessary.
 using System.Net;
+// DEPRECATED: This using is part of the legacy implementation and will not be refactored.
 // FIXME: Dynamic loading of Shaders should be handled in Host.
 using System.IO;
 using System.Reflection;
@@ -30,13 +34,17 @@ using Image = System.Windows.Controls.Image;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using Size = System.Windows.Size;
 
+// DEPRECATED: The ObjectWithPrototype class was part of a previous effort to support JScript interop.
+// This is no longer a goal for the legacy backend.
 // FIXME: This library has not been converted to use the ObjectWithPrototype class.
+// DEPRECATED: InvokeMember was used for JScript interop and is no longer relevant.
 // FIXME: Used only with InvokeMember, currently only used with drawImage (bug?).
 using SharpCanvas.Interop;
 using System.Globalization;
 using SharpCanvas.Shared;
 using SharpCanvas.Common;
 //using SharpCanvas.Prototype;
+// DEPRECATED: This is part of the legacy standalone hosting model and will not be refactored.
 // FIXME: Should be handled by Host
 using SharpCanvas.StandardFilter.FilterSet;
 using SharpCanvas.Shared;

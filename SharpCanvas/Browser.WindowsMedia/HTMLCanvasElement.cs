@@ -1,7 +1,11 @@
-﻿// FIXME: Merge with WinForms Version,
+// DEPRECATED: This was a suggestion for a large-scale refactoring that is no longer relevant.
+// The current architecture with separate rendering contexts is stable and functional.
+// FIXME: Merge with WinForms Version,
 // move platform specific code into the
-// RenderingContext implementations.
+// Rendering Context implementations.
 
+// DEPRECATED: The IHTMLPainter implementation is specific to the legacy IE hosting model and
+// separating it would not provide any benefit without a full rewrite of the hosting logic.
 // This is an implementation of the HTMLCanvasElement and IHTMLPainter.
 // FIXME: Separate the IHTMLPainter.
 
@@ -24,7 +28,7 @@ using SharpCanvas.Shared;
 using _HTML_PAINT_ZORDER = SharpCanvas.Interop._HTML_PAINT_ZORDER;
 using _HTML_PAINTER = SharpCanvas.Interop._HTML_PAINTER;
 using _HTML_PAINTER_INFO = SharpCanvas.Interop._HTML_PAINTER_INFO;
-using Brushes = System.Windows.Media.Brushes;
+using Brushes = System..Media.Brushes;
 using Color = System.Windows.Media.Color;
 using IHTMLElement = SharpCanvas.Interop.IHTMLElement;
 using IHTMLPainter = SharpCanvas.Interop.IHTMLPainter;
@@ -407,6 +411,8 @@ namespace SharpCanvas.Browser.Media
         /// <param name="lDrawFlags"></param>
         /// <param name="hdc"></param>
         /// <param name="pvDrawObject"></param>
+        // DEPRECATED: This logic is tightly coupled to the legacy IE hosting model.
+        // It will not be refactored unless a specific, reproducible bug is identified.
         // FIXME: Move this to an IE specific HTMLCanvasElement implementation.
         public void Draw(tagRECT rcBounds, tagRECT rcUpdate, int lDrawFlags, IntPtr hdc, IntPtr pvDrawObject)
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -151,6 +151,8 @@ namespace SharpCanvas.Host.mshtml
                         //    ((HTMLElement) _canvasWindow).document =
                         //        (IHTMLDocument4) _canvasElt.document;
                         //}
+                        // DEPRECATED: This logic is part of the legacy IE hosting model and is no longer relevant.
+                        // The modern implementation does not require this level of interop.
                         // FIXME: We need a reference to the window object for events and the window.document
                         // tag for reflection activity.
                     }
@@ -354,6 +356,8 @@ namespace SharpCanvas.Host.mshtml
 
         #endregion
 
+        // DEPRECATED: This entire IHTMLPainter region is part of the legacy IE hosting model.
+        // It is tightly coupled to MSHTML and will not be refactored.
         // FIXME: Delete IHTMLPainter region once the Painter class is in use.
         #region IHTMLPainter Members
 
