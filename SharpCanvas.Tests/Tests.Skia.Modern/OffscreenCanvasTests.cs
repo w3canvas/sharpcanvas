@@ -13,11 +13,11 @@ namespace SharpCanvas.Tests.Skia.Modern
         {
             var worker = new CanvasWorker();
             var manualResetEvent = new ManualResetEvent(false);
-            SKBitmap? resultBitmap = null;
+            ImageBitmap? resultImageBitmap = null;
 
-            worker.OnWorkComplete += (sender, bitmap) =>
+            worker.OnWorkComplete += (sender, imageBitmap) =>
             {
-                resultBitmap = bitmap;
+                resultImageBitmap = imageBitmap;
                 manualResetEvent.Set();
             };
             var mockWindow = new Mock<IWindow>();
@@ -35,15 +35,20 @@ namespace SharpCanvas.Tests.Skia.Modern
 
             manualResetEvent.WaitOne();
 
-            Assert.That(resultBitmap, Is.Not.Null);
-            Assert.That(resultBitmap.Width, Is.EqualTo(200));
-            Assert.That(resultBitmap.Height, Is.EqualTo(200));
+            Assert.That(resultImageBitmap, Is.Not.Null);
+            Assert.That(resultImageBitmap.width, Is.EqualTo(200));
+            Assert.That(resultImageBitmap.height, Is.EqualTo(200));
 
             // Check a pixel to make sure it's red
-            var pixel = resultBitmap.GetPixel(20, 20);
+            var bitmap = resultImageBitmap.GetBitmap();
+            Assert.That(bitmap, Is.Not.Null);
+            var pixel = bitmap.GetPixel(20, 20);
             Assert.That(pixel.Red, Is.EqualTo(255));
             Assert.That(pixel.Green, Is.EqualTo(0));
             Assert.That(pixel.Blue, Is.EqualTo(0));
+
+            // Clean up
+            resultImageBitmap.close();
         }
     }
 }
