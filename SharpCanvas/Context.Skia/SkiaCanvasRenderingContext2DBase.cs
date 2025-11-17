@@ -800,6 +800,7 @@ namespace SharpCanvas.Context.Skia
         {
             if (imageSource is SKBitmap bitmap) return bitmap;
             if (imageSource is SKImage skImage) return SKBitmap.FromImage(skImage);
+            if (imageSource is ImageBitmap imageBitmap) return imageBitmap.GetBitmap();
             if (imageSource is IImage image) return image.getImage() as SKBitmap;
             if (imageSource is IHTMLCanvasElement canvas)
             {
