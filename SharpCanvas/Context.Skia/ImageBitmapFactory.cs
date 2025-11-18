@@ -1,3 +1,4 @@
+#nullable enable
 using SkiaSharp;
 using SharpCanvas.Shared;
 using System;
@@ -53,7 +54,7 @@ namespace SharpCanvas.Context.Skia
         /// <summary>
         /// Creates an ImageBitmap from various image sources.
         /// </summary>
-        public static async Task<ImageBitmap> createImageBitmap(object source, ImageBitmapOptions? options = null)
+        public static Task<ImageBitmap> createImageBitmap(object source, ImageBitmapOptions? options = null)
         {
             SKBitmap? bitmap = null;
 
@@ -91,7 +92,7 @@ namespace SharpCanvas.Context.Skia
             else if (source is OffscreenCanvas offscreenCanvas)
             {
                 // Use transferToImageBitmap internally
-                return offscreenCanvas.transferToImageBitmap();
+                return Task.FromResult(offscreenCanvas.transferToImageBitmap());
             }
             else if (source is ImageData imageData && imageData.data is byte[] data)
             {
@@ -141,7 +142,7 @@ namespace SharpCanvas.Context.Skia
                 bitmap = ApplyOptions(bitmap, options);
             }
 
-            return new ImageBitmap(bitmap);
+            return Task.FromResult(new ImageBitmap(bitmap));
         }
 
         /// <summary>
@@ -195,15 +196,15 @@ namespace SharpCanvas.Context.Skia
                 int targetWidth = options.resizeWidth ?? bitmap.Width;
                 int targetHeight = options.resizeHeight ?? bitmap.Height;
 
-                var filterQuality = options.resizeQuality switch
+                var samplingOptions = options.resizeQuality.ToLower() switch
                 {
-                    "high" => SKFilterQuality.High,
-                    "medium" => SKFilterQuality.Medium,
-                    "low" => SKFilterQuality.Low,
-                    _ => SKFilterQuality.Low
+                    "high" => new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear),
+                    "medium" => new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.None),
+                    "low" => new SKSamplingOptions(SKFilterMode.Nearest, SKMipmapMode.None),
+                    _ => new SKSamplingOptions(SKFilterMode.Nearest, SKMipmapMode.None)
                 };
 
-                var resized = bitmap.Resize(new SKImageInfo(targetWidth, targetHeight), filterQuality);
+                var resized = bitmap.Resize(new SKImageInfo(targetWidth, targetHeight), samplingOptions);
                 if (resized != null)
                 {
                     if (result != bitmap)

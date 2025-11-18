@@ -1,6 +1,8 @@
+#nullable enable
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,12 +18,12 @@ namespace SharpCanvas.Context.Skia
         private static readonly ConcurrentDictionary<string, SharedWorkerInstance> _instances = new ConcurrentDictionary<string, SharedWorkerInstance>();
 
         private readonly SharedWorkerInstance _instance;
-        private readonly MessagePort _port;
+        private readonly MessagePort _clientPort;
 
         /// <summary>
         /// The port used to communicate with the shared worker
         /// </summary>
-        public MessagePort port => _port;
+        public MessagePort port => _clientPort;
 
         /// <summary>
         /// Event handler for errors from the shared worker
@@ -29,16 +31,25 @@ namespace SharpCanvas.Context.Skia
         public event EventHandler<ErrorEvent>? OnError;
 
         /// <summary>
+        /// Event handler for when the worker has been loaded and is ready
+        /// </summary>
+        public event EventHandler? OnLoad;
+
+        /// <summary>
         /// Creates a new SharedWorker or connects to an existing one with the same name
         /// </summary>
         /// <param name="name">The name of the shared worker</param>
         /// <param name="workerTask">The task to execute (only used if creating a new instance)</param>
-        public SharedWorker(string name, Action<SharedWorkerGlobalScope>? workerTask = null)
+        public SharedWorker(string name, Action<SharedWorkerGlobalScope>? workerTask = null, Func<string, SharedWorkerGlobalScope>? globalScopeFactory = null)
         {
-            _instance = _instances.GetOrAdd(name, n => new SharedWorkerInstance(n, workerTask));
-            _port = _instance.CreatePort();
+            var (clientPort, workerPort) = MessagePort.CreateEntangledPair();
+            _clientPort = clientPort;
 
-            _port.OnError += (sender, e) => OnError?.Invoke(sender, e);
+            _instance = _instances.GetOrAdd(name, n => new SharedWorkerInstance(n, workerTask, globalScopeFactory));
+            _instance.AddPort(workerPort);
+
+            _clientPort.OnError += (sender, e) => OnError?.Invoke(sender, e);
+            _instance.OnLoad += (sender, e) => OnLoad?.Invoke(this, e);
         }
 
         /// <summary>
@@ -51,7 +62,8 @@ namespace SharpCanvas.Context.Skia
 
         public void Dispose()
         {
-            _port.Dispose();
+            _instance.RemovePort(_clientPort);
+            _clientPort.Dispose();
         }
     }
 
@@ -62,6 +74,8 @@ namespace SharpCanvas.Context.Skia
     {
         private readonly Queue<WorkerMessage> _messageQueue;
         private readonly object _queueLock = new object();
+        private MessagePort? _entangledPort;
+        private Task? _messagePump;
         private bool _isClosed;
 
         /// <summary>
@@ -74,10 +88,19 @@ namespace SharpCanvas.Context.Skia
         /// </summary>
         public event EventHandler<ErrorEvent>? OnError;
 
-        internal MessagePort()
+        private MessagePort()
         {
             _messageQueue = new Queue<WorkerMessage>();
             _isClosed = false;
+        }
+
+        internal static (MessagePort, MessagePort) CreateEntangledPair()
+        {
+            var port1 = new MessagePort();
+            var port2 = new MessagePort();
+            port1._entangledPort = port2;
+            port2._entangledPort = port1;
+            return (port1, port2);
         }
 
         /// <summary>
@@ -85,9 +108,9 @@ namespace SharpCanvas.Context.Skia
         /// </summary>
         public void postMessage(object message, List<ITransferable>? transfer = null)
         {
-            if (_isClosed)
+            if (_isClosed || _entangledPort == null || _entangledPort._isClosed)
             {
-                throw new InvalidOperationException("Cannot post message to closed port");
+                throw new InvalidOperationException("Cannot post message to a closed or disconnected port");
             }
 
             var workerMessage = new WorkerMessage
@@ -109,10 +132,10 @@ namespace SharpCanvas.Context.Skia
                 }
             }
 
-            lock (_queueLock)
+            lock (_entangledPort._queueLock)
             {
-                _messageQueue.Enqueue(workerMessage);
-                Monitor.Pulse(_queueLock);
+                _entangledPort._messageQueue.Enqueue(workerMessage);
+                Monitor.PulseAll(_entangledPort._queueLock);
             }
         }
 
@@ -121,8 +144,20 @@ namespace SharpCanvas.Context.Skia
         /// </summary>
         public void start()
         {
-            // In the browser API, this is required to start receiving messages
-            // In our implementation, we're always started, but we keep this for API compatibility
+            if (_messagePump == null)
+            {
+                _messagePump = Task.Run(() =>
+                {
+                    while (!_isClosed)
+                    {
+                        var message = ReceiveMessage();
+                        if (message != null)
+                        {
+                            OnMessage?.Invoke(this, new MessageEvent { Data = message.Data });
+                        }
+                    }
+                });
+            }
         }
 
         /// <summary>
@@ -153,6 +188,11 @@ namespace SharpCanvas.Context.Skia
 
                 return null;
             }
+        }
+
+        internal void TriggerMessage(object data)
+        {
+            OnMessage?.Invoke(this, new MessageEvent { Data = data });
         }
 
         internal void SendMessage(object message)
@@ -243,31 +283,51 @@ namespace SharpCanvas.Context.Skia
         private readonly string _name;
         private readonly Action<SharedWorkerGlobalScope>? _workerTask;
         private readonly SharedWorkerGlobalScope _globalScope;
-        private readonly List<MessagePort> _ports;
+        private readonly ConcurrentQueue<MessagePort> _pendingPorts;
+        private readonly List<MessagePort> _connectedPorts;
         private readonly object _portsLock = new object();
         private Task? _task;
         private CancellationTokenSource? _cancellationTokenSource;
-        private bool _isStarted;
+        private volatile bool _isStarted;
 
-        public SharedWorkerInstance(string name, Action<SharedWorkerGlobalScope>? workerTask)
+        public event EventHandler? OnLoad;
+
+        public SharedWorkerInstance(string name, Action<SharedWorkerGlobalScope>? workerTask, Func<string, SharedWorkerGlobalScope>? globalScopeFactory = null)
         {
             _name = name;
             _workerTask = workerTask;
-            _globalScope = new SharedWorkerGlobalScope(name);
-            _ports = new List<MessagePort>();
+            _globalScope = globalScopeFactory?.Invoke(name) ?? new SharedWorkerGlobalScope(name);
+            _pendingPorts = new ConcurrentQueue<MessagePort>();
+            _connectedPorts = new List<MessagePort>();
             _cancellationTokenSource = new CancellationTokenSource();
             _isStarted = false;
         }
 
-        public MessagePort CreatePort()
+        public void AddPort(MessagePort port)
         {
-            var port = new MessagePort();
+            if (_isStarted)
+            {
+                // If already started, connect immediately
+                _globalScope.AddPort(port);
+                lock (_portsLock)
+                {
+                    _connectedPorts.Add(port);
+                }
+            }
+            else
+            {
+                // Otherwise, queue for connection after start
+                _pendingPorts.Enqueue(port);
+            }
+        }
+
+        public void RemovePort(MessagePort port)
+        {
+            _globalScope.RemovePort(port);
             lock (_portsLock)
             {
-                _ports.Add(port);
+                _connectedPorts.Remove(port);
             }
-            _globalScope.AddPort(port);
-            return port;
         }
 
         public void Start()
@@ -283,19 +343,30 @@ namespace SharpCanvas.Context.Skia
                 try
                 {
                     _workerTask(_globalScope);
+                    // Process any pending connections
+                    while (_pendingPorts.TryDequeue(out var port))
+                    {
+                        _globalScope.AddPort(port);
+                        lock (_portsLock)
+                        {
+                            _connectedPorts.Add(port);
+                        }
+                    }
+                    OnLoad?.Invoke(this, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
-                    // Notify all ports of the error
+                    var allPorts = _pendingPorts.ToList();
                     lock (_portsLock)
                     {
-                        foreach (var port in _ports)
-                        {
-                            port.SendError(ex.Message, ex);
-                        }
+                        allPorts.AddRange(_connectedPorts);
+                    }
+                    foreach (var port in allPorts)
+                    {
+                        port.SendError(ex.Message, ex);
                     }
                 }
-            }, _cancellationTokenSource!.Token);
+            }, _cancellationTokenSource.Token);
         }
 
         public void Stop()
@@ -303,13 +374,14 @@ namespace SharpCanvas.Context.Skia
             _cancellationTokenSource?.Cancel();
             _task?.Wait(1000);
 
+            var allPorts = _pendingPorts.ToList();
             lock (_portsLock)
             {
-                foreach (var port in _ports)
-                {
-                    port.close();
-                }
-                _ports.Clear();
+                allPorts.AddRange(_connectedPorts);
+            }
+            foreach (var port in allPorts)
+            {
+                port.close();
             }
         }
     }

@@ -1,3 +1,4 @@
+#nullable enable
 using SharpCanvas.Shared;
 using System;
 using System.Threading.Tasks;
@@ -84,7 +85,7 @@ namespace SharpCanvas.Context.Skia
         /// <param name="document">Document context</param>
         /// <param name="drawFrame">Function that draws a specific frame</param>
         /// <returns>Array of ImageBitmaps, one per frame</returns>
-        public static async Task<ImageBitmap[]> RenderFramesAsync(
+        public static Task<ImageBitmap[]> RenderFramesAsync(
             int frameCount,
             int width,
             int height,
@@ -102,7 +103,7 @@ namespace SharpCanvas.Context.Skia
                 });
             }
 
-            return await Task.WhenAll(tasks);
+            return Task.WhenAll(tasks);
         }
 
         /// <summary>
@@ -130,10 +131,14 @@ namespace SharpCanvas.Context.Skia
                     if (port == null) return;
 
                     // Set up message handler for this port
-                    port.OnMessage += async (msgSender, msgEvent) =>
+                    port.OnMessage += (msgSender, msgEvent) =>
                     {
                         try
                         {
+                            if (msgEvent.Data is null)
+                            {
+                                return;
+                            }
                             var canvas = new OffscreenCanvas(width, height, document);
                             drawFunction(canvas, msgEvent.Data);
                             var imageBitmap = canvas.transferToImageBitmap();
@@ -190,6 +195,10 @@ namespace SharpCanvas.Context.Skia
                         if (command is string cmd && cmd == "close")
                         {
                             break;
+                        }
+                        if(command is null)
+                        {
+                            continue;
                         }
 
                         drawFunction(canvas, command);

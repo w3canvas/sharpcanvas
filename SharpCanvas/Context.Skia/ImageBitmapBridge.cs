@@ -132,7 +132,7 @@ namespace SharpCanvas.Context.Skia
             {
                 var ptr = gcHandle.AddrOfPinnedObject();
                 var info = new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Unpremul);
-                skBitmap.ReadPixels(info, ptr, info.RowBytes, 0, 0);
+                skBitmap.PeekPixels().ReadPixels(info, ptr, info.RowBytes, 0, 0);
             }
             finally
             {
