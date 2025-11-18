@@ -169,14 +169,20 @@ namespace SharpCanvas.Tests.Skia.Modern
             mockWindow.Setup(w => w.fonts).Returns(fontFaceSet);
             mockDocument.Setup(d => d.defaultView).Returns(mockWindow.Object);
 
-            // Create source bitmap
-            var sourceBitmap = new SKBitmap(50, 50);
-            using (var canvas = new SKCanvas(sourceBitmap))
-            {
-                canvas.Clear(SKColors.Red);
-            }
+            // Create source canvas and draw a red rectangle
+            var sourceCanvas = new OffscreenCanvas(50, 50, mockDocument.Object);
+            var sourceContext = sourceCanvas.getContext("2d");
+            sourceContext.fillStyle = "red";
+            sourceContext.fillRect(0, 0, 50, 50);
 
-            var imageBitmap = new ImageBitmap(sourceBitmap);
+            // Get an ImageBitmap from the source canvas
+            var imageBitmap = sourceCanvas.transferToImageBitmap();
+
+            // Diagnostic check: verify the source bitmap itself is correct
+            var sourceSkBitmap = imageBitmap.GetBitmap();
+            Assert.That(sourceSkBitmap, Is.Not.Null, "Source SKBitmap should not be null");
+            var sourcePixel = sourceSkBitmap!.GetPixel(25, 25);
+            Assert.That(sourcePixel.Red, Is.EqualTo(255), "Source pixel should be red");
 
             // Create destination canvas
             var destCanvas = new OffscreenCanvas(100, 100, mockDocument.Object);
@@ -185,14 +191,16 @@ namespace SharpCanvas.Tests.Skia.Modern
             // Draw the ImageBitmap
             context.drawImage(imageBitmap, 25, 25);
 
-            var blob = await destCanvas.convertToBlob();
             // Verify the pixel at the center of the drawn image
-            var skBitmap = SKBitmap.Decode(blob);
-            var pixel = skBitmap.GetPixel(50, 50);
+            var resultBitmap = destCanvas.transferToImageBitmap();
+            var skBitmap = resultBitmap.GetBitmap();
+            Assert.That(skBitmap, Is.Not.Null);
+            var pixel = skBitmap!.GetPixel(50, 50);
 
             Assert.That(pixel.Red, Is.EqualTo(255));
 
             imageBitmap.close();
+            resultBitmap.close();
         }
 
         [Test]

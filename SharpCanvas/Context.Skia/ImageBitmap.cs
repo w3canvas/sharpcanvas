@@ -17,7 +17,7 @@ namespace SharpCanvas.Context.Skia
 
         public ImageBitmap(SKBitmap bitmap)
         {
-            _bitmap = bitmap.Copy() ?? throw new ArgumentNullException(nameof(bitmap));
+            _bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));
             _isClosed = false;
             _isNeutered = false;
         }

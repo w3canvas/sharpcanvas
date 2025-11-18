@@ -117,7 +117,9 @@ namespace SharpCanvas.Tests.Skia.Modern
         {
             var document = CreateMockDocument();
             var connectCount = 0;
-            var resetEvent = new ManualResetEvent(false);
+            var messageResetEvent = new ManualResetEvent(false);
+            var loadResetEvent = new ManualResetEvent(false);
+            string? receivedMessage = null;
 
             var worker = new SharedWorker("message-test", scope =>
             {
@@ -137,19 +139,26 @@ namespace SharpCanvas.Tests.Skia.Modern
                 };
             });
 
-            worker.Start();
+            worker.OnLoad += (sender, e) =>
+            {
+                loadResetEvent.Set();
+            };
 
-            string? receivedMessage = null;
             worker.port.OnMessage += (sender, e) =>
             {
                 receivedMessage = e.Data as string;
-                resetEvent.Set();
+                messageResetEvent.Set();
             };
-
             worker.port.start();
+
+            worker.Start();
+
+            // Wait for the worker to be loaded before posting a message
+            loadResetEvent.WaitOne(TimeSpan.FromSeconds(5));
+
             worker.port.postMessage("Hello SharedWorker!");
 
-            resetEvent.WaitOne(5000);
+            messageResetEvent.WaitOne(TimeSpan.FromSeconds(5));
 
             Assert.That(connectCount, Is.GreaterThan(0));
             Assert.That(receivedMessage, Is.EqualTo("Echo: Hello SharedWorker!"));
@@ -272,7 +281,8 @@ namespace SharpCanvas.Tests.Skia.Modern
         [Test]
         public void TestMessagePortTransfer()
         {
-            var port = new MessagePort();
+            var worker = new SharedWorker("port-transfer-test");
+            var port = worker.port;
             var bitmap = new SkiaSharp.SKBitmap(50, 50);
             var imageBitmap = new ImageBitmap(bitmap);
 
@@ -285,6 +295,7 @@ namespace SharpCanvas.Tests.Skia.Modern
             Assert.That(imageBitmap.IsNeutered, Is.True);
 
             port.close();
+            worker.Dispose();
         }
 
         [Test]
@@ -292,6 +303,7 @@ namespace SharpCanvas.Tests.Skia.Modern
         {
             var document = CreateMockDocument();
             var connectCount = 0;
+            var loadResetEvent = new ManualResetEvent(false);
 
             var sharedWorker = new SharedWorker("multi-connection-test", scope =>
             {
@@ -301,7 +313,15 @@ namespace SharpCanvas.Tests.Skia.Modern
                 };
             });
 
+            sharedWorker.OnLoad += (sender, e) =>
+            {
+                loadResetEvent.Set();
+            };
+
             sharedWorker.Start();
+
+            // Wait for the worker to be loaded before creating more connections
+            loadResetEvent.WaitOne(TimeSpan.FromSeconds(5));
 
             // Create additional connections
             var worker2 = new SharedWorker("multi-connection-test");

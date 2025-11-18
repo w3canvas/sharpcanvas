@@ -2,6 +2,7 @@ using SharpCanvas.Shared;
 using SkiaSharp;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace SharpCanvas.Context.Skia
@@ -18,6 +19,7 @@ namespace SharpCanvas.Context.Skia
         private int _width;
         private int _height;
         private bool _isNeutered;
+        private ICanvasRenderingContext2D _context;
         public IDocument Document { get; }
 
         public OffscreenCanvas(int width, int height, IDocument document)
@@ -27,6 +29,7 @@ namespace SharpCanvas.Context.Skia
             _isNeutered = false;
             Document = document;
             _surface = SKSurface.Create(new SKImageInfo(width, height));
+            _context = new OffscreenCanvasRenderingContext2D(_surface, Document, this);
         }
 
         /// <summary>
@@ -65,6 +68,7 @@ namespace SharpCanvas.Context.Skia
         {
             var oldSurface = _surface;
             _surface = SKSurface.Create(new SKImageInfo(_width, _height));
+            _context = new OffscreenCanvasRenderingContext2D(_surface, Document, this);
 
             // Copy old content to new surface
             using (var snapshot = oldSurface.Snapshot())
@@ -79,7 +83,7 @@ namespace SharpCanvas.Context.Skia
         {
             if (contextId == "2d")
             {
-                return new OffscreenCanvasRenderingContext2D(_surface, Document, this);
+                return _context;
             }
             throw new NotSupportedException($"The context id '{contextId}' is not supported.");
         }
@@ -90,13 +94,10 @@ namespace SharpCanvas.Context.Skia
         /// </summary>
         public ImageBitmap transferToImageBitmap()
         {
-            var image = _surface.Snapshot();
-            var bitmap = new SKBitmap(image.Width, image.Height);
-            using (var canvas = new SKCanvas(bitmap))
-            {
-                canvas.DrawImage(image, 0, 0);
-            }
-            image.Dispose();
+            _surface.Flush();
+            var info = new SKImageInfo(_width, _height);
+            var bitmap = new SKBitmap(info);
+            _surface.ReadPixels(info, bitmap.GetPixels(), info.RowBytes, 0, 0);
             return new ImageBitmap(bitmap);
         }
 
