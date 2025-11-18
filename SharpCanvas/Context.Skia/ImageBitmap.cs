@@ -1,3 +1,4 @@
+#nullable enable
 using SkiaSharp;
 using System;
 
@@ -16,7 +17,7 @@ namespace SharpCanvas.Context.Skia
 
         public ImageBitmap(SKBitmap bitmap)
         {
-            _bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));
+            _bitmap = bitmap.Copy() ?? throw new ArgumentNullException(nameof(bitmap));
             _isClosed = false;
             _isNeutered = false;
         }
@@ -62,7 +63,7 @@ namespace SharpCanvas.Context.Skia
         /// <summary>
         /// Gets the underlying SKBitmap. For internal use only.
         /// </summary>
-        internal SKBitmap? GetBitmap()
+        public SKBitmap? GetBitmap()
         {
             ThrowIfClosed();
             return _bitmap;
@@ -71,7 +72,7 @@ namespace SharpCanvas.Context.Skia
         /// <summary>
         /// Checks if the ImageBitmap has been closed.
         /// </summary>
-        internal bool IsClosed => _isClosed;
+        public bool IsClosed => _isClosed;
 
         private void ThrowIfClosed()
         {

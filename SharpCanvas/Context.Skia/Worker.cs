@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -128,7 +129,7 @@ namespace SharpCanvas.Context.Skia
         /// <summary>
         /// Posts a message back to the main thread (used from within worker)
         /// </summary>
-        internal void SendToMainThread(object message)
+        public void SendToMainThread(object message)
         {
             OnMessage?.Invoke(this, new MessageEvent { Data = message });
         }
@@ -158,7 +159,6 @@ namespace SharpCanvas.Context.Skia
         {
             terminate();
             _cancellationTokenSource?.Dispose();
-            _workerTask?.Dispose();
         }
     }
 

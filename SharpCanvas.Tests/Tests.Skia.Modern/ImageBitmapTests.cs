@@ -118,7 +118,7 @@ namespace SharpCanvas.Tests.Skia.Modern
         }
 
         [Test]
-        public async Task TestOffscreenCanvasConvertToBlob()
+        public void TestOffscreenCanvasConvertToBlob()
         {
             var mockWindow = new Mock<IWindow>();
             var mockDocument = new Mock<IDocument>();
@@ -132,14 +132,14 @@ namespace SharpCanvas.Tests.Skia.Modern
             context.fillStyle = "green";
             context.fillRect(0, 0, 100, 100);
 
-            var blob = await canvas.convertToBlob();
+            var blob = canvas.convertToBlob();
 
             Assert.That(blob, Is.Not.Null);
             Assert.That(blob.Length, Is.GreaterThan(0));
         }
 
         [Test]
-        public async Task TestOffscreenCanvasConvertToBlobJpeg()
+        public void TestOffscreenCanvasConvertToBlobJpeg()
         {
             var mockWindow = new Mock<IWindow>();
             var mockDocument = new Mock<IDocument>();
@@ -153,14 +153,14 @@ namespace SharpCanvas.Tests.Skia.Modern
             context.fillStyle = "yellow";
             context.fillRect(0, 0, 100, 100);
 
-            var blob = await canvas.convertToBlob("image/jpeg", 0.9);
+            var blob = canvas.convertToBlob("image/jpeg", 0.9);
 
             Assert.That(blob, Is.Not.Null);
             Assert.That(blob.Length, Is.GreaterThan(0));
         }
 
         [Test]
-        public async Task TestDrawImageWithImageBitmap()
+        public void TestDrawImageWithImageBitmap()
         {
             var mockWindow = new Mock<IWindow>();
             var mockDocument = new Mock<IDocument>();
@@ -185,15 +185,14 @@ namespace SharpCanvas.Tests.Skia.Modern
             // Draw the ImageBitmap
             context.drawImage(imageBitmap, 25, 25);
 
+            var blob = destCanvas.convertToBlob();
             // Verify the pixel at the center of the drawn image
-            var resultBitmap = destCanvas.transferToImageBitmap();
-            var skBitmap = resultBitmap.GetBitmap();
+            var skBitmap = SKBitmap.Decode(blob);
             var pixel = skBitmap.GetPixel(50, 50);
 
             Assert.That(pixel.Red, Is.EqualTo(255));
 
             imageBitmap.close();
-            resultBitmap.close();
         }
 
         [Test]

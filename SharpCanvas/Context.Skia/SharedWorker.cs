@@ -74,7 +74,7 @@ namespace SharpCanvas.Context.Skia
         /// </summary>
         public event EventHandler<ErrorEvent>? OnError;
 
-        internal MessagePort()
+        public MessagePort()
         {
             _messageQueue = new Queue<WorkerMessage>();
             _isClosed = false;
