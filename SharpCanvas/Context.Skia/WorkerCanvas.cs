@@ -58,13 +58,13 @@ namespace SharpCanvas.Context.Skia
         {
             var tcs = new TaskCompletionSource<byte[]>();
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 try
                 {
                     var canvas = new OffscreenCanvas(width, height, document);
                     drawFunction(canvas);
-                    var blob = canvas.convertToBlob(format, quality);
+                    var blob = await canvas.convertToBlob(format, quality);
                     tcs.SetResult(blob);
                 }
                 catch (Exception ex)

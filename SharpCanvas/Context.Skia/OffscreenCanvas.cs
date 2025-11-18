@@ -106,7 +106,7 @@ namespace SharpCanvas.Context.Skia
         /// </summary>
         /// <param name="type">The image format (e.g., "image/png", "image/jpeg")</param>
         /// <param name="quality">Image quality from 0 to 1 (for lossy formats like JPEG)</param>
-        public byte[] convertToBlob(string type = "image/png", double quality = 1.0)
+        public async Task<byte[]> convertToBlob(string type = "image/png", double quality = 1.0)
         {
             using (var image = _surface.Snapshot())
             {
@@ -141,9 +141,9 @@ namespace SharpCanvas.Context.Skia
         /// <summary>
         /// Converts the current canvas content to a Blob with default PNG format.
         /// </summary>
-        public byte[] convertToBlob()
+        public async Task<byte[]> convertToBlob()
         {
-            return convertToBlob("image/png", 1.0);
+            return await convertToBlob("image/png", 1.0);
         }
 
         // ITransferable implementation

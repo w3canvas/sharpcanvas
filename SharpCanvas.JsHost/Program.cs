@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.ClearScript.V8;
 using SharpCanvas.Context.Skia;
 using SharpCanvas.Shared;
@@ -9,7 +10,7 @@ namespace SharpCanvas.JsHost
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var mockWindow = new Mock<IWindow>();
             var mockDocument = new Mock<IDocument>();
@@ -29,7 +30,7 @@ namespace SharpCanvas.JsHost
                     ctx.fillRect(0, 0, 200, 200);
                 ");
 
-                var blob = canvas.convertToBlob();
+                var blob = await canvas.convertToBlob();
                 System.IO.File.WriteAllBytes("output.png", blob);
 
                 Console.WriteLine("Canvas saved to output.png");

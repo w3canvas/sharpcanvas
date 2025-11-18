@@ -11,7 +11,7 @@ namespace SharpCanvas.Tests.Skia.Modern
     public class JsHostTests
     {
         [Test]
-        public void TestJsHost()
+        public async Task TestJsHost()
         {
             var mockWindow = new Mock<IWindow>();
             var mockDocument = new Mock<IDocument>();
@@ -31,7 +31,7 @@ namespace SharpCanvas.Tests.Skia.Modern
                     ctx.fillRect(0, 0, 200, 200);
                 ");
 
-                var blob = canvas.convertToBlob();
+                var blob = await canvas.convertToBlob();
                 var skBitmap = SKBitmap.Decode(blob);
                 var pixel = skBitmap.GetPixel(100, 100);
 
