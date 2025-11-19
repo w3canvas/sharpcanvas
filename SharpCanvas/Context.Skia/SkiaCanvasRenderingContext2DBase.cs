@@ -1205,7 +1205,11 @@ namespace SharpCanvas.Context.Skia
                 {
                     try
                     {
-                        hasFocus = (bool)focusedProperty.GetValue(element);
+                        var focusedValue = focusedProperty.GetValue(element);
+                        if (focusedValue is bool)
+                        {
+                            hasFocus = (bool)focusedValue;
+                        }
                     }
                     catch
                     {

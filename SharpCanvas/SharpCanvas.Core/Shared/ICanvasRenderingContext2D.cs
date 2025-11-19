@@ -231,7 +231,7 @@ namespace SharpCanvas
         /// back-reference to the canvas
         /// </summary>
         [DispId(113)]
-        object canvas { get;}
+        object? canvas { get;}
 
         /// <summary>
         /// Provides with latest image from the Canvas
