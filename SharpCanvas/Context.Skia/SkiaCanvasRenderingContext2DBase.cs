@@ -725,22 +725,20 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
-        private SKSamplingOptions GetImageSamplingOptions()
+        private SKFilterQuality GetFilterQuality()
         {
             if (!imageSmoothingEnabled)
             {
-                return new SKSamplingOptions(SKFilterMode.Nearest, SKMipmapMode.None);
+                return SKFilterQuality.None;
             }
-            else
+
+            return imageSmoothingQuality.ToLower() switch
             {
-                return imageSmoothingQuality.ToLower() switch
-                {
-                    "high" => new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear),
-                    "medium" => new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.None),
-                    "low" => new SKSamplingOptions(SKFilterMode.Nearest, SKMipmapMode.None),
-                    _ => new SKSamplingOptions(SKFilterMode.Nearest, SKMipmapMode.None)
-                };
-            }
+                "high" => SKFilterQuality.High,
+                "medium" => SKFilterQuality.Medium,
+                "low" => SKFilterQuality.Low,
+                _ => SKFilterQuality.None,
+            };
         }
 
         public void drawImage(object image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh)
@@ -748,14 +746,11 @@ namespace SharpCanvas.Context.Skia
             var bitmap = GetBitmapFromImageSource(image);
             if (bitmap != null)
             {
-                using (var skImage = SKImage.FromBitmap(bitmap))
+                using (var paint = new SKPaint { FilterQuality = GetFilterQuality() })
                 {
-                    using (var paint = new SKPaint())
-                    {
-                        var sourceRect = new SKRect((float)sx, (float)sy, (float)(sx + sw), (float)(sy + sh));
-                        var destRect = new SKRect((float)dx, (float)dy, (float)(dx + dw), (float)(dy + dh));
-                        _surface.Canvas.DrawImage(skImage, sourceRect, destRect, GetImageSamplingOptions(), paint);
-                    }
+                    var sourceRect = new SKRect((float)sx, (float)sy, (float)(sx + sw), (float)(sy + sh));
+                    var destRect = new SKRect((float)dx, (float)dy, (float)(dx + dw), (float)(dy + dh));
+                    _surface.Canvas.DrawBitmap(bitmap, sourceRect, destRect, paint);
                 }
                 if (ShouldDisposeBitmap(image))
                 {
@@ -769,13 +764,10 @@ namespace SharpCanvas.Context.Skia
             var bitmap = GetBitmapFromImageSource(pImg);
             if (bitmap != null)
             {
-                using (var skImage = SKImage.FromBitmap(bitmap))
+                using (var paint = new SKPaint { FilterQuality = GetFilterQuality() })
                 {
-                    using (var paint = new SKPaint())
-                    {
-                        var destRect = new SKRect((float)dx, (float)dy, (float)(dx + dw), (float)(dy + dh));
-                        _surface.Canvas.DrawImage(skImage, destRect, GetImageSamplingOptions(), paint);
-                    }
+                    var destRect = new SKRect((float)dx, (float)dy, (float)(dx + dw), (float)(dy + dh));
+                    _surface.Canvas.DrawBitmap(bitmap, destRect, paint);
                 }
                 if (ShouldDisposeBitmap(pImg))
                 {
@@ -789,12 +781,9 @@ namespace SharpCanvas.Context.Skia
             var bitmap = GetBitmapFromImageSource(pImg);
             if (bitmap != null)
             {
-                using (var skImage = SKImage.FromBitmap(bitmap))
+                using (var paint = new SKPaint { FilterQuality = GetFilterQuality() })
                 {
-                    using (var paint = new SKPaint())
-                    {
-                        _surface.Canvas.DrawImage(skImage, (float)dx, (float)dy, GetImageSamplingOptions(), paint);
-                    }
+                    _surface.Canvas.DrawBitmap(bitmap, (float)dx, (float)dy, paint);
                 }
                 if (ShouldDisposeBitmap(pImg))
                 {
@@ -824,14 +813,16 @@ namespace SharpCanvas.Context.Skia
 
         public void drawImage(object pImg, float dx, float dy)
         {
-            if (pImg is SKBitmap bitmap)
+            var bitmap = GetBitmapFromImageSource(pImg);
+            if (bitmap != null)
             {
-                using (var skImage = SKImage.FromBitmap(bitmap))
+                using (var paint = new SKPaint { FilterQuality = GetFilterQuality() })
                 {
-                    using (var paint = new SKPaint())
-                    {
-                        _surface.Canvas.DrawImage(skImage, dx, dy, GetImageSamplingOptions(), paint);
-                    }
+                    _surface.Canvas.DrawBitmap(bitmap, dx, dy, paint);
+                }
+                if (ShouldDisposeBitmap(pImg))
+                {
+                    bitmap.Dispose();
                 }
             }
         }
