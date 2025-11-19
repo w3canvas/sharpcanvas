@@ -144,6 +144,19 @@ namespace SharpCanvas.Context.Skia
                                 filters.Add(SKImageFilter.CreateColorFilter(SKColorFilter.CreateColorMatrix(saturateMatrix)));
                             }
                             break;
+                        case "brightness":
+                            if (args.Length == 1 && TryParsePercentage(args[0], out var brightnessAmount))
+                            {
+                                var brightnessMatrix = new float[]
+                                {
+                                    brightnessAmount, 0, 0, 0, 0,
+                                    0, brightnessAmount, 0, 0, 0,
+                                    0, 0, brightnessAmount, 0, 0,
+                                    0, 0, 0, 1, 0
+                                };
+                                filters.Add(SKImageFilter.CreateColorFilter(SKColorFilter.CreateColorMatrix(brightnessMatrix)));
+                            }
+                            break;
                     }
                 }
             }
