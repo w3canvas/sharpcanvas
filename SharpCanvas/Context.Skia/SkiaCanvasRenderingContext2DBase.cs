@@ -1137,12 +1137,59 @@ namespace SharpCanvas.Context.Skia
 
         public bool isContextLost()
         {
-            return false; // SkiaSharp context is not lost in the same way a WebGL context is.
+            // Return true if the surface has been disposed or is no longer valid
+            try
+            {
+                return _surface == null || _surface.Canvas == null;
+            }
+            catch
+            {
+                return true;
+            }
         }
 
         public void drawFocusIfNeeded(object element)
         {
-            // No-op for now. This is for accessibility and browser focus rings.
+            // Check if the element has focus by looking for common focus-related properties
+            bool hasFocus = false;
+
+            if (element != null)
+            {
+                // Try to get a "focused" or "hasFocus" property using reflection
+                var elementType = element.GetType();
+                var focusedProperty = elementType.GetProperty("focused") ??
+                                     elementType.GetProperty("hasFocus") ??
+                                     elementType.GetProperty("Focused") ??
+                                     elementType.GetProperty("HasFocus");
+
+                if (focusedProperty != null && focusedProperty.PropertyType == typeof(bool))
+                {
+                    try
+                    {
+                        hasFocus = (bool)focusedProperty.GetValue(element);
+                    }
+                    catch
+                    {
+                        hasFocus = false;
+                    }
+                }
+            }
+
+            // If the element has focus and the path is not empty, draw a focus ring
+            if (hasFocus && !_path.IsEmpty)
+            {
+                using (var focusPaint = new SKPaint
+                {
+                    Style = SKPaintStyle.Stroke,
+                    Color = new SKColor(0, 0, 0, 128), // Semi-transparent black
+                    StrokeWidth = 2,
+                    PathEffect = SKPathEffect.CreateDash(new float[] { 4, 2 }, 0), // Dashed line
+                    IsAntialias = true
+                })
+                {
+                    _surface.Canvas.DrawPath(_path, focusPaint);
+                }
+            }
         }
 
         public void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, bool anticlockwise)
@@ -1313,12 +1360,51 @@ namespace SharpCanvas.Context.Skia
 
         public object getContextAttributes()
         {
+            // Return dynamic context attributes based on the actual surface configuration
+            bool hasAlpha = true;
+            string colorSpace = "srgb";
+
+            try
+            {
+                if (_surface != null)
+                {
+                    var pixmap = _surface.PeekPixels();
+                    if (pixmap != null)
+                    {
+                        // Check if the surface actually has an alpha channel
+                        hasAlpha = pixmap.Info.AlphaType != SKAlphaType.Opaque;
+
+                        // Determine color space based on surface info
+                        if (pixmap.ColorSpace != null)
+                        {
+                            // Check if it's sRGB or another color space
+                            if (pixmap.ColorSpace.IsSrgb)
+                            {
+                                colorSpace = "srgb";
+                            }
+                            else
+                            {
+                                // For other color spaces, we might want to check for display-p3, etc.
+                                // For now, default to srgb if not explicitly sRGB
+                                colorSpace = "srgb";
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // If we can't determine the attributes, fall back to defaults
+                hasAlpha = true;
+                colorSpace = "srgb";
+            }
+
             return new ContextAttributes
             {
-                alpha = true, // SKSurface always has an alpha channel
-                colorSpace = "srgb", // Assuming sRGB for now
+                alpha = hasAlpha,
+                colorSpace = colorSpace,
                 desynchronized = false, // Not applicable in SkiaSharp
-                willReadFrequently = false // Default value
+                willReadFrequently = false // Default value, could be made configurable in the future
             };
         }
     }
