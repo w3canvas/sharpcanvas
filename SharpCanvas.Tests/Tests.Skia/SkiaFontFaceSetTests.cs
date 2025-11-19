@@ -31,6 +31,7 @@ namespace SharpCanvas.Tests.Skia
             var fontFace = new FontFace("MyTestFont", _fontBytes, new FontFaceDescriptors());
 
             fontFaceSet.add(fontFace);
+            await fontFace.LoadCalled;
 
             Assert.That(fontFaceSet.status, Is.EqualTo("loading"));
             await fontFaceSet.ready;
@@ -52,6 +53,7 @@ namespace SharpCanvas.Tests.Skia
 
             var fontFace = new FontFace("MyTestFont", _fontBytes, new FontFaceDescriptors());
             document.defaultView.fonts.add(fontFace);
+            await fontFace.LoadCalled;
 
             Assert.That(document.defaultView.fonts.status, Is.EqualTo("loading"));
             await document.defaultView.fonts.ready;

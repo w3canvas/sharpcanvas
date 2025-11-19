@@ -8,6 +8,9 @@ namespace SharpCanvas.Shared
     {
         private readonly string? _source;
         private readonly TaskCompletionSource<byte[]> _loader;
+        private readonly TaskCompletionSource<bool> _loadCalledTcs;
+
+        public Task LoadCalled => _loadCalledTcs.Task;
 
         public FontFace(string family, byte[] source, FontFaceDescriptors descriptors)
         {
@@ -23,6 +26,7 @@ namespace SharpCanvas.Shared
             _loader = new TaskCompletionSource<byte[]>();
             _loader.SetResult(source);
             status = "loaded";
+            _loadCalledTcs = new TaskCompletionSource<bool>();
         }
 
         public FontFace(string family, string source, FontFaceDescriptors descriptors)
@@ -39,6 +43,7 @@ namespace SharpCanvas.Shared
             _source = source;
             _loader = new TaskCompletionSource<byte[]>();
             status = "unloaded";
+            _loadCalledTcs = new TaskCompletionSource<bool>();
         }
 
         public string display { get; set; }
@@ -70,6 +75,7 @@ namespace SharpCanvas.Shared
             }
 
             status = "loading";
+            _loadCalledTcs.SetResult(true);
             try
             {
                 var client = new HttpClient();

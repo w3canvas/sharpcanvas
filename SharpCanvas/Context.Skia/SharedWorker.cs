@@ -287,7 +287,7 @@ namespace SharpCanvas.Context.Skia
         private readonly List<MessagePort> _connectedPorts;
         private readonly object _portsLock = new object();
         private Task? _task;
-        private CancellationTokenSource? _cancellationTokenSource;
+        private CancellationTokenSource _cancellationTokenSource;
         private volatile bool _isStarted;
 
         public event EventHandler? OnLoad;
@@ -363,7 +363,10 @@ namespace SharpCanvas.Context.Skia
                     }
                     foreach (var port in allPorts)
                     {
-                        port.SendError(ex.Message, ex);
+                        if (port != null)
+                        {
+                            port.SendError(ex.Message, ex);
+                        }
                     }
                 }
             }, _cancellationTokenSource.Token);
