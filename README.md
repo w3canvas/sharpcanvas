@@ -293,11 +293,12 @@ See [.claude/NUGET_PROXY_README.md](.claude/NUGET_PROXY_README.md) for details.
 
 ## 📖 Documentation
 
-- [Production Gaps Report](PRODUCTION_GAPS.md) - Known limitations and roadmap
-- [Implementation Status](IMPLEMENTATION_STATUS.md) - Feature implementation status
-- [Testing Instructions](TESTING_INSTRUCTIONS.md) - Detailed testing guide
-- [Unified Testing Strategy](UNIFIED_TESTING_STRATEGY.md) - Cross-backend testing approach
-- [TODO List](TODO.md) - Planned improvements
+- [Production Readiness](PRODUCTION_READINESS.md) - Status, metrics, and deployment guide
+- [Project Structure](STRUCTURE.md) - Architecture and organization
+- [Roadmap](TODO.md) - Future enhancements and community contributions
+- [Implementation Status](IMPLEMENTATION_STATUS.md) - Feature implementation details
+- [Testing Instructions](TESTING_INSTRUCTIONS.md) - How to run tests
+- [Unified Testing Strategy](UNIFIED_TESTING_STRATEGY.md) - Cross-backend testing
 - [ImageBitmap and Workers](IMAGEBITMAP_AND_WORKERS.md) - Advanced features
 
 ## 🎯 Production Readiness
@@ -333,11 +334,17 @@ See [.claude/NUGET_PROXY_README.md](.claude/NUGET_PROXY_README.md) for details.
 Contributions are welcome! Please feel free to submit pull requests.
 
 ### Areas for Contribution
-1. **Filter Implementation** - Complete the `filter` property and filter chain support
-2. **Legacy Backend** - Bring System.Drawing backend to feature parity
-3. **Documentation** - Add more examples and API documentation
-4. **Tests** - Increase test coverage for edge cases
-5. **Performance** - Optimize rendering for complex scenes
+
+See [Roadmap](TODO.md) for detailed contribution opportunities.
+
+**High-impact areas:**
+1. **Examples and Samples** - Real-world usage examples and tutorials
+2. **Performance** - Profile and optimize rendering for complex scenes
+3. **Documentation** - Additional examples, translations, quick-start guides
+4. **Platform Testing** - Test and optimize on different platforms
+5. **Developer Tools** - Visual debuggers, profilers, and utilities
+
+**Note:** The modern SkiaSharp backend is feature-complete. Focus contributions on enhancements, tools, and community support.
 
 ## 📄 License
 
