@@ -13,10 +13,10 @@ namespace SharpCanvas.Tests.Skia.Modern
     public class ImageBitmapTests
     {
         [Test]
-        public void TestCreateImageBitmapFromSKBitmap()
+        public async Task TestCreateImageBitmapFromSKBitmap()
         {
             var skBitmap = new SKBitmap(100, 100);
-            var imageBitmap = ImageBitmapFactory.createImageBitmap(skBitmap);
+            var imageBitmap = await ImageBitmapFactory.createImageBitmap(skBitmap);
 
             Assert.That(imageBitmap, Is.Not.Null);
             Assert.That(imageBitmap.width, Is.EqualTo(100));
@@ -28,7 +28,7 @@ namespace SharpCanvas.Tests.Skia.Modern
         }
 
         [Test]
-        public void TestCreateImageBitmapWithResize()
+        public async Task TestCreateImageBitmapWithResize()
         {
             var skBitmap = new SKBitmap(200, 200);
             var options = new ImageBitmapOptions
@@ -38,7 +38,7 @@ namespace SharpCanvas.Tests.Skia.Modern
                 resizeQuality = "high"
             };
 
-            var imageBitmap = ImageBitmapFactory.createImageBitmap(skBitmap, options);
+            var imageBitmap = await ImageBitmapFactory.createImageBitmap(skBitmap, options);
 
             Assert.That(imageBitmap.width, Is.EqualTo(100));
             Assert.That(imageBitmap.height, Is.EqualTo(100));
@@ -47,7 +47,7 @@ namespace SharpCanvas.Tests.Skia.Modern
         }
 
         [Test]
-        public void TestCreateImageBitmapWithCrop()
+        public async Task TestCreateImageBitmapWithCrop()
         {
             var skBitmap = new SKBitmap(200, 200);
             using (var canvas = new SKCanvas(skBitmap))
@@ -55,7 +55,7 @@ namespace SharpCanvas.Tests.Skia.Modern
                 canvas.Clear(SKColors.Red);
             }
 
-            var imageBitmap = ImageBitmapFactory.createImageBitmap(skBitmap, 50, 50, 100, 100);
+            var imageBitmap = await ImageBitmapFactory.createImageBitmap(skBitmap, 50, 50, 100, 100);
 
             Assert.That(imageBitmap.width, Is.EqualTo(100));
             Assert.That(imageBitmap.height, Is.EqualTo(100));
@@ -161,7 +161,7 @@ namespace SharpCanvas.Tests.Skia.Modern
         }
 
         [Test]
-        public void TestDrawImageWithImageBitmap()
+        public async Task TestDrawImageWithImageBitmap()
         {
             var mockWindow = new Mock<IWindow>();
             var mockDocument = new Mock<IDocument>();

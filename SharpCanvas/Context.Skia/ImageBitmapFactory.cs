@@ -54,7 +54,7 @@ namespace SharpCanvas.Context.Skia
         /// <summary>
         /// Creates an ImageBitmap from various image sources.
         /// </summary>
-        public static ImageBitmap createImageBitmap(object source, ImageBitmapOptions? options = null)
+        public static Task<ImageBitmap> createImageBitmap(object source, ImageBitmapOptions? options = null)
         {
             SKBitmap? bitmap = null;
 
@@ -92,7 +92,7 @@ namespace SharpCanvas.Context.Skia
             else if (source is OffscreenCanvas offscreenCanvas)
             {
                 // Use transferToImageBitmap internally
-                return offscreenCanvas.transferToImageBitmap();
+                return Task.FromResult(offscreenCanvas.transferToImageBitmap());
             }
             else if (source is ImageData imageData && imageData.data is byte[] data)
             {
@@ -142,16 +142,16 @@ namespace SharpCanvas.Context.Skia
                 bitmap = ApplyOptions(bitmap, options);
             }
 
-            return new ImageBitmap(bitmap);
+            return Task.FromResult(new ImageBitmap(bitmap));
         }
 
         /// <summary>
         /// Creates an ImageBitmap from a source with a specific rectangle
         /// </summary>
-        public static ImageBitmap createImageBitmap(object source, int sx, int sy, int sw, int sh, ImageBitmapOptions? options = null)
+        public static async Task<ImageBitmap> createImageBitmap(object source, int sx, int sy, int sw, int sh, ImageBitmapOptions? options = null)
         {
             // First create the full bitmap
-            var fullBitmap = createImageBitmap(source, null);
+            var fullBitmap = await createImageBitmap(source, null);
             var sourceBitmap = fullBitmap.GetBitmap();
 
             if (sourceBitmap == null)
