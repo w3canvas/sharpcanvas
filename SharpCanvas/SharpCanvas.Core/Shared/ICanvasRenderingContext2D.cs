@@ -5,10 +5,25 @@ using System.Runtime.InteropServices;
 namespace SharpCanvas
 {
     /// <summary>
-    /// This is a .NET translation of the canvas rendering context 2D. Parameter types have been tranlated to
-    /// corresponding .NET equivalents. Optional parameters (do not exist in .NET but be passed in Type.Missing)
-    /// have been removed and properties translated to .NET properties.
+    /// The ICanvasRenderingContext2D interface provides the 2D rendering context for the drawing surface of a canvas element.
+    /// This is a .NET translation of the HTML5 Canvas 2D rendering context API.
     /// </summary>
+    /// <remarks>
+    /// This interface implements the complete HTML5 Canvas 2D API specification with .NET type equivalents.
+    /// Supports multiple backend implementations including SkiaSharp (modern, cross-platform) and System.Drawing (legacy, Windows only).
+    ///
+    /// Key features:
+    /// - Drawing shapes (rectangles, paths, arcs, bezier curves)
+    /// - Text rendering with font control
+    /// - Image manipulation and drawing
+    /// - Transformations (translate, rotate, scale)
+    /// - Compositing and transparency
+    /// - Gradients and patterns
+    /// - Pixel manipulation (getImageData, putImageData)
+    /// - State management (save/restore)
+    ///
+    /// For usage examples, see https://github.com/w3canvas/sharpcanvas
+    /// </remarks>
     [Guid("2F98211C-7A71-4588-8D4A-AD83CA80BAE7"),
      InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface ICanvasRenderingContext2D
