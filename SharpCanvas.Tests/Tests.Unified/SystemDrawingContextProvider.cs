@@ -1,3 +1,4 @@
+#if WINDOWS
 using SharpCanvas;
 using SharpCanvas.Context.Drawing2D;
 using System;
@@ -75,3 +76,4 @@ namespace SharpCanvas.Tests.Unified
         }
     }
 }
+#endif

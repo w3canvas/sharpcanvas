@@ -1092,35 +1092,6 @@ namespace SharpCanvas.Context.Drawing2D
             path.AddBezier(cp0, cp1, cp2, cp3);
         }
 
-        /// <summary>
-        /// The bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) method must ensure there is a subpath for (cp1x, cp1y), and then must 
-        /// connect the last point in the subpath to the given point (x, y) using a cubic Bézier curve with control points (cp1x, cp1y) 
-        /// and (cp2x, cp2y). Then, it must add the point (x, y) to the subpath.
-        /// </summary>
-        public void bezierCurveTo(double cp1x, double cp1y, double cp2x, double cp2y, double x, double y)
-        {
-            PointF[] points = InternalTransform(cp1x, cp1y, cp2x, cp2y, x, y);
-            //method must ensure there is a subpath for (cp1x, cp1y)
-            if (path.PointCount == 0)
-            {
-            {
-                lock (_sync)
-                {
-                    surface.Flush();
-                    var dest = (Bitmap) _surfaceBitmap.Clone();
-                    _source.MakeTransparent(Color.Transparent);
-                    dest.MakeTransparent(Color.Transparent);
-                    _compositier.blendImages(_source,
-                                             dest);
-                    surface.Clear(Color.Transparent);
-                    surface.DrawImage(_source, 0, 0);
-                }
-            }
-        }
-
-        #endregion
-
-        #region text
 
         private readonly List<string> validAlignValues = new List<string> {"start", "end", "left", "right", "center"};
 

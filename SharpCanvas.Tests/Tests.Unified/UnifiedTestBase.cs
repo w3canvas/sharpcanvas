@@ -41,10 +41,12 @@ namespace SharpCanvas.Tests.Unified
             yield return new SkiaContextProvider();
 
             // System.Drawing context provider would be added here for Windows-only testing
+#if WINDOWS
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 yield return new SystemDrawingContextProvider();
             }
+#endif
         }
 
         [SetUp]
