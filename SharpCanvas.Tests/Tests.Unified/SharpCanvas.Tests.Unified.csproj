@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <!-- Conditionally include System.Drawing context for Windows -->
-  <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
     <ProjectReference Include="..\..\SharpCanvas\Legacy\Drawing\Context.Drawing2D\SharpCanvas.Context.Drawing2D.csproj" />
   </ItemGroup>
 
