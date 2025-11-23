@@ -90,3 +90,7 @@ artifacts/
 # Rider
 .idea/
 *.sln.iml
+
+# Publish output
+**/publish/
+**/AppBundle/
