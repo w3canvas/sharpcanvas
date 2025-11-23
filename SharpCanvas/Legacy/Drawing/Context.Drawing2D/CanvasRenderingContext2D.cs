@@ -768,186 +768,6 @@ namespace SharpCanvas.Context.Drawing2D
             surface.FillPolygon(_fill.brush, new[
                                                  ]
                                                  {
-                                                     points[0],
-                                                     points[1],
-                                                     points[2],
-                                                     points[3]
-                                                 }, FillMode.Winding);
-            if (OnPartialDraw != null)
-            {
-                OnPartialDraw();
-            }
-        }
-
-        /// <summary>
-        /// The isPointInPath(x, y) method must return true if the point given by the x and y coordinates passed to the method, when treated as coordinates 
-        /// in the canvas coordinate space unaffected by the current transformation, is inside the current path as determined by the non-zero winding number 
-        /// rule; and must return false otherwise. Points on the path itself are considered to be inside the path. If either of the arguments is infinite or 
-        /// NaN, then the method must return false.
-        /// </summary>
-        public bool isPointInPath(double x, double y)
-        {
-            return path.IsVisible((float) x, (float) y);
-        }
-
-        private Brush transformStrokePoints(LinearCanvasGradient style, PointF[] points)
-        {
-            if (points.Length > 4)
-            {
-                //optimize polygon by wrapping it in rectangle
-                PointF mostLeft = points[0];
-                foreach (PointF point in points)
-                {
-                    if (point.X < mostLeft.X)
-                        mostLeft = point;
-                }
-                PointF mostRight = points[0];
-                foreach (PointF point in points)
-                {
-                    if (point.X > mostRight.X)
-                        mostRight = point;
-                }
-                PointF mostTop = points[0];
-                foreach (PointF point in points)
-                {
-                    if (point.Y < mostTop.Y)
-                        mostTop = point;
-                }
-                PointF mostBottom = points[0];
-                foreach (PointF point in points)
-                {
-                    if (point.Y > mostBottom.Y)
-                        mostBottom = point;
-                }
-                var wrapper = new PointF[4];
-                wrapper[0] = new PointF(mostLeft.X, mostTop.Y);
-                wrapper[1] = new PointF(mostRight.X, mostTop.Y);
-                wrapper[2] = new PointF(mostRight.X, mostBottom.Y);
-                wrapper[3] = new PointF(mostLeft.X, mostBottom.Y);
-                points = wrapper;
-            }
-            var intersections = new List<PointF>();
-            //find intersection points
-            for (int i = 0; i < points.Length - 1; i++)
-            {
-                if (GeometryUtils.LineAndLineIntersects(points[i], points[i + 1], style.start, style.end))
-                {
-                    intersections.Add(GeometryUtils.GetIntersectionPoint(points[i], points[i + 1], style.start,
-                                                                         style.end));
-                }
-            }
-            if (GeometryUtils.LineAndLineIntersects(points[0], points[points.Length - 1], style.start, style.end))
-            {
-                intersections.Add(GeometryUtils.GetIntersectionPoint(points[0], points[points.Length - 1], style.start,
-                                                                     style.end));
-            }
-            //find intersection points with max distance between them
-            PointF start = intersections[0];
-            PointF end = intersections[0];
-            foreach (PointF a in intersections)
-            {
-                foreach (PointF b in intersections)
-                {
-                    if (GeometryUtils.Distance(start, end) < GeometryUtils.Distance(a, b))
-                    {
-                        start = a;
-                        end = b;
-                    }
-                }
-            }
-            //swap start and end if needed
-            bool leftToRight = style.start.X <= style.end.X;
-            bool topToDown = style.start.Y <= style.end.Y;
-            if (leftToRight && start.X > end.X)
-            {
-                PointF tmp = start;
-                start = end;
-                end = tmp;
-            }
-            if (topToDown && start.Y > end.Y)
-            {
-                PointF tmp = start;
-                start = end;
-                end = tmp;
-            }
-            //if newly found start or end point are closer to the center than initial start or end
-            //then it means we shouldn't stretch this direction
-            if (leftToRight && start.X > style.start.X)
-            {
-                start = style.start;
-            }
-            if (topToDown && start.Y > style.start.Y)
-            {
-                start = style.start;
-            }
-            if (leftToRight && end.X < style.end.X)
-            {
-                end = style.end;
-            }
-            if (topToDown && end.Y < style.end.Y)
-            {
-                end = style.end;
-            }
-
-            float before = GeometryUtils.Distance(start, style.start);
-            float it = GeometryUtils.Distance(style.start, style.end);
-            float after = GeometryUtils.Distance(style.end, end);
-            float whole = GeometryUtils.Distance(start, end);
-            //move first color
-            style.Positions.Insert(0, before/whole);
-            style.Colors.Insert(0, style.Colors[0]);
-            //move other points
-            float shift = before/whole;
-            for (int i = 1; i < style.Positions.Count; i++)
-            {
-                style.Positions[i] = style.Positions[i]*(it/whole) + shift;
-            }
-            //move last point
-            style.Positions.Add(1);
-            style.Colors.Add(style.Colors[style.Colors.Count - 1]);
-            //stretch gradient
-            //shift start point one pixel back and end point one pixel forward
-            //TODO: investigate do we need to shift for 1px always or use current lineWidth
-            LineEquation e = GeometryUtils.BuildLineEqualtionByTwoPoints(start, end);
-            var shiftStartX = (float) _lineWidth;
-            float shiftEndX = (float) _lineWidth*(-1);
-            if (start.X < end.X)
-            {
-                shiftStartX = (float) _lineWidth*(-1);
-                shiftEndX = (float) _lineWidth;
-            }
-            var shiftStartY = (float) _lineWidth;
-            float shiftEndY = (float) _lineWidth*(-1);
-            if (start.Y < end.Y)
-            {
-                shiftStartY = (float) _lineWidth*(-1);
-                shiftEndY = (float) _lineWidth;
-            }
-            if (!e.IsXConstant)
-            {
-                start = e.getPointWithX(start.X + shiftStartX);
-            }
-            else
-            {
-                start = e.getPointWithY(start.Y + shiftStartY);
-            }
-            if (!e.IsXConstant)
-            {
-                end = e.getPointWithX(end.X + shiftEndX);
-            }
-            else
-            {
-                end = e.getPointWithY(end.Y + shiftEndY);
-            }
-
-            style.start = new PointF(start.X, start.Y);
-            style.end = new PointF(end.X, end.Y);
-            return (Brush) style.GetBrush();
-        }
-
-        private void ApplyShadows()
-        {
-            if (ColorUtils.isValidColor(_shadowColor) && ColorUtils.ParseColor(_shadowColor).A != 0
                 && _shadowBlur != 0 && (_shadowOffsetX != 0 || _shadowOffsetY != 0))
             {
                 var blur = new GaussianBlur((int) _shadowBlur);
@@ -987,193 +807,6 @@ namespace SharpCanvas.Context.Drawing2D
 
         /// <summary>
         /// There is no such method in the spec. What is the purpose of maxWidth?
-        /// </summary>
-        public void FillRect(double x, double y, double width, double height, object maxWidth)
-        {
-            fillRect(x, y, width, height);
-        }
-
-        #endregion
-
-        #region path API
-
-        /// <summary>
-        /// The beginPath()  method must empty the list of subpaths so that the context once again has zero subpaths.
-        /// </summary>
-        public void beginPath()
-        {
-            //we need to close all previous figures in order to be sure that there are no open figures
-            path.CloseAllFigures();
-            //we don't want to copy previous figure, so we need to reset the path
-            path.Reset();
-            //don't want to loose default FillMode value after reset
-            path.FillMode = FillMode.Winding;
-            path.StartFigure();
-        }
-
-        /// <summary>
-        /// The closePath()  method must do nothing if the context has no subpaths. Otherwise, it must mark the last subpath 
-        /// as closed, create a new subpath whose first point is the same as the previous subpath's first point, and finally 
-        /// add this new subpath to the path.
-        /// If the last subpath had more than one point in its list of points, then this is equivalent to adding a 
-        /// straight line connecting the last point back to the first point, thus "closing" the shape, and then repeating the 
-        /// last (possibly implied) moveTo() call.
-        /// </summary>
-        public void closePath()
-        {
-            //TODO: test with creating  new subpath with single point
-            path.CloseFigure();
-        }
-
-        /// <summary>
-        /// The moveTo(x, y) method must create a new subpath with the specified point as its first (and only) point.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public void moveTo(double x, double y)
-        {
-            path.StartFigure();
-            //transform passed coordinates according to internal transformation matrix
-            PointF[] points = InternalTransform(x, y);
-            path.AddLine(points[0], points[0]);
-        }
-
-        /// <summary>
-        /// The lineTo(x, y) method must ensure there is a subpath for (x, y) if the context has no subpaths. 
-        /// Otherwise, it must connect the last point in the subpath to the given point (x, y) using a straight line, and must then 
-        /// add the given point (x, y) to the subpath.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public void lineTo(double x, double y)
-        {
-            //we've initialized path already, so no check is required
-            //transform passed coordinates according to internal transformation matrix
-            PointF[] points = InternalTransform(x, y);
-            if (path.PointCount > 0)
-                path.AddLine(path.GetLastPoint(), points[0]);
-            else
-            {
-                moveTo(x, y);
-            }
-        }
-
-        /// <summary>
-        /// The quadraticCurveTo(cpx, cpy, x, y) method must ensure there is a subpath for (cpx, cpy), and then must connect the 
-        /// last point in the subpath to the given point (x, y) using a quadratic Bézier curve with control point (cpx, cpy), 
-        /// and must then add the given point (x, y) to the subpath.
-        /// </summary>
-        /// <param name="cpx"></param>
-        /// <param name="cpy"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public void quadraticCurveTo(double cpx, double cpy, double x, double y)
-        {
-            PointF[] transformedPoints = InternalTransform(cpx, cpy, x, y);
-            //method must ensure there is a subpath for (cpx, cpy)
-            if (path.PointCount == 0)
-            {
-                moveTo(cpx, cpy);
-            }
-            //declare three initial points in single array for convenience
-            var qp = new[]
-                         {
-                             path.GetLastPoint(), transformedPoints[0],
-                             transformedPoints[1]
-                         };
-            PointF cp0 = qp[0];
-            PointF cp3 = qp[2];
-            var cp1 = new PointF();
-            cp1.X = qp[0].X + 2f/3f*(qp[1].X - qp[0].X);
-            cp1.Y = qp[0].Y + 2f/3f*(qp[1].Y - qp[0].Y);
-            var cp2 = new PointF();
-            cp2.X = cp1.X + 1f/3F*(qp[2].X - qp[0].X);
-            cp2.Y = cp1.Y + 1f/3F*(qp[2].Y - qp[0].Y);
-            path.AddBezier(cp0, cp1, cp2, cp3);
-        }
-
-
-        private readonly List<string> validAlignValues = new List<string> {"start", "end", "left", "right", "center"};
-
-        private readonly List<string> validBaselineValues = new List<string>
-                                                                {
-                                                                    "top",
-                                                                    "hanging",
-                                                                    "middle",
-                                                                    "alphabetic",
-                                                                    "ideographic",
-                                                                    "bottom"
-                                                                };
-
-        /// <summary>
-        /// The font IDL attribute, on setting, must be parsed the same way as the 'font' property of CSS (but without supporting property-independent style 
-        /// sheet syntax like 'inherit'), and the resulting font must be assigned to the context, with the 'line-height' component forced to 'normal', with 
-        /// the 'font-size' component converted to CSS pixels, and with system fonts being computed to explicit values. If the new value is syntactically 
-        /// incorrect (including using property-independent style sheet syntax like 'inherit' or 'initial'), then it must be ignored, without assigning a 
-        /// new font value. 
-        /// </summary>
-        public string font
-        {
-            get { return _font; }
-            set
-            {
-                _font = value;
-                Font font = FontUtils.ParseFont(_font, surface.DpiX);
-                if (font == null)
-                {
-                    //When the context is created, the font of the context must be set to 10px sans-serif.
-                    if (_parsedFont == null)
-                        _parsedFont = new Font("sans-serif", 10);
-                }
-                else
-                {
-                    _parsedFont = font;
-                }
-            }
-        }
-
-        /// <summary>
-        /// The textAlign IDL attribute, on getting, must return the current value. On setting, if the value is one of start, end,
-        /// left, right, or center, then the value must be changed to the new value. Otherwise, the new value must be ignored. 
-        /// When the context is created, the textAlign attribute must initially have the value start.
-        /// </summary>
-        public string textAlign
-        {
-            get { return _textAlign; }
-            set
-            {
-                if (validAlignValues.Contains(value))
-                    _textAlign = value;
-            }
-        }
-
-        /// <summary>
-        /// The textBaseline  IDL attribute, on getting, must return the current value. On setting, if the value is one of
-        /// top, hanging, middle, alphabetic, ideographic, or bottom, then the value must be changed to the new value. 
-        /// Otherwise, the new value must be ignored. When the context is created, the textBaseline attribute must 
-        /// initially have the value alphabetic.
-        /// </summary>
-        public string textBaseLine
-        {
-            get { return _textBaseLine; }
-            set
-            {
-                if (validBaselineValues.Contains(value))
-                    _textBaseLine = value;
-            }
-        }
-
-        /// <summary>
-        /// The measureText()  method takes one argument, text. When the method is invoked, the user agent must replace all the 
-        /// space characters in text with U+0020 SPACE characters, and then must form a hypothetical infinitely wide CSS line 
-        /// box containing a single inline box containing the text text, with all the properties at their initial values except 
-        /// the 'font' property of the inline element set to the current font of the context, as given by the font attribute, and 
-        /// must then return a new TextMetrics object with its width attribute set to the width of that inline box, in CSS pixels.
-        /// </summary>
-        public object measureText(string text)
-        {
-            return FontUtils.MeasureText(text, surface, _parsedFont);
-        }
 
         /// <summary>
         /// Parses the font from the string. Coefficient allows to adjust size.
@@ -1945,6 +1578,201 @@ namespace SharpCanvas.Context.Drawing2D
                        };
         }
 
+                surface = Graphics.FromImage(_surfaceBitmap);
+                surface.Clear(Color.Transparent);
+                if (!reset)
+                {
+                    //scale image to fit new sizes
+                    surface.DrawImage(currentImage.GetThumbnailImage(width, height, null, IntPtr.Zero), 0, 0);
+                }
+            }
+        }
+
+        public int GetHeight()
+        {
+            return (int)surface.VisibleClipBounds.Height;
+        }
+
+        public int GetWidth()
+        {
+            return (int)surface.VisibleClipBounds.Width;
+        }
+
+        #endregion
+
+        #region MDN Properties
+
+        public string direction { get; set; } = "ltr";
+        public string filter { get; set; } = "none";
+        public string fontKerning { get; set; } = "auto";
+        public string fontStretch { get; set; } = "normal";
+        public string fontVariantCaps { get; set; } = "normal";
+        public bool imageSmoothingEnabled { get; set; } = true;
+        public string imageSmoothingQuality { get; set; } = "low";
+        public string lang { get; set; } = "en-US";
+        public string letterSpacing { get; set; } = "0px";
+        private double _lineDashOffset = 0.0;
+        public double lineDashOffset
+        {
+            get => _lineDashOffset;
+            set
+            {
+                _lineDashOffset = value;
+                _stroke.DashOffset = (float)value;
+            }
+        }
+        public string textRendering { get; set; } = "auto";
+        public string wordSpacing { get; set; } = "0px";
+
+        #endregion
+
+        #region Utils
+
+        public void resetTransform()
+        {
+            setTransform(1, 0, 0, 1, 0, 0);
+        }
+
+        /// <summary>
+        /// Returns a copy of the current transformation matrix as a DOMMatrix object.
+        /// </summary>
+        /// <returns>A DOMMatrix object representing the current transformation matrix</returns>
+        /// <remarks>
+        /// The returned matrix can be used to save the current transformation state
+        /// and restore it later using setTransform().
+        /// </remarks>
+                public object getTransform()
+        {
+            var elements = _transformation.Elements;
+            return new Shared.DOMMatrix(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5]);
+        }
+
+        public void reset()
+        {
+            _reset();
+        }
+
+        public bool isContextLost()
+        {
+            return false;
+        }
+
+        public void drawFocusIfNeeded(object element)
+        {
+            // No-op
+        }
+
+        public void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, bool anticlockwise)
+        {
+            // TODO: This implementation ignores startAngle, endAngle, and anticlockwise. It draws a full ellipse.
+            using (var ellipsePath = new GraphicsPath())
+            {
+                ellipsePath.AddEllipse((float)(x - radiusX), (float)(y - radiusY), (float)(radiusX * 2), (float)(radiusY * 2));
+
+                if (rotation != 0)
+                {
+                    using (var matrix = new Matrix())
+                    {
+                        matrix.RotateAt((float)(GeometryUtils.ConvertRadiansToDegrees(rotation)), new PointF((float)x, (float)y));
+                        ellipsePath.Transform(matrix);
+                    }
+                }
+                path.AddPath(ellipsePath, false);
+            }
+        }
+
+        public void roundRect(double x, double y, double w, double h, object radii)
+        {
+            // TODO: Implement. This requires manual path construction with arcs and lines, which is non-trivial.
+            // For now, this will draw a regular rectangle.
+            rect(x, y, w, h);
+        }
+
+        private double[] _lineDash = new double[0];
+
+        private void UpdateLineDash()
+        {
+            if (_lineDash == null || _lineDash.Length == 0)
+            {
+                _stroke.DashStyle = DashStyle.Solid;
+            }
+            else
+            {
+                _stroke.DashStyle = DashStyle.Custom;
+                var intervals = _lineDash.Select(d => (float)d).ToArray();
+                if (intervals.Length % 2 != 0)
+                {
+                    intervals = intervals.Concat(intervals).ToArray();
+                }
+                _stroke.DashPattern = intervals;
+            }
+        }
+
+        public void setLineDash(object segments)
+        {
+            if (segments is System.Collections.IEnumerable enumerable)
+            {
+                var list = new List<double>();
+                foreach (var item in enumerable)
+                {
+                    list.Add(System.Convert.ToDouble(item));
+                }
+                _lineDash = list.ToArray();
+            }
+            else
+            {
+                _lineDash = new double[0];
+            }
+            UpdateLineDash();
+        }
+
+        public object getLineDash()
+        {
+            return _lineDash;
+        }
+
+        public object createConicGradient(double startAngle, double x, double y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool isPointInStroke(double x, double y)
+        {
+            return path.IsOutlineVisible((float)x, (float)y, _stroke);
+        }
+
+        public object getContextAttributes()
+        {
+            return new ContextAttributes();
+        }
+
+        //todo: move it to geometry utils
+
+        /// <summary>
+        /// Reset Canvas fields to their initial value.
+        /// </summary>
+        private void _reset()
+        {
+            SetDefaultValues();
+            _stroke = _initialConfig.Stroke;
+            _fill = _initialConfig.Fill;
+            SetLineConfig(_initialConfig.Stroke);
+        }
+
+        /// <summary>
+        /// InternalTransform set of methods allows to apply current tansformation matrix to the set of points.
+        /// For convenience of use, points accepted as separate pair of coordinates (x, y)
+        /// </summary>
+        private PointF[] InternalTransform(double x, double y, double x1, double y1, double x2, double y2, double x3,
+                                           double y3)
+        {
+            return new[]
+                       {
+                           InternalTransform(x, y)[0], InternalTransform(x1, y1)[0], InternalTransform(x2, y2)[0],
+                           InternalTransform(x3, y3)[0]
+                       };
+        }
+
         private PointF[] InternalTransform(double x, double y, double x1, double y1, double x2, double y2)
         {
             return new[] {InternalTransform(x, y)[0], InternalTransform(x1, y1)[0], InternalTransform(x2, y2)[0]};
@@ -1960,6 +1788,84 @@ namespace SharpCanvas.Context.Drawing2D
             var points = new[] {new PointF((float) x, (float) y)};
             _transformation.TransformPoints(points);
             return points;
+        }
+
+        private void DrawArcBetweenTwoPoints(PointF p0, PointF p1, PointF p2, float radius)
+        {
+            // Calculate vectors
+            double dx1 = p1.X - p0.X;
+            double dy1 = p1.Y - p0.Y;
+            double dx2 = p2.X - p1.X;
+            double dy2 = p2.Y - p1.Y;
+
+            // Normalize
+            double len1 = Math.Sqrt(dx1 * dx1 + dy1 * dy1);
+            double len2 = Math.Sqrt(dx2 * dx2 + dy2 * dy2);
+            
+            if (len1 < 1e-6 || len2 < 1e-6) return;
+
+            double ux1 = dx1 / len1;
+            double uy1 = dy1 / len1;
+            double ux2 = dx2 / len2;
+            double uy2 = dy2 / len2;
+
+            // Angle between vectors
+            double cosA = ux1 * ux2 + uy1 * uy2;
+            // Clamp
+            if (cosA > 1.0) cosA = 1.0;
+            if (cosA < -1.0) cosA = -1.0;
+            double angle = Math.Acos(cosA);
+
+            // Tangent distance
+            double tanA = Math.Tan((Math.PI - angle) / 2);
+            double dist = radius * tanA;
+
+            // Tangent points
+            // t1 is on p0->p1, distance 'dist' from p1
+            double t1x = p1.X - ux1 * dist;
+            double t1y = p1.Y - uy1 * dist;
+            
+            // t2 is on p1->p2, distance 'dist' from p1
+            double t2x = p1.X + ux2 * dist;
+            double t2y = p1.Y + uy2 * dist;
+
+            // Center of circle
+            // Cross product of u1 and u2: u1.x*u2.y - u1.y*u2.x
+            double cross = ux1 * uy2 - uy1 * ux2;
+            double sign = cross >= 0 ? 1 : -1;
+            
+            // Perpendicular vector pointing towards center
+            double px = -uy1 * sign;
+            double py = ux1 * sign;
+            
+            double cx = t1x + px * radius;
+            double cy = t1y + py * radius;
+
+            // Start and end angles
+            double startAngle = Math.Atan2(t1y - cy, t1x - cx);
+            double endAngle = Math.Atan2(t2y - cy, t2x - cx);
+
+            // Sweep angle
+            double startDeg = startAngle * 180 / Math.PI;
+            double endDeg = endAngle * 180 / Math.PI;
+            double sweepDeg = endDeg - startDeg;
+
+            if (sign > 0) // Clockwise
+            {
+                if (sweepDeg < 0) sweepDeg += 360;
+            }
+            else // Counter-clockwise
+            {
+                if (sweepDeg > 0) sweepDeg -= 360;
+            }
+
+            // Draw line to t1
+            // Note: We use AddLine with transformed coordinates (which is what we calculated)
+            // But AddLine expects points.
+            path.AddLine(p0, new PointF((float)t1x, (float)t1y));
+            
+            // Draw arc
+            path.AddArc((float)(cx - radius), (float)(cy - radius), (float)(radius * 2), (float)(radius * 2), (float)startDeg, (float)sweepDeg);
         }
 
         #endregion
@@ -1988,12 +1894,6 @@ namespace SharpCanvas.Context.Drawing2D
             }
             return base.InvokeMember(name, invokeAttr, binder, target, args, modifiers, culture, namedParameters);
         }
-
-        //DONE: This library has been converted to use the ObjectWithPrototype class.
-        //The custom IReflect implementation was replaced by inheriting from ObjectWithPrototype.
-        //DEPRECATED: The special handling for drawImage is necessary to resolve overloads when called from JScript.
-        //DEPRECATED: The context for the "Throw debug error" FIXME was lost.
-        //DEPRECATED: Wrapping a host IExpando is not possible without the host environment. The refactoring to ObjectWithPrototype is a sufficient improvement.
 
     }
 }
