@@ -10,7 +10,9 @@ A cross-platform C# implementation of the HTML5 Canvas 2D rendering API, support
 - **Cross-Platform** - Works on Windows, Linux, and macOS via SkiaSharp
 - **Multiple Backends** - Modern SkiaSharp backend and legacy System.Drawing support
 - **Production Ready** - 100% test pass rate with comprehensive test coverage
-- **JavaScript Interoperability** - Supports JavaScript-driven testing via Microsoft.ClearScript
+- **WebAssembly Support** - Run in browsers via Blazor WASM or headless with Wasmtime
+- **Blazor Component** - Ready-to-use interactive Canvas component for Blazor apps
+- **JavaScript Interoperability** - Full JavaScript integration via Microsoft.ClearScript V8
 - **Performance** - Hardware-accelerated rendering through Skia
 - **Accessibility** - Focus ring support for enhanced accessibility
 
@@ -84,6 +86,68 @@ context.lineWidth = 2;
 context.stroke();
 ```
 
+## 🌐 WebAssembly and Blazor
+
+SharpCanvas supports WebAssembly deployment for running .NET Canvas code in browsers and headless environments.
+
+### Blazor WebAssembly Component
+
+Use SharpCanvas in Blazor WASM applications:
+
+```bash
+cd SharpCanvas.Blazor.Wasm
+dotnet run
+```
+
+Then navigate to http://localhost:5233 to see the interactive demo with 4 rendering modes:
+- Basic shapes (rectangles, fills, strokes)
+- Gradients (linear and radial)
+- Paths (arcs, curves, bezier)
+- Text rendering
+
+### JavaScript Integration
+
+SharpCanvas includes JavaScript engine integration via ClearScript V8:
+
+```bash
+cd SharpCanvas.JsHost
+dotnet run
+```
+
+This runs comprehensive JavaScript-driven Canvas tests including:
+- Basic drawing operations
+- Path API (moveTo, lineTo, arc, curves)
+- Transformations (translate, rotate, scale)
+- Gradients and patterns
+- Text rendering
+
+All tests generate PNG output files for validation.
+
+### Standalone WASM Execution
+
+For headless WASM execution with Wasmtime (requires `wasm-tools-net8` workload):
+
+```bash
+# Install Wasmtime
+curl https://wasmtime.dev/install.sh -sSf | bash
+
+# Build WASM console app
+cd SharpCanvas.Wasm.Console
+dotnet build
+
+# Run with Wasmtime
+wasmtime run bin/Debug/net8.0/browser-wasm/AppBundle/SharpCanvas.Wasm.Console.wasm
+```
+
+**Note:** See [WASM_WORKLOAD_STATUS.md](WASM_WORKLOAD_STATUS.md) for workload installation instructions and troubleshooting.
+
+### WASM Deployment Documentation
+
+- [WASM Deployment Guide](WASM_DEPLOYMENT.md) - Comprehensive deployment instructions
+- [WASM Workload Status](WASM_WORKLOAD_STATUS.md) - Installation troubleshooting
+- [WASM Package Sizes](WASM_PACKAGE_SIZES.md) - Size analysis and optimization
+- [WASM Clarification](WASM_CLARIFICATION.md) - Execution models explained
+
 ## 🏗️ Architecture
 
 ### Project Structure
@@ -98,7 +162,9 @@ SharpCanvas/
 │   ├── Tests.Skia.Modern/    # Modern backend tests
 │   ├── Tests.Unified/        # Cross-backend unified tests
 │   └── Tests.Skia.Standalone/ # Standalone integration tests
-└── SharpCanvas.JsHost/        # JavaScript host integration
+├── SharpCanvas.JsHost/        # JavaScript host integration (ClearScript V8)
+├── SharpCanvas.Blazor.Wasm/   # Blazor WebAssembly component
+└── SharpCanvas.Wasm.Console/  # Standalone WASM console app (for Wasmtime)
 ```
 
 ### Backend Comparison
@@ -294,6 +360,7 @@ See [.claude/NUGET_PROXY_README.md](.claude/NUGET_PROXY_README.md) for details.
 
 ## 📖 Documentation
 
+### Core Documentation
 - [Production Readiness](PRODUCTION_READINESS.md) - Status, metrics, and deployment guide
 - [Project Structure](STRUCTURE.md) - Architecture and organization
 - [Roadmap](TODO.md) - Future enhancements and community contributions
@@ -301,6 +368,13 @@ See [.claude/NUGET_PROXY_README.md](.claude/NUGET_PROXY_README.md) for details.
 - [Testing Instructions](TESTING_INSTRUCTIONS.md) - How to run tests
 - [Unified Testing Strategy](UNIFIED_TESTING_STRATEGY.md) - Cross-backend testing
 - [ImageBitmap and Workers](IMAGEBITMAP_AND_WORKERS.md) - Advanced features
+
+### WebAssembly and Blazor Documentation
+- [WASM Deployment Guide](WASM_DEPLOYMENT.md) - Complete WASM deployment instructions
+- [WASM Workload Status](WASM_WORKLOAD_STATUS.md) - Workload installation and troubleshooting
+- [WASM Package Sizes](WASM_PACKAGE_SIZES.md) - Package size analysis and optimization
+- [WASM Clarification](WASM_CLARIFICATION.md) - Browser vs headless execution models
+- [Completion Summary](COMPLETION_SUMMARY.md) - Full project implementation summary
 
 ## 🎯 Production Readiness
 
