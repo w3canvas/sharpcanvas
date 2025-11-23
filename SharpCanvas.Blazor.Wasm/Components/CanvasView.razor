@@ -1,0 +1,205 @@
+@using SharpCanvas.Context.Skia
+@using SharpCanvas.Shared
+@using SkiaSharp
+@using System.Runtime.InteropServices.JavaScript
+@inject IJSRuntime JS
+
+<div class="canvas-container">
+    <h3>SharpCanvas WebAssembly Demo</h3>
+    <img src="@ImageDataUrl" alt="Canvas Output" style="border: 1px solid #ccc; max-width: 100%;" />
+    <div class="controls">
+        <button class="btn btn-primary" @onclick="DrawBasic">Draw Basic Shapes</button>
+        <button class="btn btn-success" @onclick="DrawGradient">Draw Gradient</button>
+        <button class="btn btn-info" @onclick="DrawPaths">Draw Paths</button>
+        <button class="btn btn-warning" @onclick="DrawText">Draw Text</button>
+    </div>
+</div>
+
+@code {
+    private string ImageDataUrl { get; set; } = string.Empty;
+    private IDocument? mockDocument;
+    private OffscreenCanvas? canvas;
+
+    protected override void OnInitialized()
+    {
+        InitializeCanvas();
+        DrawBasic();
+    }
+
+    private void InitializeCanvas()
+    {
+        var mockWindow = new Moq.Mock<IWindow>();
+        var mockDoc = new Moq.Mock<IDocument>();
+        var fontFaceSet = new FontFaceSet();
+
+        mockWindow.Setup(w => w.fonts).Returns(fontFaceSet);
+        mockDoc.Setup(d => d.defaultView).Returns(mockWindow.Object);
+
+        mockDocument = mockDoc.Object;
+        canvas = new OffscreenCanvas(400, 300, mockDocument);
+    }
+
+    private async void DrawBasic()
+    {
+        if (canvas == null) return;
+
+        var ctx = canvas.getContext("2d") as OffscreenCanvasRenderingContext2D;
+        if (ctx == null) return;
+
+        // Clear canvas
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, 400, 300);
+
+        // Draw rectangles
+        ctx.fillStyle = "#FF0000";
+        ctx.fillRect(20, 20, 100, 80);
+
+        ctx.fillStyle = "#00FF00";
+        ctx.fillRect(140, 20, 100, 80);
+
+        ctx.fillStyle = "#0000FF";
+        ctx.fillRect(260, 20, 100, 80);
+
+        // Draw stroked rectangles
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(20, 120, 100, 80);
+        ctx.strokeRect(140, 120, 100, 80);
+        ctx.strokeRect(260, 120, 100, 80);
+
+        await UpdateImage();
+    }
+
+    private async void DrawGradient()
+    {
+        if (canvas == null) return;
+
+        var ctx = canvas.getContext("2d") as OffscreenCanvasRenderingContext2D;
+        if (ctx == null) return;
+
+        // Clear canvas
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, 400, 300);
+
+        // Linear gradient
+        var gradient = ctx.createLinearGradient(0, 0, 400, 0);
+        (gradient as SkiaLinearCanvasGradient)?.addColorStop(0, "red");
+        (gradient as SkiaLinearCanvasGradient)?.addColorStop(0.5, "yellow");
+        (gradient as SkiaLinearCanvasGradient)?.addColorStop(1, "blue");
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 400, 150);
+
+        // Radial gradient
+        var radialGradient = ctx.createRadialGradient(200, 225, 10, 200, 225, 75);
+        (radialGradient as SkiaRadialCanvasGradient)?.addColorStop(0, "white");
+        (radialGradient as SkiaRadialCanvasGradient)?.addColorStop(1, "green");
+
+        ctx.fillStyle = radialGradient;
+        ctx.fillRect(0, 150, 400, 150);
+
+        await UpdateImage();
+    }
+
+    private async void DrawPaths()
+    {
+        if (canvas == null) return;
+
+        var ctx = canvas.getContext("2d") as OffscreenCanvasRenderingContext2D;
+        if (ctx == null) return;
+
+        // Clear canvas
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, 400, 300);
+
+        // Draw triangle
+        ctx.beginPath();
+        ctx.moveTo(100, 50);
+        ctx.lineTo(200, 50);
+        ctx.lineTo(150, 150);
+        ctx.closePath();
+        ctx.fillStyle = "#FF00FF";
+        ctx.fill();
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Draw circle
+        ctx.beginPath();
+        ctx.arc(300, 100, 50, 0, Math.PI * 2, false);
+        ctx.fillStyle = "#00FFFF";
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw bezier curve
+        ctx.beginPath();
+        ctx.moveTo(50, 200);
+        ctx.bezierCurveTo(50, 250, 350, 250, 350, 200);
+        ctx.strokeStyle = "#FF0000";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        await UpdateImage();
+    }
+
+    private async void DrawText()
+    {
+        if (canvas == null) return;
+
+        var ctx = canvas.getContext("2d") as OffscreenCanvasRenderingContext2D;
+        if (ctx == null) return;
+
+        // Clear canvas
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, 400, 300);
+
+        // Draw various text styles
+        ctx.fillStyle = "#000000";
+        ctx.font = "20px Arial";
+        ctx.fillText("Hello SharpCanvas!", 20, 40);
+
+        ctx.font = "30px Arial";
+        ctx.strokeStyle = "#FF0000";
+        ctx.strokeText("WebAssembly!", 20, 90);
+
+        ctx.font = "25px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("Centered Text", 200, 140);
+
+        ctx.font = "20px Arial";
+        ctx.textAlign = "right";
+        ctx.fillText("Right Aligned", 380, 190);
+
+        ctx.font = "italic 25px Arial";
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#0000FF";
+        ctx.fillText("Running in Browser!", 20, 240);
+
+        await UpdateImage();
+    }
+
+    private async Task UpdateImage()
+    {
+        if (canvas == null) return;
+
+        var blob = await canvas.convertToBlob();
+        var base64 = Convert.ToBase64String(blob);
+        ImageDataUrl = $"data:image/png;base64,{base64}";
+        StateHasChanged();
+    }
+}
+
+<style>
+    .canvas-container {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .controls {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+</style>

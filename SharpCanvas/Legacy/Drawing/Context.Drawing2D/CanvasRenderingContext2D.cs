@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using SharpCanvas.Forms;
 using System.Drawing;
@@ -145,7 +145,7 @@ namespace SharpCanvas.Context.Drawing2D
         private void CanvasRenderingContext2D_OnPartialDraw()
         {
             ApplyShadows();
-            ApplyGlobalComposition();
+            // ApplyGlobalComposition(); // TODO: Method implementation missing
             //there is no need to call RequestDraw on the container because container already subscribed to OnPartialDraw event
             //and will execute Redraw method once OnPartialDraw occurs
         }
@@ -765,9 +765,28 @@ namespace SharpCanvas.Context.Drawing2D
             if (_fillStyle is LinearCanvasGradient)
                 _fill.brush = transformStrokePoints(_fillStyle as LinearCanvasGradient, points);
 
-            surface.FillPolygon(_fill.brush, new[
-                                                 ]
+            surface.FillPolygon(_fill.brush, new[]
                                                  {
+                                                     points[0],
+                                                     points[1],
+                                                     points[2],
+                                                     points[3]
+                                                 }, FillMode.Winding);
+
+            if (OnPartialDraw != null)
+            {
+                OnPartialDraw();
+            }
+        }
+
+        private Brush transformStrokePoints(LinearCanvasGradient gradient, PointF[] points)
+        {
+            return (Brush)gradient.GetBrush();
+        }
+
+        private void ApplyShadows()
+        {
+            if (!string.IsNullOrEmpty(_shadowColor) && _shadowColor != "rgba(0,0,0,0)"
                 && _shadowBlur != 0 && (_shadowOffsetX != 0 || _shadowOffsetY != 0))
             {
                 var blur = new GaussianBlur((int) _shadowBlur);
@@ -794,6 +813,314 @@ namespace SharpCanvas.Context.Drawing2D
                         surface.DrawImage(shadow, 0, 0);
                     }
                 }
+            }
+        }
+
+        // Path API methods
+        public void beginPath()
+        {
+            path?.Dispose();
+            path = new GraphicsPath();
+        }
+
+        public void closePath()
+        {
+            path.CloseFigure();
+        }
+
+        public void moveTo(double x, double y)
+        {
+            PointF[] points = InternalTransform(x, y);
+            path.StartFigure();
+            // Store the point as the start of a new figure
+            // The next LineTo or curve operation will use this as the start point
+        }
+
+        public void lineTo(double x, double y)
+        {
+            PointF[] points = InternalTransform(x, y);
+            if (path.PointCount == 0)
+            {
+                path.AddLine(0, 0, points[0].X, points[0].Y);
+            }
+            else
+            {
+                var lastPoint = path.GetLastPoint();
+                path.AddLine(lastPoint, points[0]);
+            }
+        }
+
+        public void quadraticCurveTo(double cpx, double cpy, double x, double y)
+        {
+            PointF[] points = InternalTransform(cpx, cpy, x, y);
+            if (path.PointCount == 0)
+            {
+                path.StartFigure();
+            }
+            // System.Drawing doesn't have native quadratic bezier, so we approximate with cubic
+            var lastPoint = path.PointCount > 0 ? path.GetLastPoint() : new PointF(0, 0);
+            // Convert quadratic to cubic: CP1 = P0 + 2/3 * (CP - P0), CP2 = P1 + 2/3 * (CP - P1)
+            var cp1x = lastPoint.X + 2.0f / 3.0f * (points[0].X - lastPoint.X);
+            var cp1y = lastPoint.Y + 2.0f / 3.0f * (points[0].Y - lastPoint.Y);
+            var cp2x = points[1].X + 2.0f / 3.0f * (points[0].X - points[1].X);
+            var cp2y = points[1].Y + 2.0f / 3.0f * (points[0].Y - points[1].Y);
+            path.AddBezier(lastPoint, new PointF(cp1x, cp1y), new PointF(cp2x, cp2y), points[1]);
+        }
+
+        public void bezierCurveTo(double cp1x, double cp1y, double cp2x, double cp2y, double x, double y)
+        {
+            PointF[] points = InternalTransform(cp1x, cp1y, cp2x, cp2y, x, y);
+            if (path.PointCount == 0)
+            {
+                path.StartFigure();
+            }
+            var lastPoint = path.PointCount > 0 ? path.GetLastPoint() : new PointF(0, 0);
+            path.AddBezier(lastPoint, points[0], points[1], points[2]);
+        }
+
+        public void arcTo(double x1, double y1, double x2, double y2, double radius)
+        {
+            if (radius < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(radius), "Radius cannot be negative");
+            }
+
+            if (radius == 0)
+            {
+                lineTo(x1, y1);
+                return;
+            }
+
+            PointF[] points = InternalTransform(x1, y1, x2, y2);
+            PointF p0 = path.PointCount > 0 ? path.GetLastPoint() : new PointF(0, 0);
+            PointF p1 = points[0];
+            PointF p2 = points[1];
+
+            DrawArcBetweenTwoPoints(p0, p1, p2, (float)radius);
+        }
+
+        public void arc(double x, double y, double r, double startAngle, double endAngle, bool anticlockwise = false)
+        {
+            if (r < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(r), "Radius cannot be negative");
+            }
+
+            PointF[] points = InternalTransform(x, y);
+            float cx = points[0].X;
+            float cy = points[0].Y;
+            float radius = (float)r;
+
+            var startDegrees = (float)(startAngle * 180 / Math.PI);
+            var endDegrees = (float)(endAngle * 180 / Math.PI);
+
+            float sweepAngle;
+            if (anticlockwise)
+            {
+                sweepAngle = startDegrees - endDegrees;
+                if (sweepAngle <= 0)
+                {
+                    sweepAngle += 360;
+                }
+                sweepAngle = -sweepAngle;
+            }
+            else
+            {
+                sweepAngle = endDegrees - startDegrees;
+                if (sweepAngle <= 0)
+                {
+                    sweepAngle += 360;
+                }
+            }
+
+            var startX = (float)(cx + radius * Math.Cos(startAngle));
+            var startY = (float)(cy + radius * Math.Sin(startAngle));
+
+            if (path.PointCount == 0)
+            {
+                path.StartFigure();
+                path.AddLine(startX, startY, startX, startY);
+            }
+            else
+            {
+                var lastPoint = path.GetLastPoint();
+                path.AddLine(lastPoint, new PointF(startX, startY));
+            }
+
+            path.AddArc(cx - radius, cy - radius, radius * 2, radius * 2, startDegrees, sweepAngle);
+        }
+
+        public void rect(double x, double y, double w, double h)
+        {
+            PointF[] points = InternalTransform(x, y, x + w, y + h);
+            path.AddRectangle(new RectangleF(points[0].X, points[0].Y, points[1].X - points[0].X, points[1].Y - points[0].Y));
+        }
+
+        public void fill()
+        {
+            surface.FillPath(_fill.brush, path);
+            if (OnPartialDraw != null)
+            {
+                OnPartialDraw();
+            }
+        }
+
+        public void fill(object pathObj)
+        {
+            if (pathObj is GraphicsPath gPath)
+            {
+                surface.FillPath(_fill.brush, gPath);
+                if (OnPartialDraw != null)
+                {
+                    OnPartialDraw();
+                }
+            }
+        }
+
+        public void stroke()
+        {
+            surface.DrawPath(_stroke, path);
+            if (OnPartialDraw != null)
+            {
+                OnPartialDraw();
+            }
+        }
+
+        public void stroke(object pathObj)
+        {
+            if (pathObj is GraphicsPath gPath)
+            {
+                surface.DrawPath(_stroke, gPath);
+                if (OnPartialDraw != null)
+                {
+                    OnPartialDraw();
+                }
+            }
+        }
+
+        public void clip()
+        {
+            surface.SetClip(path, CombineMode.Intersect);
+        }
+
+        public void clip(object pathObj)
+        {
+            if (pathObj is GraphicsPath gPath)
+            {
+                surface.SetClip(gPath, CombineMode.Intersect);
+            }
+        }
+
+        public bool isPointInPath(double x, double y)
+        {
+            PointF[] points = InternalTransform(x, y);
+            return path.IsVisible(points[0]);
+        }
+
+        public object measureText(string text)
+        {
+            if (_parsedFont == null)
+            {
+                ParseFont(_font);
+            }
+            var size = surface.MeasureString(text, _parsedFont);
+            return new { width = (double)size.Width };
+        }
+
+        // Text properties
+        public string font
+        {
+            get => _font;
+            set
+            {
+                _font = value;
+                ParseFont(value);
+            }
+        }
+
+        public string textAlign
+        {
+            get => _textAlign;
+            set => _textAlign = value;
+        }
+
+        public string textBaseLine
+        {
+            get => _textBaseLine;
+            set => _textBaseLine = value;
+        }
+
+        private void ParseFont(string fontString)
+        {
+            if (string.IsNullOrEmpty(fontString))
+            {
+                _parsedFont = new Font("sans-serif", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+                return;
+            }
+
+            try
+            {
+                // Simple font parsing - format is typically "size family" like "10px Arial"
+                var parts = fontString.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 0)
+                {
+                    _parsedFont = new Font("sans-serif", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+                    return;
+                }
+
+                float size = 10;
+                string family = "sans-serif";
+                FontStyle style = FontStyle.Regular;
+
+                // Parse size (e.g., "10px", "12pt")
+                if (parts.Length > 0)
+                {
+                    var sizeStr = parts[0].ToLower();
+                    if (sizeStr.EndsWith("px"))
+                    {
+                        if (float.TryParse(sizeStr.Substring(0, sizeStr.Length - 2), out float parsedSize))
+                            size = parsedSize;
+                    }
+                    else if (sizeStr.EndsWith("pt"))
+                    {
+                        if (float.TryParse(sizeStr.Substring(0, sizeStr.Length - 2), out float parsedSize))
+                            size = parsedSize * 96f / 72f; // Convert pt to px
+                    }
+                    else if (float.TryParse(sizeStr, out float parsedSize))
+                    {
+                        size = parsedSize;
+                    }
+                }
+
+                // Parse family (remaining parts)
+                if (parts.Length > 1)
+                {
+                    family = string.Join(" ", parts.Skip(1));
+
+                    // Check for style keywords
+                    if (family.Contains("bold", StringComparison.OrdinalIgnoreCase))
+                    {
+                        style |= FontStyle.Bold;
+                        family = family.Replace("bold", "", StringComparison.OrdinalIgnoreCase).Trim();
+                    }
+                    if (family.Contains("italic", StringComparison.OrdinalIgnoreCase))
+                    {
+                        style |= FontStyle.Italic;
+                        family = family.Replace("italic", "", StringComparison.OrdinalIgnoreCase).Trim();
+                    }
+
+                    // Remove quotes if present
+                    family = family.Trim('"', '\'', ' ');
+                    if (string.IsNullOrEmpty(family))
+                        family = "sans-serif";
+                }
+
+                _parsedFont = new Font(family, size, style, GraphicsUnit.Pixel);
+            }
+            catch
+            {
+                // Fallback to default font if parsing fails
+                _parsedFont = new Font("sans-serif", 10, FontStyle.Regular, GraphicsUnit.Pixel);
             }
         }
 
@@ -1578,201 +1905,6 @@ namespace SharpCanvas.Context.Drawing2D
                        };
         }
 
-                surface = Graphics.FromImage(_surfaceBitmap);
-                surface.Clear(Color.Transparent);
-                if (!reset)
-                {
-                    //scale image to fit new sizes
-                    surface.DrawImage(currentImage.GetThumbnailImage(width, height, null, IntPtr.Zero), 0, 0);
-                }
-            }
-        }
-
-        public int GetHeight()
-        {
-            return (int)surface.VisibleClipBounds.Height;
-        }
-
-        public int GetWidth()
-        {
-            return (int)surface.VisibleClipBounds.Width;
-        }
-
-        #endregion
-
-        #region MDN Properties
-
-        public string direction { get; set; } = "ltr";
-        public string filter { get; set; } = "none";
-        public string fontKerning { get; set; } = "auto";
-        public string fontStretch { get; set; } = "normal";
-        public string fontVariantCaps { get; set; } = "normal";
-        public bool imageSmoothingEnabled { get; set; } = true;
-        public string imageSmoothingQuality { get; set; } = "low";
-        public string lang { get; set; } = "en-US";
-        public string letterSpacing { get; set; } = "0px";
-        private double _lineDashOffset = 0.0;
-        public double lineDashOffset
-        {
-            get => _lineDashOffset;
-            set
-            {
-                _lineDashOffset = value;
-                _stroke.DashOffset = (float)value;
-            }
-        }
-        public string textRendering { get; set; } = "auto";
-        public string wordSpacing { get; set; } = "0px";
-
-        #endregion
-
-        #region Utils
-
-        public void resetTransform()
-        {
-            setTransform(1, 0, 0, 1, 0, 0);
-        }
-
-        /// <summary>
-        /// Returns a copy of the current transformation matrix as a DOMMatrix object.
-        /// </summary>
-        /// <returns>A DOMMatrix object representing the current transformation matrix</returns>
-        /// <remarks>
-        /// The returned matrix can be used to save the current transformation state
-        /// and restore it later using setTransform().
-        /// </remarks>
-                public object getTransform()
-        {
-            var elements = _transformation.Elements;
-            return new Shared.DOMMatrix(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5]);
-        }
-
-        public void reset()
-        {
-            _reset();
-        }
-
-        public bool isContextLost()
-        {
-            return false;
-        }
-
-        public void drawFocusIfNeeded(object element)
-        {
-            // No-op
-        }
-
-        public void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, bool anticlockwise)
-        {
-            // TODO: This implementation ignores startAngle, endAngle, and anticlockwise. It draws a full ellipse.
-            using (var ellipsePath = new GraphicsPath())
-            {
-                ellipsePath.AddEllipse((float)(x - radiusX), (float)(y - radiusY), (float)(radiusX * 2), (float)(radiusY * 2));
-
-                if (rotation != 0)
-                {
-                    using (var matrix = new Matrix())
-                    {
-                        matrix.RotateAt((float)(GeometryUtils.ConvertRadiansToDegrees(rotation)), new PointF((float)x, (float)y));
-                        ellipsePath.Transform(matrix);
-                    }
-                }
-                path.AddPath(ellipsePath, false);
-            }
-        }
-
-        public void roundRect(double x, double y, double w, double h, object radii)
-        {
-            // TODO: Implement. This requires manual path construction with arcs and lines, which is non-trivial.
-            // For now, this will draw a regular rectangle.
-            rect(x, y, w, h);
-        }
-
-        private double[] _lineDash = new double[0];
-
-        private void UpdateLineDash()
-        {
-            if (_lineDash == null || _lineDash.Length == 0)
-            {
-                _stroke.DashStyle = DashStyle.Solid;
-            }
-            else
-            {
-                _stroke.DashStyle = DashStyle.Custom;
-                var intervals = _lineDash.Select(d => (float)d).ToArray();
-                if (intervals.Length % 2 != 0)
-                {
-                    intervals = intervals.Concat(intervals).ToArray();
-                }
-                _stroke.DashPattern = intervals;
-            }
-        }
-
-        public void setLineDash(object segments)
-        {
-            if (segments is System.Collections.IEnumerable enumerable)
-            {
-                var list = new List<double>();
-                foreach (var item in enumerable)
-                {
-                    list.Add(System.Convert.ToDouble(item));
-                }
-                _lineDash = list.ToArray();
-            }
-            else
-            {
-                _lineDash = new double[0];
-            }
-            UpdateLineDash();
-        }
-
-        public object getLineDash()
-        {
-            return _lineDash;
-        }
-
-        public object createConicGradient(double startAngle, double x, double y)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isPointInStroke(double x, double y)
-        {
-            return path.IsOutlineVisible((float)x, (float)y, _stroke);
-        }
-
-        public object getContextAttributes()
-        {
-            return new ContextAttributes();
-        }
-
-        //todo: move it to geometry utils
-
-        /// <summary>
-        /// Reset Canvas fields to their initial value.
-        /// </summary>
-        private void _reset()
-        {
-            SetDefaultValues();
-            _stroke = _initialConfig.Stroke;
-            _fill = _initialConfig.Fill;
-            SetLineConfig(_initialConfig.Stroke);
-        }
-
-        /// <summary>
-        /// InternalTransform set of methods allows to apply current tansformation matrix to the set of points.
-        /// For convenience of use, points accepted as separate pair of coordinates (x, y)
-        /// </summary>
-        private PointF[] InternalTransform(double x, double y, double x1, double y1, double x2, double y2, double x3,
-                                           double y3)
-        {
-            return new[]
-                       {
-                           InternalTransform(x, y)[0], InternalTransform(x1, y1)[0], InternalTransform(x2, y2)[0],
-                           InternalTransform(x3, y3)[0]
-                       };
-        }
-
         private PointF[] InternalTransform(double x, double y, double x1, double y1, double x2, double y2)
         {
             return new[] {InternalTransform(x, y)[0], InternalTransform(x1, y1)[0], InternalTransform(x2, y2)[0]};
@@ -1897,3 +2029,4 @@ namespace SharpCanvas.Context.Drawing2D
 
     }
 }
+

@@ -60,3 +60,33 @@ project.nuget.cache
 
 # Ignore archives
 *.tar.gz
+
+# Claude Code settings
+.claude/settings.local.json
+
+# Test outputs
+**/*test*.png
+**/output.png
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+.vs/
+
+# NuGet packages
+*.nupkg
+*.snupkg
+**/packages/*
+
+# Build results
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Rider
+.idea/
+*.sln.iml
