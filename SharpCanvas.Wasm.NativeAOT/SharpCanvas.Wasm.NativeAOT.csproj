@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <RuntimeIdentifier>wasi-wasm</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
+    <TrimMode>link</TrimMode>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!--
+    EXPERIMENTAL: This project uses NativeAOT-LLVM for WASI compilation
+    This is opt-in and NOT included in the main solution build.
+
+    Prerequisites:
+    1. Add experimental package source:
+       dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-experimental/nuget/v3/index.json
+
+    2. Install .NET 9 SDK
+
+    3. Build this project separately:
+       cd SharpCanvas.Wasm.NativeAOT
+       dotnet restore
+       dotnet publish -c Release
+
+    Note: componentize-dotnet currently only works on Windows
+  -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\SharpCanvas\SharpCanvas.Core\SharpCanvas.Core.csproj" />
+    <ProjectReference Include="..\SharpCanvas\Context.Skia\Context.Skia.csproj" />
+  </ItemGroup>
+
+  <!--
+    NativeAOT-LLVM package reference
+    This will be added once we confirm the experimental package source is configured
+  -->
+  <!--
+  <ItemGroup>
+    <PackageReference Include="BytecodeAlliance.Componentize.DotNet.Wasm.SDK" Version="0.6.0-preview00009" />
+  </ItemGroup>
+  -->
+
+</Project>

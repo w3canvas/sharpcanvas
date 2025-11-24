@@ -67,6 +67,11 @@ project.nuget.cache
 # Test outputs
 **/*test*.png
 **/output.png
+**/output-nativeaot.png
+
+# WASM outputs
+**/wasi-wasm/
+**/browser-wasm/
 
 # .NET Core
 project.lock.json
