@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Context.Drawing2D
 {

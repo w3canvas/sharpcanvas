@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SharpCanvas.Runtime.EventLoop;
 
 namespace SharpCanvas.Runtime.Workers
 {
@@ -68,12 +69,14 @@ namespace SharpCanvas.Runtime.Workers
     }
 
     /// <summary>
-    /// Represents a message port for communicating with a SharedWorker
+    /// Represents a message port for communicating with a SharedWorker.
+    /// Uses event loops for proper message ordering and thread context.
     /// </summary>
     public class MessagePort : IDisposable
     {
         private readonly Queue<WorkerMessage> _messageQueue;
         private readonly object _queueLock = new object();
+        private readonly IEventLoop? _eventLoop;
         private MessagePort? _entangledPort;
         private Task? _messagePump;
         private bool _isClosed;
@@ -88,9 +91,10 @@ namespace SharpCanvas.Runtime.Workers
         /// </summary>
         public event EventHandler<ErrorEvent>? OnError;
 
-        private MessagePort()
+        private MessagePort(IEventLoop? eventLoop = null)
         {
             _messageQueue = new Queue<WorkerMessage>();
+            _eventLoop = eventLoop;
             _isClosed = false;
         }
 
@@ -104,7 +108,9 @@ namespace SharpCanvas.Runtime.Workers
         }
 
         /// <summary>
-        /// Posts a message through this port
+        /// Posts a message through this port.
+        /// Transferable objects (OffscreenCanvas, ImageBitmap) are transferred with zero-copy semantics.
+        /// If the entangled port has an event loop, messages are posted to it for proper ordering.
         /// </summary>
         public void postMessage(object message, List<ITransferable>? transfer = null)
         {
@@ -113,13 +119,8 @@ namespace SharpCanvas.Runtime.Workers
                 throw new InvalidOperationException("Cannot post message to a closed or disconnected port");
             }
 
-            var workerMessage = new WorkerMessage
-            {
-                Data = message,
-                Transfer = transfer
-            };
-
-            // Handle transferable objects
+            // Handle transferable objects BEFORE queuing
+            // This ensures proper zero-copy transfer semantics
             if (transfer != null)
             {
                 foreach (var transferable in transfer)
@@ -128,14 +129,37 @@ namespace SharpCanvas.Runtime.Workers
                     {
                         throw new InvalidOperationException("Cannot transfer an already neutered object");
                     }
+                    // Neuter on the calling thread to prevent further use
                     transferable.Neuter();
                 }
             }
 
-            lock (_entangledPort._queueLock)
+            var workerMessage = new WorkerMessage
             {
-                _entangledPort._messageQueue.Enqueue(workerMessage);
-                Monitor.PulseAll(_entangledPort._queueLock);
+                Data = message,
+                Transfer = transfer
+            };
+
+            // If the target port has an event loop, post to it for proper ordering
+            if (_entangledPort._eventLoop != null)
+            {
+                _entangledPort._eventLoop.Post(() =>
+                {
+                    lock (_entangledPort._queueLock)
+                    {
+                        _entangledPort._messageQueue.Enqueue(workerMessage);
+                        Monitor.PulseAll(_entangledPort._queueLock);
+                    }
+                });
+            }
+            else
+            {
+                // No event loop, use direct queuing
+                lock (_entangledPort._queueLock)
+                {
+                    _entangledPort._messageQueue.Enqueue(workerMessage);
+                    Monitor.PulseAll(_entangledPort._queueLock);
+                }
             }
         }
 
@@ -276,7 +300,8 @@ namespace SharpCanvas.Runtime.Workers
     }
 
     /// <summary>
-    /// Internal instance of a shared worker
+    /// Internal instance of a shared worker.
+    /// Runs on its own thread with a dedicated event loop for proper message ordering.
     /// </summary>
     internal class SharedWorkerInstance
     {
@@ -286,6 +311,7 @@ namespace SharpCanvas.Runtime.Workers
         private readonly ConcurrentQueue<MessagePort> _pendingPorts;
         private readonly List<MessagePort> _connectedPorts;
         private readonly object _portsLock = new object();
+        private readonly WorkerThreadEventLoop _eventLoop;
         private Task? _task;
         private CancellationTokenSource _cancellationTokenSource;
         private volatile bool _isStarted;
@@ -299,6 +325,7 @@ namespace SharpCanvas.Runtime.Workers
             _globalScope = globalScopeFactory?.Invoke(name) ?? new SharedWorkerGlobalScope(name);
             _pendingPorts = new ConcurrentQueue<MessagePort>();
             _connectedPorts = new List<MessagePort>();
+            _eventLoop = new WorkerThreadEventLoop();
             _cancellationTokenSource = new CancellationTokenSource();
             _isStarted = false;
         }
@@ -342,17 +369,46 @@ namespace SharpCanvas.Runtime.Workers
             {
                 try
                 {
-                    _workerTask(_globalScope);
-                    // Process any pending connections
-                    while (_pendingPorts.TryDequeue(out var port))
+                    // Start the worker task in parallel with the event loop
+                    var userTaskThread = new Thread(() =>
                     {
-                        _globalScope.AddPort(port);
-                        lock (_portsLock)
+                        try
                         {
-                            _connectedPorts.Add(port);
+                            _workerTask(_globalScope);
+                            // Process any pending connections
+                            while (_pendingPorts.TryDequeue(out var port))
+                            {
+                                _globalScope.AddPort(port);
+                                lock (_portsLock)
+                                {
+                                    _connectedPorts.Add(port);
+                                }
+                            }
+                            OnLoad?.Invoke(this, EventArgs.Empty);
                         }
-                    }
-                    OnLoad?.Invoke(this, EventArgs.Empty);
+                        catch (Exception ex)
+                        {
+                            var allPorts = _pendingPorts.ToList();
+                            lock (_portsLock)
+                            {
+                                allPorts.AddRange(_connectedPorts);
+                            }
+                            foreach (var port in allPorts)
+                            {
+                                if (port != null)
+                                {
+                                    port.SendError(ex.Message, ex);
+                                }
+                            }
+                        }
+                    });
+                    userTaskThread.Start();
+
+                    // Run the event loop on this thread (blocks until stopped)
+                    _eventLoop.Run();
+
+                    // Wait for user task to complete
+                    userTaskThread.Join(1000);
                 }
                 catch (Exception ex)
                 {
@@ -375,6 +431,10 @@ namespace SharpCanvas.Runtime.Workers
         public void Stop()
         {
             _cancellationTokenSource?.Cancel();
+
+            // Stop the event loop
+            _eventLoop.Stop();
+
             _task?.Wait(1000);
 
             var allPorts = _pendingPorts.ToList();
@@ -386,6 +446,9 @@ namespace SharpCanvas.Runtime.Workers
             {
                 port.close();
             }
+
+            // Dispose event loop
+            _eventLoop.Dispose();
         }
     }
 }
