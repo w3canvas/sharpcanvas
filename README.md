@@ -6,11 +6,12 @@ A comprehensive C# implementation of the HTML5 Canvas 2D rendering API with **tw
 
 ## 🚀 Features
 
-- **Full HTML5 Canvas API** - Complete implementation of the Canvas 2D rendering context
+- **~95% Canvas API Coverage** - Comprehensive implementation of the HTML5 Canvas 2D API ([details](docs/CANVAS_API_GAPS.md))
 - **Two Production Backends**
   - **SkiaSharp** - Cross-platform (Windows, Linux, macOS), hardware-accelerated
   - **System.Drawing** - Windows-native GDI+, perfect for Windows-only applications
 - **100% Test Coverage** - 258/258 tests passing (229 modern + 28 core + 1 standalone)
+- **Backend-Agnostic Runtime** - Workers, SharedWorkers, and Event Loops shared across all backends
 - **WebAssembly Support** - Run in browsers via Blazor WASM or headless with Wasmtime
 - **Blazor Component** - Ready-to-use interactive Canvas component for Blazor apps
 - **JavaScript Interoperability** - Full JavaScript integration via Microsoft.ClearScript V8
@@ -239,6 +240,7 @@ SharpCanvas/
 - **[Project Structure](docs/STRUCTURE.md)** - Architecture and component organization
 - **[Architecture Refactoring Plan](docs/ARCHITECTURE_REFACTORING_PLAN.md)** - Runtime layer design and implementation
 - **[Testing Coverage](docs/TESTING_COVERAGE.md)** - Test strategy and coverage metrics
+- **[Canvas API Coverage](docs/CANVAS_API_GAPS.md)** - What's implemented and what's missing (~95% complete)
 - **[Production Readiness](docs/PRODUCTION_READINESS.md)** - Production deployment guide
 - **[WASM Deployment](docs/WASM_DEPLOYMENT.md)** - WebAssembly deployment instructions
 - **[Implementation Status](docs/IMPLEMENTATION_STATUS.md)** - Feature implementation details
