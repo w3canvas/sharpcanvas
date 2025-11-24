@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharpCanvas.Core\SharpCanvas.Core.csproj" />
+    <ProjectReference Include="..\SharpCanvas.Runtime\SharpCanvas.Runtime.csproj" />
   </ItemGroup>
 
   <ItemGroup>

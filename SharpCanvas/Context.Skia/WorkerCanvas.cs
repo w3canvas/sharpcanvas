@@ -1,5 +1,6 @@
 #nullable enable
 using SharpCanvas.Shared;
+using SharpCanvas.Runtime.Workers;
 using System;
 using System.Threading.Tasks;
 

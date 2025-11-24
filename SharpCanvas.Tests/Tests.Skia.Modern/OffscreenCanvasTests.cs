@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using SharpCanvas.Context.Skia;
+using SharpCanvas.Runtime.Workers;
 using SkiaSharp;
 using System.Threading;
 using Moq;
@@ -11,13 +12,14 @@ namespace SharpCanvas.Tests.Skia.Modern
         [Test]
         public void TestOffscreenCanvasWithWorker()
         {
-            var worker = new CanvasWorker();
+            var factory = new SkiaGraphicsFactory();
+            var worker = new CanvasWorker(factory);
             var manualResetEvent = new ManualResetEvent(false);
             ImageBitmap? resultImageBitmap = null;
 
             worker.OnWorkComplete += (sender, imageBitmap) =>
             {
-                resultImageBitmap = imageBitmap;
+                resultImageBitmap = (ImageBitmap)imageBitmap;
                 manualResetEvent.Set();
             };
             var mockWindow = new Mock<IWindow>();

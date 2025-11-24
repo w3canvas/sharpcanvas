@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SharpCanvas.Context.Skia
+namespace SharpCanvas.Runtime.Workers
 {
     /// <summary>
     /// Represents a SharedWorker - a worker that can be accessed from multiple browsing contexts

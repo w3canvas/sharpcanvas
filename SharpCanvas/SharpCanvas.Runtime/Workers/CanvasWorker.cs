@@ -1,9 +1,8 @@
 using SharpCanvas.Shared;
-using SkiaSharp;
 using System;
 using System.Threading.Tasks;
 
-namespace SharpCanvas.Context.Skia
+namespace SharpCanvas.Runtime.Workers
 {
     /// <summary>
     /// Helper class for running canvas operations in a background worker.
@@ -11,8 +10,15 @@ namespace SharpCanvas.Context.Skia
     /// </summary>
     public class CanvasWorker
     {
-        public delegate void DrawDelegate(OffscreenCanvas canvas);
-        public event EventHandler<ImageBitmap> OnWorkComplete;
+        private readonly IGraphicsFactory _graphicsFactory;
+
+        public delegate void DrawDelegate(dynamic canvas);
+        public event EventHandler<object> OnWorkComplete;
+
+        public CanvasWorker(IGraphicsFactory graphicsFactory)
+        {
+            _graphicsFactory = graphicsFactory ?? throw new ArgumentNullException(nameof(graphicsFactory));
+        }
 
         /// <summary>
         /// Runs a canvas drawing operation in the background and returns the result as an ImageBitmap
@@ -21,7 +27,7 @@ namespace SharpCanvas.Context.Skia
         {
             Task.Run(() =>
             {
-                var canvas = new OffscreenCanvas(width, height, document);
+                dynamic canvas = _graphicsFactory.CreateOffscreenCanvas(width, height, document);
                 drawDelegate(canvas);
                 var imageBitmap = canvas.transferToImageBitmap();
                 OnWorkComplete?.Invoke(this, imageBitmap);

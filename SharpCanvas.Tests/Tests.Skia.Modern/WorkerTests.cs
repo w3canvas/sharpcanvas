@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using SharpCanvas.Context.Skia;
+using SharpCanvas.Runtime.Workers;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

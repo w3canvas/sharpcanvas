@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>SharpCanvas.Runtime</RootNamespace>
+    <AssemblyName>SharpCanvas.Runtime</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SharpCanvas.Core\SharpCanvas.Core.csproj" />
+  </ItemGroup>
+
+</Project>

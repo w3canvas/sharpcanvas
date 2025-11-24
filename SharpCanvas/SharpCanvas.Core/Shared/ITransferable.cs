@@ -1,4 +1,4 @@
-namespace SharpCanvas.Context.Skia
+namespace SharpCanvas
 {
     /// <summary>
     /// Marker interface for objects that can be transferred between workers/contexts

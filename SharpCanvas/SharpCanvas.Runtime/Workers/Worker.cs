@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SharpCanvas.Context.Skia
+namespace SharpCanvas.Runtime.Workers
 {
     /// <summary>
     /// Represents a Web Worker - a script that runs in a background thread.
