@@ -1,62 +1,58 @@
 #!/bin/bash
-# Build script for SharpCanvas NativeAOT-LLVM WASI (EXPERIMENTAL)
+# Build script for SharpCanvas NativeAOT (EXPERIMENTAL)
 #
 # This script builds the NativeAOT project separately from the main solution.
-# Run this ONLY if you want to experiment with NativeAOT-LLVM compilation.
+# Run this ONLY if you want to experiment with NativeAOT compilation.
 
 echo "========================================"
-echo "SharpCanvas NativeAOT-LLVM Build"
+echo "SharpCanvas NativeAOT Build"
 echo "========================================"
 echo ""
 echo "This is an EXPERIMENTAL build using:"
-echo "- .NET 9"
-echo "- NativeAOT-LLVM compiler"
-echo "- WASI target"
-echo "- componentize-dotnet tooling"
+echo "- .NET 8"
+echo "- NativeAOT compiler (PublishAot=true)"
+echo "- Native executable output (not WASM)"
 echo ""
 
-# Check if .NET 9 is installed
+# Check if .NET 8 or later is installed
 DOTNET_VERSION=$(dotnet --version)
-if [[ ! $DOTNET_VERSION =~ ^9\. ]]; then
-    echo "ERROR: .NET 9 is required (found $DOTNET_VERSION)"
-    echo "Download from: https://dotnet.microsoft.com/download/dotnet/9.0"
+if [[ ! $DOTNET_VERSION =~ ^[89]\. ]]; then
+    echo "ERROR: .NET 8 or later is required (found $DOTNET_VERSION)"
+    echo "Download from: https://dotnet.microsoft.com/download/dotnet"
     exit 1
 fi
 
-echo "Step 1: Checking package sources..."
-if ! dotnet nuget list source | grep -q "dotnet-experimental"; then
-    echo ""
-    echo "WARNING: Experimental package source not found"
-    echo ""
-    echo "Run this command to add it:"
-    echo "dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-experimental/nuget/v3/index.json -n dotnet-experimental"
-    echo ""
-    read -p "Continue anyway? (y/n): " CONTINUE
-    if [[ ! $CONTINUE =~ ^[Yy]$ ]]; then
-        exit 1
+# Determine runtime identifier based on OS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS - detect architecture
+    ARCH=$(uname -m)
+    if [[ "$ARCH" == "arm64" ]]; then
+        RID="osx-arm64"
+    else
+        RID="osx-x64"
     fi
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    RID="linux-x64"
 else
-    echo "✓ Experimental package source configured"
+    echo "ERROR: Unsupported OS: $OSTYPE"
+    exit 1
 fi
 
-echo ""
-echo "Step 2: Restoring dependencies..."
+echo "Step 1: Restoring dependencies..."
 dotnet restore || {
     echo "ERROR: Restore failed"
     exit 1
 }
 
 echo ""
-echo "Step 3: Building project..."
-dotnet build -c Release || {
-    echo "ERROR: Build failed"
-    exit 1
-}
-
-echo ""
-echo "Step 4: Publishing to WASM..."
-dotnet publish -c Release || {
+echo "Step 2: Publishing with NativeAOT ($RID)..."
+dotnet publish -c Release -r $RID || {
     echo "ERROR: Publish failed"
+    echo ""
+    echo "This may fail if:"
+    echo "- SkiaSharp is not compatible with NativeAOT trimming"
+    echo "- Required code was trimmed"
+    echo "- Native dependencies cannot be bundled"
     exit 1
 }
 
@@ -66,9 +62,9 @@ echo "SUCCESS!"
 echo "========================================"
 echo ""
 echo "Output location:"
-echo "bin/Release/net9.0/wasi-wasm/publish/"
+echo "bin/Release/net8.0/$RID/publish/"
 echo ""
-echo "To run with Wasmtime:"
-echo "  cd bin/Release/net9.0/wasi-wasm/publish"
-echo "  wasmtime run --dir=. SharpCanvas.Wasm.NativeAOT.wasm"
+echo "To run:"
+echo "  cd bin/Release/net8.0/$RID/publish"
+echo "  ./SharpCanvas.Wasm.NativeAOT"
 echo ""

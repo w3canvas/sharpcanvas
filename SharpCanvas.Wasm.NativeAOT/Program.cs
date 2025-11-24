@@ -6,27 +6,27 @@ using SkiaSharp;
 namespace SharpCanvas.Wasm.NativeAOT;
 
 /// <summary>
-/// EXPERIMENTAL: NativeAOT-LLVM WASI compilation test
+/// EXPERIMENTAL: NativeAOT compilation test
 ///
-/// This tests whether SharpCanvas can compile to native WASM using
-/// NativeAOT-LLVM instead of the standard Blazor WASM runtime.
+/// This tests whether SharpCanvas can compile with NativeAOT to produce
+/// native executables with faster startup and smaller deployment size.
 ///
 /// Expected benefits:
-/// - Smaller package size (no .NET runtime)
-/// - Better performance (truly native code)
-/// - WASI 0.2 compatibility
+/// - Faster startup (no JIT compilation)
+/// - Smaller self-contained deployments
+/// - Better performance (ahead-of-time compiled)
 ///
 /// Potential issues:
 /// - SkiaSharp native dependencies may not be compatible
-/// - File I/O uses different APIs in WASI
-/// - Experimental tooling may have limitations
+/// - Aggressive trimming may remove needed code
+/// - Reflection-based code may fail
 /// </summary>
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("SharpCanvas NativeAOT-LLVM WASI Test");
-        Console.WriteLine("======================================");
+        Console.WriteLine("SharpCanvas NativeAOT Test");
+        Console.WriteLine("==========================");
         Console.WriteLine();
 
         try
@@ -74,7 +74,7 @@ class Program
             var pngBytes = ctx.GetBitmap();
             Console.WriteLine($"✓ Generated PNG: {pngBytes.Length} bytes");
 
-            // Try to write output file (WASI file I/O)
+            // Write output file
             try
             {
                 File.WriteAllBytes("output-nativeaot.png", pngBytes);
@@ -82,7 +82,7 @@ class Program
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"⚠ Could not write file (WASI limitation?): {ex.Message}");
+                Console.WriteLine($"⚠ Could not write file: {ex.Message}");
             }
 
             Console.WriteLine();

@@ -1,46 +1,39 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
-    <RuntimeIdentifier>wasi-wasm</RuntimeIdentifier>
+    <TargetFramework>net8.0</TargetFramework>
     <PublishAot>true</PublishAot>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
     <TrimMode>link</TrimMode>
     <IsPackable>false</IsPackable>
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
   <!--
-    EXPERIMENTAL: This project uses NativeAOT-LLVM for WASI compilation
+    EXPERIMENTAL: This project tests standard NativeAOT compilation
     This is opt-in and NOT included in the main solution build.
 
-    Prerequisites:
-    1. Add experimental package source:
-       dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-experimental/nuget/v3/index.json
+    NativeAOT compiles C# to native executables (not WASM) for:
+    - Faster startup time
+    - Smaller self-contained deployments
+    - No JIT overhead
 
-    2. Install .NET 9 SDK
+    To build:
+      cd SharpCanvas.Wasm.NativeAOT
+      dotnet publish -c Release -r win-x64      # Windows
+      dotnet publish -c Release -r linux-x64    # Linux
+      dotnet publish -c Release -r osx-arm64    # macOS Apple Silicon
 
-    3. Build this project separately:
-       cd SharpCanvas.Wasm.NativeAOT
-       dotnet restore
-       dotnet publish -c Release
+    This tests whether SkiaSharp is compatible with NativeAOT's
+    aggressive trimming and ahead-of-time compilation.
 
-    Note: componentize-dotnet currently only works on Windows
+    No experimental packages needed - PublishAot is built into .NET 8+
   -->
 
   <ItemGroup>
     <ProjectReference Include="..\SharpCanvas\SharpCanvas.Core\SharpCanvas.Core.csproj" />
     <ProjectReference Include="..\SharpCanvas\Context.Skia\Context.Skia.csproj" />
   </ItemGroup>
-
-  <!--
-    NativeAOT-LLVM package reference
-    This will be added once we confirm the experimental package source is configured
-  -->
-  <!--
-  <ItemGroup>
-    <PackageReference Include="BytecodeAlliance.Componentize.DotNet.Wasm.SDK" Version="0.6.0-preview00009" />
-  </ItemGroup>
-  -->
 
 </Project>
