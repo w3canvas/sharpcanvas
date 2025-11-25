@@ -943,7 +943,7 @@ namespace SharpCanvas.Context.Skia
             };
         }
 
-        public object getImageData(double sx, double sy, double sw, double sh, object settings = null)
+        public object getImageData(double sx, double sy, double sw, double sh, object? settings = null)
         {
             if (sw < 0 || sh < 0)
             {
@@ -972,7 +972,7 @@ namespace SharpCanvas.Context.Skia
                 gcHandle.Free();
             }
 
-            var colorSpace = "srgb";
+            string colorSpace = "srgb";
             if (settings != null)
             {
                 try
@@ -981,7 +981,7 @@ namespace SharpCanvas.Context.Skia
                     var cs = dynSettings.colorSpace as string;
                     if (!string.IsNullOrEmpty(cs))
                     {
-                        colorSpace = cs;
+                        colorSpace = cs!;
                     }
                 }
                 catch
@@ -1000,7 +1000,7 @@ namespace SharpCanvas.Context.Skia
             }
         }
 
-        public object createImageData(double sw, double sh, object settings = null)
+        public object createImageData(double sw, double sh, object? settings = null)
         {
             if (double.IsNaN(sw) || double.IsInfinity(sw) || sw <= 0 ||
                 double.IsNaN(sh) || double.IsInfinity(sh) || sh <= 0)
@@ -1011,7 +1011,7 @@ namespace SharpCanvas.Context.Skia
             var height = (uint)sh;
             var data = new byte[width * height * 4];
 
-            var colorSpace = "srgb";
+            string colorSpace = "srgb";
             if (settings != null)
             {
                 try
@@ -1020,7 +1020,7 @@ namespace SharpCanvas.Context.Skia
                     var cs = dynSettings.colorSpace as string;
                     if (!string.IsNullOrEmpty(cs))
                     {
-                        colorSpace = cs;
+                        colorSpace = cs!;
                     }
                 }
                 catch

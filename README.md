@@ -229,7 +229,7 @@ SharpCanvas/
 | **WASM Support** | ✅ Blazor + Wasmtime | ❌ N/A (requires Windows APIs) |
 | **JavaScript Integration** | ✅ ClearScript V8 | ✅ ClearScript V8 |
 | **Dependencies** | SkiaSharp NuGet | System.Drawing (built-in) |
-| **Framework Support** | .NET 8.0+ | .NET 8.0+ (potentially .NET Framework 4.x) |
+| **Framework Support** | .NET Standard 2.0+ / .NET 8.0+ | .NET 8.0+ (Windows) |
 | **Best For** | Cross-platform, modern apps | Windows desktop/server, legacy .NET |
 | **Status** | ✅ Production Ready | ✅ Production Ready |
 

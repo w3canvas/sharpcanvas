@@ -204,10 +204,10 @@ namespace SharpCanvas
         object measureText([In] string text);
 
         [DispId(105)]
-        object getImageData([In] double sx, [In] double sy, [In] double sw, [In] double sh, [In] object settings = null);
+        object getImageData([In] double sx, [In] double sy, [In] double sw, [In] double sh, [In] object? settings = null);
 
         [DispId(106)]
-        object createImageData([In] double sw, [In] double sh, [In] object settings = null);
+        object createImageData([In] double sw, [In] double sh, [In] object? settings = null);
 
         [DispId(107)]
         void putImageData([In] object pData, [In] double dx, [In] double dy);

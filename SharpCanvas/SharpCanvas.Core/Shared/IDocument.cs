@@ -43,7 +43,7 @@ namespace SharpCanvas.Shared
         /// <summary>
         /// The defaultView IDL attribute of the HTMLDocument interface must return the Document's browsing context's WindowProxy object, if there is one, or null otherwise.
         /// </summary>
-        IWindow defaultView { get; }
+        IWindow? defaultView { get; }
 
     }
 }

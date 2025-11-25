@@ -13,7 +13,7 @@ namespace SharpCanvas.Runtime.Workers
         private readonly IGraphicsFactory _graphicsFactory;
 
         public delegate void DrawDelegate(dynamic canvas);
-        public event EventHandler<object> OnWorkComplete;
+        public event EventHandler<object>? OnWorkComplete;
 
         public CanvasWorker(IGraphicsFactory graphicsFactory)
         {

@@ -109,7 +109,7 @@ class Program
 /// </summary>
 class Document : IDocument
 {
-    public object body { get; set; }
+    public object body { get; set; } = new object();
     public string title { get; set; } = string.Empty;
     public ILocation? location { get; set; }
     public IWindow? defaultView => null;
