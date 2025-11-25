@@ -391,7 +391,7 @@ All tests pass successfully, including:
 
 ### Prerequisites
 
-- .NET SDK 8.0 or later
+- .NET SDK 8.0 or later (verified on .NET 8, 9, and 10)
 - SkiaSharp (automatically restored via NuGet)
 
 ### Build Steps
@@ -521,8 +521,8 @@ See [Roadmap](TODO.md) for detailed contribution opportunities.
 **Current Status:**
 - ✅ **SkiaSharp backend** - Feature-complete, 100% tested
 - ✅ **System.Drawing backend** - Feature-complete, fully implemented
-- ⏳ **WASM deployment** - Ready, pending final validation
-- 🧪 **NativeAOT** - Experimental, needs testing
+- ✅ **WASM deployment** - Verified for .NET 8, 9, and 10
+- ✅ **NativeAOT** - Verified for .NET 8, 9, and 10
 
 Focus contributions on enhancements, tooling, examples, and deployment optimizations.
 
