@@ -1,4 +1,4 @@
-This is a C# project that uses .NET 8. To build the project, you will need the .NET 8 SDK installed.
+This is a C# project that targets .NET 8 and .NET Standard 2.0. To build the project, you will need the .NET 8 SDK (or later) installed.
 
 ## Building the project
 
@@ -46,11 +46,11 @@ If you encounter issues with text rendering in SkiaSharp tests, ensure that the 
 
 ### `fontVariantCaps` Implementation
 
-The implementation of the `fontVariantCaps` property in the Skia backend is more complex than initially anticipated. It requires the use of the `HarfBuzzSharp` library for text shaping to correctly handle OpenType features. The `SKShaper` class in `SkiaSharp.HarfBuzz` is the entry point for this, but a deeper integration is required to correctly apply the features and draw the resulting glyphs. This task has been deferred and is documented in `UNDONE.md`.
+The implementation of the `fontVariantCaps` property in the Skia backend is more complex than initially anticipated. It requires the use of the `HarfBuzzSharp` library for text shaping to correctly handle OpenType features. The `SKShaper` class in `SkiaSharp.HarfBuzz` is the entry point for this, but a deeper integration is required to correctly apply the features and draw the resulting glyphs. This task has been deferred.
 
 ### Legacy Code (`System.Drawing`)
 
-The legacy `System.Drawing` codebase has several `FIXME` comments listed in `UNDONE.md`. These comments are related to interop with JScript and the use of `IExpando`. After investigation, it has been determined that attempting to address these `FIXME`s without the original legacy host environment for testing is high-risk. A comment from the original author in the code suggests that the current implementation was left in place for compatibility. Therefore, these `FIXME`s should be considered deprecated unless a specific, reproducible bug is identified.
+The legacy `System.Drawing` codebase has several `FIXME` comments. These comments are related to interop with JScript and the use of `IExpando`. After investigation, it has been determined that attempting to address these `FIXME`s without the original legacy host environment for testing is high-risk. A comment from the original author in the code suggests that the current implementation was left in place for compatibility. Therefore, these `FIXME`s should be considered deprecated unless a specific, reproducible bug is identified.
 
 ### Modern Skia Backend Status (December 2024)
 

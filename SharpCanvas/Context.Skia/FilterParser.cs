@@ -16,7 +16,7 @@ namespace SharpCanvas.Context.Skia
             }
 
             var filters = new List<SKImageFilter>();
-            var filterParts = filter.Split(')', StringSplitOptions.RemoveEmptyEntries)
+            var filterParts = filter.Split(new[] { ')' }, StringSplitOptions.RemoveEmptyEntries)
                                     .Select(s => s.Trim() + ")");
 
             foreach (var part in filterParts)

@@ -2,8 +2,10 @@
 using SharpCanvas.Shared;
 using SkiaSharp;
 using System.Collections.Generic;
+#if WINDOWS
 using System.Drawing;
 using System.Drawing.Imaging;
+#endif
 
 namespace SharpCanvas.Context.Skia
 {
