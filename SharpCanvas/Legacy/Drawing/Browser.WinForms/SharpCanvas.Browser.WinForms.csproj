@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net8.0-windows;net472</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Browser.Forms</RootNamespace>
     <AssemblyName>SharpCanvas.Browser.Forms</AssemblyName>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net8.0;net8.0-windows;net472</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Interop</RootNamespace>
     <AssemblyName>SharpCanvas.Interop</AssemblyName>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <LangVersion>latest</LangVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <Nullable>enable</Nullable>
   </PropertyGroup>

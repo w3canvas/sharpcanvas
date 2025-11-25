@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using SharpCanvas.Forms;
 using System.Drawing;
@@ -1098,15 +1099,15 @@ namespace SharpCanvas.Context.Drawing2D
                     family = string.Join(" ", parts.Skip(1));
 
                     // Check for style keywords
-                    if (family.Contains("bold", StringComparison.OrdinalIgnoreCase))
+                    if (family.IndexOf("bold", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         style |= FontStyle.Bold;
-                        family = family.Replace("bold", "", StringComparison.OrdinalIgnoreCase).Trim();
+                        family = Regex.Replace(family, "bold", "", RegexOptions.IgnoreCase).Trim();
                     }
-                    if (family.Contains("italic", StringComparison.OrdinalIgnoreCase))
+                    if (family.IndexOf("italic", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         style |= FontStyle.Italic;
-                        family = family.Replace("italic", "", StringComparison.OrdinalIgnoreCase).Trim();
+                        family = Regex.Replace(family, "italic", "", RegexOptions.IgnoreCase).Trim();
                     }
 
                     // Remove quotes if present

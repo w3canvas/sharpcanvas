@@ -67,9 +67,9 @@ namespace SharpCanvas.Context.Drawing2D
                 case "left":
                     return point;
                 case "center":
-                    return new PointF(point.X - size.width/2f, point.Y);
+                    return new PointF((float)(point.X - size.width/2f), point.Y);
                 case "right":
-                    return new PointF(point.X - size.width, point.Y);
+                    return new PointF((float)(point.X - size.width), point.Y);
             }
             return point;
         }

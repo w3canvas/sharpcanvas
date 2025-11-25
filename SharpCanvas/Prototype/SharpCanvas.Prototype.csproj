@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net8.0;net8.0-windows;net472</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Prototype</RootNamespace>
     <AssemblyName>SharpCanvas.Prototype</AssemblyName>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">

@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net8.0-windows;net472</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.StandardFilter</RootNamespace>
     <AssemblyName>SharpCanvas.StandardFilter</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseWindowsForms>true</UseWindowsForms>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
