@@ -55,7 +55,9 @@ namespace SharpCanvas.Runtime.EventLoop
                 }
                 catch (Exception ex)
                 {
-                    return Task.FromException<T>(ex);
+                    var tcs = new TaskCompletionSource<T>();
+                    tcs.SetException(ex);
+                    return tcs.Task;
                 }
             }
             else

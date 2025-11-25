@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0-windows;net472</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows;net472;net45</TargetFrameworks>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Tests</RootNamespace>
@@ -37,8 +37,15 @@
     <ProjectReference Include="..\..\SharpCanvas\SharpCanvas.Core\SharpCanvas.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />

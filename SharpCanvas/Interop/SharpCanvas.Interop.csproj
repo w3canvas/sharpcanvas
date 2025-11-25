@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net8.0-windows;net472</TargetFrameworks>
+    <TargetFrameworks>net8.0;net8.0-windows;net472;net45</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Interop</RootNamespace>
     <AssemblyName>SharpCanvas.Interop</AssemblyName>
@@ -33,7 +33,7 @@
     <Compile Include="IHTMLElementBase.cs" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
     <PackageReference Include="Jint" Version="4.4.1" />
   </ItemGroup>
 

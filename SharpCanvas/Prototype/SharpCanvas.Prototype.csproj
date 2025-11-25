@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net8.0-windows;net472</TargetFrameworks>
+    <TargetFrameworks>net8.0;net8.0-windows;net472;net45</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Prototype</RootNamespace>
     <AssemblyName>SharpCanvas.Prototype</AssemblyName>

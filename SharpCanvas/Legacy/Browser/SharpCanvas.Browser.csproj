@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0-windows;net472</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows;net472;net45</TargetFrameworks>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Browser</RootNamespace>
     <AssemblyName>SharpCanvas.Browser</AssemblyName>
@@ -19,11 +19,15 @@
     <ProjectReference Include="../../SharpCanvas.Core/SharpCanvas.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net45' ">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net8.0-windows;net472</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows;net472;net45</TargetFrameworks>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>SharpCanvas.Tests.Forms</RootNamespace>
