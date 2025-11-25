@@ -12,6 +12,18 @@ namespace SharpCanvas.JsHost
     {
         static async Task Main(string[] args)
         {
+            if (args.Length > 0 && args[0] == "--server")
+            {
+                int port = 8081;
+                if (args.Length > 1 && int.TryParse(args[1], out int p))
+                {
+                    port = p;
+                }
+                var server = new Server(port);
+                await server.Start();
+                return;
+            }
+
             Console.WriteLine("SharpCanvas JavaScript Integration Test Suite\n");
 
             if (args.Length > 0 && args[0] == "--comprehensive")
@@ -49,3 +61,4 @@ namespace SharpCanvas.JsHost
         }
     }
 }
+
