@@ -19,6 +19,9 @@
   <ItemGroup>
     <PackageReference Include="Jint" Version="4.4.1" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <!-- WebGPU Support (Optional) -->
+    <PackageReference Include="Silk.NET.WebGPU" Version="2.21.0" />
+    <PackageReference Include="Silk.NET.WebGPU.Native.WGPU" Version="2.21.0" />
   </ItemGroup>
 
   <ItemGroup>
