@@ -908,13 +908,42 @@ namespace SharpCanvas.Context.Skia
 
         public object measureText(string text)
         {
-            var width = _fillFont.MeasureText(text);
+            var bounds = new SKRect();
+            var width = _fillFont.MeasureText(text, out bounds);
             var metrics = _fillFont.Metrics;
-            var height = metrics.Descent - metrics.Ascent;
-            return new TextMetrics { width = (int)width, height = (int)height };
+
+            double offset = 0;
+            var align = _textAlign.ToLower();
+            if (align == "center")
+            {
+                offset = -width / 2.0;
+            }
+            else if (align == "right" || (align == "end" && direction == "ltr") || (align == "start" && direction == "rtl"))
+            {
+                offset = -width;
+            }
+
+            var yOffset = FontUtils.GetYOffset(textBaseLine, _fillFont);
+
+            return new TextMetrics
+            {
+                width = width,
+                height = metrics.Descent - metrics.Ascent,
+                actualBoundingBoxLeft = -(bounds.Left + offset),
+                actualBoundingBoxRight = bounds.Right + offset,
+                actualBoundingBoxAscent = -(bounds.Top + yOffset),
+                actualBoundingBoxDescent = bounds.Bottom + yOffset,
+                fontBoundingBoxAscent = -(metrics.Top + yOffset),
+                fontBoundingBoxDescent = metrics.Bottom + yOffset,
+                emHeightAscent = -(metrics.Ascent + yOffset),
+                emHeightDescent = metrics.Descent + yOffset,
+                hangingBaseline = -(metrics.Ascent + yOffset),
+                alphabeticBaseline = -yOffset,
+                ideographicBaseline = -(metrics.Descent + yOffset)
+            };
         }
 
-        public object getImageData(double sx, double sy, double sw, double sh)
+        public object getImageData(double sx, double sy, double sw, double sh, object settings = null)
         {
             if (sw < 0 || sh < 0)
             {
@@ -943,17 +972,35 @@ namespace SharpCanvas.Context.Skia
                 gcHandle.Free();
             }
 
+            var colorSpace = "srgb";
+            if (settings != null)
+            {
+                try
+                {
+                    dynamic dynSettings = settings;
+                    var cs = dynSettings.colorSpace as string;
+                    if (!string.IsNullOrEmpty(cs))
+                    {
+                        colorSpace = cs;
+                    }
+                }
+                catch
+                {
+                    // Ignore errors reading settings
+                }
+            }
+
             if (success)
             {
-                return new ImageData((uint)width, (uint)height) { data = data };
+                return new ImageData((uint)width, (uint)height) { data = data, colorSpace = colorSpace };
             }
             else
             {
-                return createImageData(sw, sh);
+                return createImageData(sw, sh, settings);
             }
         }
 
-        public object createImageData(double sw, double sh)
+        public object createImageData(double sw, double sh, object settings = null)
         {
             if (double.IsNaN(sw) || double.IsInfinity(sw) || sw <= 0 ||
                 double.IsNaN(sh) || double.IsInfinity(sh) || sh <= 0)
@@ -963,7 +1010,26 @@ namespace SharpCanvas.Context.Skia
             var width = (uint)sw;
             var height = (uint)sh;
             var data = new byte[width * height * 4];
-            return new ImageData(width, height) { data = data };
+
+            var colorSpace = "srgb";
+            if (settings != null)
+            {
+                try
+                {
+                    dynamic dynSettings = settings;
+                    var cs = dynSettings.colorSpace as string;
+                    if (!string.IsNullOrEmpty(cs))
+                    {
+                        colorSpace = cs;
+                    }
+                }
+                catch
+                {
+                    // Ignore errors reading settings
+                }
+            }
+
+            return new ImageData(width, height) { data = data, colorSpace = colorSpace };
         }
 
         public void putImageData(object pData, double dx, double dy)
