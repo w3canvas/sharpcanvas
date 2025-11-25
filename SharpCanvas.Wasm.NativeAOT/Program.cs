@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using SharpCanvas.Shared;
 using SharpCanvas.Context.Skia;
 using SkiaSharp;
@@ -42,7 +43,7 @@ class Program
             }
 
             var document = new Document();
-            var ctx = new SkiaCanvasRenderingContext2D(surface, document);
+            var ctx = new CanvasRenderingContext2D(surface, document);
 
             Console.WriteLine("✓ Created canvas context");
 
@@ -108,5 +109,11 @@ class Program
 /// </summary>
 class Document : IDocument
 {
-    public IElement? GetElementById(string id) => null;
+    public object body { get; set; }
+    public string title { get; set; } = string.Empty;
+    public ILocation? location { get; set; }
+    public IWindow? defaultView => null;
+
+    public object createElement(string tagName) => new object();
+    public object createElementNS(string ns, string tagName) => new object();
 }

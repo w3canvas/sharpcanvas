@@ -1455,7 +1455,7 @@ namespace SharpCanvas.Context.Drawing2D
         /// The returned ImageData object's data property is a one-dimensional array containing the image data
         /// in RGBA order, with integer values between 0 and 255 (inclusive).
         /// </remarks>
-        public object createImageData(double sw, double sh)
+        public object createImageData(double sw, double sh, object settings = null)
         {
             if (double.IsNaN(sw) || double.IsInfinity(sw) || double.IsInfinity(sh) || double.IsNaN(sh))
             {
@@ -1471,6 +1471,24 @@ namespace SharpCanvas.Context.Drawing2D
                 }
             }
             img.data = Utils.ConvertArrayToJSArray(arr.ToArray());
+
+            if (settings != null)
+            {
+                try
+                {
+                    dynamic dynSettings = settings;
+                    var cs = dynSettings.colorSpace as string;
+                    if (!string.IsNullOrEmpty(cs))
+                    {
+                        img.colorSpace = cs;
+                    }
+                }
+                catch
+                {
+                    // Ignore errors reading settings
+                }
+            }
+
             return img;
         }
 
@@ -1479,7 +1497,7 @@ namespace SharpCanvas.Context.Drawing2D
         /// whose corners are the four points (sx, sy), (sx+sw, sy), (sx+sw, sy+sh), (sx, sy+sh), in canvas coordinate space units. 
         /// Pixels outside the canvas must be returned as transparent black. Pixels must be returned as non-premultiplied alpha values.
         /// </summary>
-        public object getImageData(double sx, double sy, double sw, double sh)
+        public object getImageData(double sx, double sy, double sw, double sh, object settings = null)
         {
             if (double.IsNaN(sw) || double.IsInfinity(sw) || double.IsInfinity(sh) || double.IsNaN(sh)
                 || double.IsNaN(sx) || double.IsInfinity(sx) || double.IsInfinity(sy) || double.IsNaN(sy))
@@ -1496,6 +1514,23 @@ namespace SharpCanvas.Context.Drawing2D
             {
 //unsafe mode will be faster
                 ProcessImageUnSafe(sw, sh, sx, sy, img);
+            }
+
+            if (settings != null)
+            {
+                try
+                {
+                    dynamic dynSettings = settings;
+                    var cs = dynSettings.colorSpace as string;
+                    if (!string.IsNullOrEmpty(cs))
+                    {
+                        img.colorSpace = cs;
+                    }
+                }
+                catch
+                {
+                    // Ignore errors reading settings
+                }
             }
 
             return img;

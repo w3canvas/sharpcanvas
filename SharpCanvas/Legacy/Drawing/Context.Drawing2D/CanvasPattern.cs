@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
+using SharpCanvas.Shared;
 
 namespace SharpCanvas.Context.Drawing2D
 {
@@ -8,6 +9,7 @@ namespace SharpCanvas.Context.Drawing2D
         private readonly string _imagePath;
         private readonly string _repetition;
         private ICanvasRenderingContext2D _context2D;
+        private Matrix _localMatrix = new Matrix();
 
         public CanvasPattern(string _repetition, string _imagePath)
         {
@@ -19,6 +21,16 @@ namespace SharpCanvas.Context.Drawing2D
         {
             _repetition = repetition;
             _context2D = context2D;
+        }
+
+        public void setTransform(DOMMatrix matrix)
+        {
+            if (matrix == null)
+            {
+                _localMatrix.Reset();
+                return;
+            }
+            _localMatrix = new Matrix((float)matrix.a, (float)matrix.b, (float)matrix.c, (float)matrix.d, (float)matrix.e, (float)matrix.f);
         }
 
         public TextureBrush GetBrush(Matrix matrix)
@@ -54,6 +66,7 @@ namespace SharpCanvas.Context.Drawing2D
             }
             var brush = new TextureBrush(bmp, wm);
             brush.MultiplyTransform(matrix);
+            brush.MultiplyTransform(_localMatrix);
             return brush;
         }
     }

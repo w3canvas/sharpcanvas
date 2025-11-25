@@ -52,6 +52,8 @@ namespace SharpCanvas.Shared
 
         public uint height { get; set; }
 
+        public string colorSpace { get; set; } = "srgb";
+
         #endregion
 
 #if WINDOWS
