@@ -31,6 +31,8 @@ namespace SharpCanvas.WebGPU
             }
         }
 
+        internal Silk.NET.WebGPU.Queue* _currentQueue;
+
         public Task<object> requestAdapter()
         {
             Console.WriteLine("[SharpCanvas] WebGPUBridge: requestAdapter called");
@@ -42,20 +44,18 @@ namespace SharpCanvas.WebGPU
                 return tcs.Task;
             }
 
-            // Create options
             var options = new RequestAdapterOptions
             {
                 PowerPreference = PowerPreference.HighPerformance,
                 ForceFallbackAdapter = false
             };
 
-            // Define callback
             PfnRequestAdapterCallback callback = new PfnRequestAdapterCallback((status, adapter, message, userdata) =>
             {
                 if (status == RequestAdapterStatus.Success)
                 {
                     Console.WriteLine($"[SharpCanvas] Adapter obtained: {(long)adapter:X}");
-                    tcs.SetResult(new Adapter(_wgpu, adapter));
+                    tcs.SetResult(new Adapter(this, _wgpu, adapter));
                 }
                 else
                 {
@@ -65,11 +65,6 @@ namespace SharpCanvas.WebGPU
                 }
             });
 
-            // We need to keep the callback alive? Silk.NET might handle it if we pass it directly?
-            // Actually, Silk.NET generates a struct for the callback usually, or takes a delegate.
-            // Let's check if RequestAdapter takes a delegate or a function pointer.
-            // Usually it takes a PfnRequestAdapterCallback delegate.
-            
             _wgpu.InstanceRequestAdapter(_instance, &options, callback, null);
 
             return tcs.Task;
@@ -78,11 +73,13 @@ namespace SharpCanvas.WebGPU
 
     public unsafe class Adapter
     {
+        private readonly WebGPUBridge _bridge;
         private readonly Silk.NET.WebGPU.WebGPU _wgpu;
         private readonly Silk.NET.WebGPU.Adapter* _adapter;
 
-        public Adapter(Silk.NET.WebGPU.WebGPU wgpu, Silk.NET.WebGPU.Adapter* adapter)
+        public Adapter(WebGPUBridge bridge, Silk.NET.WebGPU.WebGPU wgpu, Silk.NET.WebGPU.Adapter* adapter)
         {
+            _bridge = bridge;
             _wgpu = wgpu;
             _adapter = adapter;
         }
@@ -92,10 +89,8 @@ namespace SharpCanvas.WebGPU
             Console.WriteLine("[SharpCanvas] WebGPUBridge: requestDevice called");
             var tcs = new TaskCompletionSource<object>();
 
-            // Create descriptor
             var descriptor = new DeviceDescriptor
             {
-                // Defaults
             };
 
             PfnRequestDeviceCallback callback = new PfnRequestDeviceCallback((status, device, message, userdata) =>
@@ -103,6 +98,8 @@ namespace SharpCanvas.WebGPU
                 if (status == RequestDeviceStatus.Success)
                 {
                     Console.WriteLine($"[SharpCanvas] Device obtained: {(long)device:X}");
+                    var q = _wgpu.DeviceGetQueue(device);
+                    _bridge._currentQueue = q;
                     tcs.SetResult(new Device(_wgpu, device));
                 }
                 else
@@ -162,8 +159,43 @@ namespace SharpCanvas.WebGPU
     {
         public void submit(int[] commands)
         {
+            if (_currentQueue == null)
+            {
+                Console.WriteLine("[SharpCanvas] Error: Queue not initialized");
+                return;
+            }
+
             Console.WriteLine($"[SharpCanvas] submit called with {(commands != null ? commands.Length : 0)} commands");
-            // TODO: Implement command decoding and execution
+            
+            if (commands == null || commands.Length == 0) return;
+
+            int i = 0;
+            while (i < commands.Length)
+            {
+                int cmd = commands[i++];
+                switch (cmd)
+                {
+                    case 1: // BEGIN_RENDER_PASS
+                        Console.WriteLine("  CMD: BEGIN_RENDER_PASS");
+                        break;
+                    case 2: // END_RENDER_PASS
+                        Console.WriteLine("  CMD: END_RENDER_PASS");
+                        break;
+                    case 3: // SET_PIPELINE
+                        Console.WriteLine("  CMD: SET_PIPELINE");
+                        break;
+                    case 4: // DRAW
+                        int vertexCount = commands[i++];
+                        int instanceCount = commands[i++];
+                        int firstVertex = commands[i++];
+                        int firstInstance = commands[i++];
+                        Console.WriteLine($"  CMD: DRAW {vertexCount}, {instanceCount}, {firstVertex}, {firstInstance}");
+                        break;
+                    default:
+                        Console.WriteLine($"  Unknown command: {cmd}");
+                        break;
+                }
+            }
         }
     }
 }
