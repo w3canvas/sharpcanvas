@@ -7,7 +7,7 @@ using Silk.NET.Core.Native;
 
 namespace SharpCanvas.WebGPU
 {
-    public unsafe class WebGPUBridge
+    public unsafe partial class WebGPUBridge
     {
         private readonly Silk.NET.WebGPU.WebGPU _wgpu;
         private readonly Instance* _instance;
@@ -154,6 +154,16 @@ namespace SharpCanvas.WebGPU
         public Navigator()
         {
             gpu = new WebGPUBridge();
+        }
+    }
+    
+    // Extension to WebGPUBridge
+    public unsafe partial class WebGPUBridge
+    {
+        public void submit(int[] commands)
+        {
+            Console.WriteLine($"[SharpCanvas] submit called with {(commands != null ? commands.Length : 0)} commands");
+            // TODO: Implement command decoding and execution
         }
     }
 }

@@ -39,9 +39,9 @@ namespace SharpCanvas.JsHost
                 // Helper to get context easily in JS
                 Engine.Execute("var ctx = canvas.getContext('2d');");
 
-                // Inject navigator.gpu
-                var navigator = new SharpCanvas.WebGPU.Navigator();
-                Engine.AddHostObject("navigator", navigator);
+                // Inject __native_webgpu
+                var bridge = new SharpCanvas.WebGPU.WebGPUBridge();
+                Engine.AddHostObject("__native_webgpu", bridge);
             }
 
             public void Dispose()
