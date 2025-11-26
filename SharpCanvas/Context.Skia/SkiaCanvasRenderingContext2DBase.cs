@@ -1517,4 +1517,208 @@ namespace SharpCanvas.Context.Skia
             };
         }
     }
+
+        public void submit(object[] commands)
+        {
+            int i = 0;
+            while (i < commands.Length)
+            {
+                var cmdObj = commands[i++];
+                if (cmdObj == null) continue;
+                int cmd = Convert.ToInt32(cmdObj);
+
+                switch (cmd)
+                {
+                    case 1: // SET_FILL_STYLE
+                        fillStyle = commands[i++];
+                        break;
+                    case 2: // SET_STROKE_STYLE
+                        strokeStyle = commands[i++];
+                        break;
+                    case 3: // SET_LINE_WIDTH
+                        lineWidth = Convert.ToDouble(commands[i++]);
+                        break;
+                    case 4: // SET_LINE_CAP
+                        lineCap = (string)commands[i++];
+                        break;
+                    case 5: // SET_LINE_JOIN
+                        lineJoin = (string)commands[i++];
+                        break;
+                    case 6: // SET_MITER_LIMIT
+                        miterLimit = Convert.ToDouble(commands[i++]);
+                        break;
+                    case 7: // SET_GLOBAL_ALPHA
+                        globalAlpha = Convert.ToDouble(commands[i++]);
+                        break;
+                    case 8: // SET_GLOBAL_COMPOSITE_OPERATION
+                        globalCompositeOperation = (string)commands[i++];
+                        break;
+                    case 9: // SET_FONT
+                        font = (string)commands[i++];
+                        break;
+                    case 10: // SET_TEXT_ALIGN
+                        textAlign = (string)commands[i++];
+                        break;
+                    case 11: // SET_TEXT_BASELINE
+                        textBaseLine = (string)commands[i++];
+                        break;
+                    case 12: // SET_SHADOW_BLUR
+                        shadowBlur = Convert.ToDouble(commands[i++]);
+                        break;
+                    case 13: // SET_SHADOW_COLOR
+                        shadowColor = (string)commands[i++];
+                        break;
+                    case 14: // SET_SHADOW_OFFSET_X
+                        shadowOffsetX = Convert.ToDouble(commands[i++]);
+                        break;
+                    case 15: // SET_SHADOW_OFFSET_Y
+                        shadowOffsetY = Convert.ToDouble(commands[i++]);
+                        break;
+                    case 16: // FILL_RECT
+                        fillRect(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 17: // STROKE_RECT
+                        strokeRect(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 18: // CLEAR_RECT
+                        clearRect(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 19: // BEGIN_PATH
+                        beginPath();
+                        break;
+                    case 20: // CLOSE_PATH
+                        closePath();
+                        break;
+                    case 21: // MOVE_TO
+                        moveTo(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 22: // LINE_TO
+                        lineTo(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 23: // QUADRATIC_CURVE_TO
+                        quadraticCurveTo(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 24: // BEZIER_CURVE_TO
+                        bezierCurveTo(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 25: // ARC
+                        arc(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToBoolean(commands[i++])
+                        );
+                        break;
+                    case 26: // ARC_TO
+                        arcTo(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 27: // RECT
+                        rect(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 28: // FILL
+                        fill((string)commands[i++]);
+                        break;
+                    case 29: // STROKE
+                        stroke();
+                        break;
+                    case 30: // CLIP
+                        clip((string)commands[i++]);
+                        break;
+                    case 31: // SAVE
+                        save();
+                        break;
+                    case 32: // RESTORE
+                        restore();
+                        break;
+                    case 33: // SCALE
+                        scale(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 34: // ROTATE
+                        rotate(Convert.ToDouble(commands[i++]));
+                        break;
+                    case 35: // TRANSLATE
+                        translate(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 36: // TRANSFORM
+                        transform(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 37: // SET_TRANSFORM
+                        setTransform(
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++]),
+                            Convert.ToDouble(commands[i++])
+                        );
+                        break;
+                    case 38: // RESET_TRANSFORM
+                        resetTransform();
+                        break;
+                    default:
+                        // Unknown command
+                        break;
+                }
+            }
+        }
+    }
 }
