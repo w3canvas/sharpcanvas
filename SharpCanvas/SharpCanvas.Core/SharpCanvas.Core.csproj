@@ -35,4 +35,9 @@
     <PackageReference Include="SkiaSharp.NativeAssets.WebAssembly" Version="3.119.0" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
+    <PackageReference Include="Silk.NET.WebGPU" Version="2.21.0" />
+    <PackageReference Include="Silk.NET.WebGPU.Native.WGPU" Version="2.21.0" />
+  </ItemGroup>
+
 </Project>

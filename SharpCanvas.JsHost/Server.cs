@@ -38,6 +38,10 @@ namespace SharpCanvas.JsHost
                 
                 // Helper to get context easily in JS
                 Engine.Execute("var ctx = canvas.getContext('2d');");
+
+                // Inject navigator.gpu
+                var navigator = new SharpCanvas.WebGPU.Navigator();
+                Engine.AddHostObject("navigator", navigator);
             }
 
             public void Dispose()
@@ -70,6 +74,12 @@ namespace SharpCanvas.JsHost
             {
                 var request = context.Request;
                 var response = context.Response;
+
+                Console.WriteLine($"[SharpCanvas] Request: {request.HttpMethod} {request.Url.AbsolutePath}");
+                foreach (string key in request.Headers.AllKeys)
+                {
+                    Console.WriteLine($"[SharpCanvas] Header {key}: {request.Headers[key]}");
+                }
 
                 if (request.Url.AbsolutePath == "/create-session" && request.HttpMethod == "POST")
                 {
