@@ -59,7 +59,7 @@ namespace SharpCanvas.WebGPU
                 }
                 else
                 {
-                    string msg = Marshal.PtrToStringAnsi((IntPtr)message);
+                    string msg = Marshal.PtrToStringAnsi((IntPtr)message) ?? "Unknown Error";
                     Console.WriteLine($"[SharpCanvas] Failed to get adapter: {msg}");
                     tcs.SetException(new Exception($"Failed to get adapter: {msg}"));
                 }
@@ -104,7 +104,7 @@ namespace SharpCanvas.WebGPU
                 }
                 else
                 {
-                    string msg = Marshal.PtrToStringAnsi((IntPtr)message);
+                    string msg = Marshal.PtrToStringAnsi((IntPtr)message) ?? "Unknown Error";
                     Console.WriteLine($"[SharpCanvas] Failed to get device: {msg}");
                     tcs.SetException(new Exception($"Failed to get device: {msg}"));
                 }

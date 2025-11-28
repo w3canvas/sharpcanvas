@@ -152,6 +152,8 @@ namespace SharpCanvas.Browser
             set { _parent = value; }
         }
 
+        public FontFaceSet fonts => new FontFaceSet();
+
         #endregion 
 
         public object onload { get; set; } = new object();

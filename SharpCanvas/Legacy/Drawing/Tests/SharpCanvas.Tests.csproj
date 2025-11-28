@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0-windows;net472;net45</TargetFrameworks>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <UseWindowsForms>true</UseWindowsForms>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpCanvas.Tests</RootNamespace>
     <AssemblyName>SharpCanvas.Tests</AssemblyName>
@@ -28,13 +29,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpCanvas\SharpCanvas.csproj" />
-    <ProjectReference Include="..\..\Legacy\Browser\SharpCanvas.Browser.csproj" />
-    <ProjectReference Include="..\..\SharpCanvas\Host\SharpCanvas.Host.csproj" />
-    <ProjectReference Include="..\..\SharpCanvas\Interop\SharpCanvas.Interop.csproj" />
-    <ProjectReference Include="..\..\SharpCanvas\Prototype\SharpCanvas.Prototype.csproj" />
-    <ProjectReference Include="..\..\SharpCanvas\Bitmap.Filter\SharpCanvas.Bitmap.Filter.csproj" />
-    <ProjectReference Include="..\..\SharpCanvas\SharpCanvas.Core\SharpCanvas.Core.csproj" />
+    <ProjectReference Include="..\..\..\SharpCanvas.csproj" />
+    <ProjectReference Include="..\..\Browser\SharpCanvas.Browser.csproj" />
+    <ProjectReference Include="..\..\..\Host\SharpCanvas.Host.csproj" />
+    <ProjectReference Include="..\..\..\Interop\SharpCanvas.Interop.csproj" />
+    <ProjectReference Include="..\..\..\Prototype\SharpCanvas.Prototype.csproj" />
+    <ProjectReference Include="..\..\..\Bitmap.Filter\SharpCanvas.Bitmap.Filter.csproj" />
+    <ProjectReference Include="..\..\..\SharpCanvas.Core\SharpCanvas.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">

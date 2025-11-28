@@ -16,6 +16,10 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net45' ">
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="HTMLDispIDs.cs" />
     <Compile Include="IHTMLDocument4.cs" />
@@ -29,7 +33,7 @@
     <Compile Include="MSHtml.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net45' ">
     <Compile Include="IHTMLElementBase.cs" />
   </ItemGroup>
 

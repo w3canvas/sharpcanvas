@@ -44,7 +44,7 @@ namespace SharpCanvas.Context.Skia
     ///
     /// For detailed documentation, see: https://github.com/w3canvas/sharpcanvas
     /// </remarks>
-    public abstract class SkiaCanvasRenderingContext2DBase : ICanvasRenderingContext2D
+    public abstract class SkiaCanvasRenderingContext2DBase : ICanvasRenderingContext2D, IDisposable
     {
         internal Feature[]? _fontFeatures;
         protected SKSurface _surface;
@@ -1516,7 +1516,30 @@ namespace SharpCanvas.Context.Skia
                 willReadFrequently = false // Default value, could be made configurable in the future
             };
         }
-    }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _surface?.Dispose();
+                _path?.Dispose();
+                _fillPaint?.Dispose();
+                _strokePaint?.Dispose();
+                _fillFont?.Dispose();
+                _strokeFont?.Dispose();
+
+                while (_fillPaintStack.Count > 0) _fillPaintStack.Pop().Dispose();
+                while (_strokePaintStack.Count > 0) _strokePaintStack.Pop().Dispose();
+                while (_fillFontStack.Count > 0) _fillFontStack.Pop().Dispose();
+                while (_strokeFontStack.Count > 0) _strokeFontStack.Pop().Dispose();
+            }
+        }
 
         public void submit(object[] commands)
         {
@@ -1662,13 +1685,23 @@ namespace SharpCanvas.Context.Skia
                         );
                         break;
                     case 28: // FILL
-                        fill((string)commands[i++]);
+                        var fillRule = (string)commands[i++];
+                        if (!string.IsNullOrEmpty(fillRule))
+                        {
+                            _path.FillType = fillRule.ToLower() == "evenodd" ? SKPathFillType.EvenOdd : SKPathFillType.Winding;
+                        }
+                        fill();
                         break;
                     case 29: // STROKE
                         stroke();
                         break;
                     case 30: // CLIP
-                        clip((string)commands[i++]);
+                        var clipRule = (string)commands[i++];
+                        if (!string.IsNullOrEmpty(clipRule))
+                        {
+                            _path.FillType = clipRule.ToLower() == "evenodd" ? SKPathFillType.EvenOdd : SKPathFillType.Winding;
+                        }
+                        clip();
                         break;
                     case 31: // SAVE
                         save();

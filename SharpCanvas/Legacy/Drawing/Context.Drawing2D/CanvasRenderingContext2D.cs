@@ -2038,6 +2038,11 @@ namespace SharpCanvas.Context.Drawing2D
 
         #endregion
 
+        public void submit(object[] commands)
+        {
+            // Not implemented for legacy backend
+        }
+
         public override object InvokeMember(string name, BindingFlags invokeAttr, Binder binder, object target, object[] args,
                                    ParameterModifier[] modifiers, CultureInfo culture, string[] namedParameters)
         {

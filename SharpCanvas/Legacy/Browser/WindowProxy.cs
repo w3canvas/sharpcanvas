@@ -249,6 +249,8 @@ namespace SharpCanvas.Browser
             get { return _realObject.navigator; }
         }
 
+        public FontFaceSet fonts => _realObject.fonts;
+
         /// <summary>
         /// Redraw visible only childrens (take in count z-index of the children)
         /// </summary>
