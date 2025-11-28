@@ -1,6 +1,0 @@
-/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Browser.csproj.AssemblyReference.cache
-/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Browser.GeneratedMSBuildEditorConfig.editorconfig
-/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Browser.AssemblyInfoInputs.cache
-/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Browser.AssemblyInfo.cs
-/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Browser.csproj.CoreCompileInputs.cache
-/app/SharpCanvas/obj/Debug/net8.0-windows/SharpCanvas.Browser.sourcelink.json

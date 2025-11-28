@@ -1,5 +1,0 @@
-/app/SharpCanvas/obj/Debug/net8.0/SharpCanvas.Installer.GeneratedMSBuildEditorConfig.editorconfig
-/app/SharpCanvas/obj/Debug/net8.0/SharpCanvas.Installer.AssemblyInfoInputs.cache
-/app/SharpCanvas/obj/Debug/net8.0/SharpCanvas.Installer.AssemblyInfo.cs
-/app/SharpCanvas/obj/Debug/net8.0/SharpCanvas.Installer.csproj.CoreCompileInputs.cache
-/app/SharpCanvas/obj/Debug/net8.0/SharpCanvas.Installer.sourcelink.json
